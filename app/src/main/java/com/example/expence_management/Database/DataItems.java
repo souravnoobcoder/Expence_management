@@ -11,7 +11,7 @@ public class DataItems {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
-    private Date date;
+    private String date;
 
     private int moneyExpense;
 
@@ -21,8 +21,11 @@ public class DataItems {
 
     private String moneyExpensePurpose;
 
+    public DataItems(){
+
+    }
     @Ignore
-    public DataItems(int id, Date date, int moneyExpense, int moneyGot, String moneyGotPurpose, String moneyExpensePurpose) {
+    public DataItems(int id, String date, int moneyExpense, int moneyGot, String moneyGotPurpose, String moneyExpensePurpose) {
         this.id = id;
         this.date = date;
         this.moneyExpense = moneyExpense;
@@ -39,11 +42,11 @@ public class DataItems {
         this.id = id;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
