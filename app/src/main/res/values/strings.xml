@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Expense_management</string>
+    <string name="searching">For multi dates</string>
+    <string name="searching_by_date">Searching by date</string>
+    <string name="taking_more_date">taking more date</string>
+</resources>

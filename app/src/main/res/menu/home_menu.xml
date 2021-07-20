@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/search_by_date"
+        android:icon="@drawable/ic_search_by_calender"
+        app:showAsAction="ifRoom"
+        android:title="@string/searching_by_date" />
+    <item
+        android:id="@+id/search_for_multi_days"
+        android:title="@string/searching"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_for_multi_date"/>
+
+</menu>
