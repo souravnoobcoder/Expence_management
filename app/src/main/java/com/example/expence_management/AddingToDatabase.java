@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ public class AddingToDatabase extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.date_input);
 
+
         amount=findViewById(R.id.money);
         detail=findViewById(R.id.money_explain);
         addingMore=findViewById(R.id.add_more_subData);
@@ -50,6 +52,7 @@ public class AddingToDatabase extends AppCompatActivity {
         moneyGot=new ArrayList<>();
         mEPurpose=new ArrayList<>();
         mGPurpose=new ArrayList<>();
+
         bar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,22 +73,21 @@ public class AddingToDatabase extends AppCompatActivity {
                         return true;
                     case R.id.save_data:
                         setInsert(inputDate,moneyExpense,moneyGot,mGPurpose,mEPurpose);
+                        makeToast("Your data is saved");
                         return true;
                     default:
                         return false;
                 }
             }
         });
-
-     String amountUsed=amount.getText().toString();
-     String amountPurpose=detail.getText().toString();
-
      addingMore.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View v) {
-             if (gain.isSelected()){
+             String amountUsed=amount.getText().toString();
+             String amountPurpose=detail.getText().toString();
+             if (gain.isChecked()){
                     settingToGain(amountUsed,amountPurpose);
-             }else if (paid.isSelected()){
+             }else if (paid.isChecked()){
                         settingToExpense(amountUsed,amountPurpose);
              }else{
                     makeToast("please select Gain or Paid");
@@ -112,13 +114,13 @@ public class AddingToDatabase extends AppCompatActivity {
         paid.setSelected(false);
     }
     private int setGrossMoney(List<Integer> money){
-        int i=0,gross=0;
+        int i=0,gross=0,value;
         if (money.isEmpty())
             return 0;
-        while (!money.isEmpty()){
-            gross+=money.get(i);
-            i++;
-        }
+       for (i=0;i<money.size();i++){
+           value =Integer.parseInt(money.get(i).toString());
+           gross+=value;
+       }
         return gross;
     }
     private void setInsert(String date,List<Integer> moneyExpense, List<Integer> moneyGot
@@ -129,4 +131,5 @@ public class AddingToDatabase extends AppCompatActivity {
                 moneyExpense,moneyGot,moneyGotPurpose,moneyExpensePurpose);
        model.insertData(myData);
     }
+
 }
