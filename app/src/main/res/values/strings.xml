@@ -3,4 +3,6 @@
     <string name="searching">For multi dates</string>
     <string name="searching_by_date">Searching by date</string>
     <string name="taking_more_date">taking more date</string>
+    <string name="saving_data_to_database">saving_data_to_database</string>
+    <string name="data_preview">data_preview</string>
 </resources>

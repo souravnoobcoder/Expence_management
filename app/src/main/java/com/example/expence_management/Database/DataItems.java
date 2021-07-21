@@ -3,8 +3,10 @@ package com.example.expence_management.Database;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverter;
+import androidx.room.TypeConverters;
 
-import java.util.Date;
+import java.util.List;
 
 @Entity(tableName = "expenses")
 public class DataItems {
@@ -13,25 +15,32 @@ public class DataItems {
 
     private String date;
 
-    private int moneyExpense;
+    private int grossMoneyExpense;
 
-    private int moneyGot;
+    private int grossMoneyGot;
 
-    private String moneyGotPurpose;
+    private List<Integer> moneyExpense;
 
-    private String moneyExpensePurpose;
+    private List<Integer> moneyGot;
+
+    private List<String> moneyGotPurposes;
+
+    private List<String> moneyExpensePurposes;
 
     public DataItems(){
 
     }
     @Ignore
-    public DataItems(int id, String date, int moneyExpense, int moneyGot, String moneyGotPurpose, String moneyExpensePurpose) {
-        this.id = id;
+    public DataItems(String date, int grossMoneyExpense, int grossMoneyGot,
+                     List<Integer> moneyExpense, List<Integer> moneyGot,
+                     List<String> moneyGotPurposes, List<String> moneyExpensePurposes) {
         this.date = date;
+        this.grossMoneyExpense = grossMoneyExpense;
+        this.grossMoneyGot = grossMoneyGot;
         this.moneyExpense = moneyExpense;
         this.moneyGot = moneyGot;
-        this.moneyGotPurpose = moneyGotPurpose;
-        this.moneyExpensePurpose = moneyExpensePurpose;
+        this.moneyGotPurposes = moneyGotPurposes;
+        this.moneyExpensePurposes = moneyExpensePurposes;
     }
 
     public int getId() {
@@ -50,35 +59,51 @@ public class DataItems {
         this.date = date;
     }
 
-    public int getMoneyExpense() {
+    public int getGrossMoneyExpense() {
+        return grossMoneyExpense;
+    }
+
+    public void setGrossMoneyExpense(int grossMoneyExpense) {
+        this.grossMoneyExpense = grossMoneyExpense;
+    }
+
+    public int getGrossMoneyGot() {
+        return grossMoneyGot;
+    }
+
+    public void setGrossMoneyGot(int grossMoneyGot) {
+        this.grossMoneyGot = grossMoneyGot;
+    }
+
+    public List<Integer> getMoneyExpense() {
         return moneyExpense;
     }
 
-    public void setMoneyExpense(int moneyExpense) {
+    public void setMoneyExpense(List<Integer> moneyExpense) {
         this.moneyExpense = moneyExpense;
     }
 
-    public int getMoneyGot() {
+    public List<Integer> getMoneyGot() {
         return moneyGot;
     }
 
-    public void setMoneyGot(int moneyGot) {
+    public void setMoneyGot(List<Integer> moneyGot) {
         this.moneyGot = moneyGot;
     }
 
-    public String getMoneyGotPurpose() {
-        return moneyGotPurpose;
+    public List<String> getMoneyGotPurposes() {
+        return moneyGotPurposes;
     }
 
-    public void setMoneyGotPurpose(String moneyGotPurpose) {
-        this.moneyGotPurpose = moneyGotPurpose;
+    public void setMoneyGotPurposes(List<String> moneyGotPurposes) {
+        this.moneyGotPurposes = moneyGotPurposes;
     }
 
-    public String getMoneyExpensePurpose() {
-        return moneyExpensePurpose;
+    public List<String> getMoneyExpensePurposes() {
+        return moneyExpensePurposes;
     }
 
-    public void setMoneyExpensePurpose(String moneyExpensePurpose) {
-        this.moneyExpensePurpose = moneyExpensePurpose;
+    public void setMoneyExpensePurposes(List<String> moneyExpensePurposes) {
+        this.moneyExpensePurposes = moneyExpensePurposes;
     }
 }
