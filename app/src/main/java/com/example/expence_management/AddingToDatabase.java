@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +36,7 @@ public class AddingToDatabase extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.date_input);
 
 
@@ -74,6 +75,7 @@ public class AddingToDatabase extends AppCompatActivity {
                     case R.id.save_data:
                         setInsert(inputDate,moneyExpense,moneyGot,mGPurpose,mEPurpose);
                         makeToast("Your data is saved");
+                        makeAllListNull();
                         return true;
                     default:
                         return false;
@@ -114,7 +116,7 @@ public class AddingToDatabase extends AppCompatActivity {
         paid.setSelected(false);
     }
     private int setGrossMoney(List<Integer> money){
-        int i=0,gross=0,value;
+        int i,gross=0,value;
         if (money.isEmpty())
             return 0;
        for (i=0;i<money.size();i++){
@@ -131,5 +133,21 @@ public class AddingToDatabase extends AppCompatActivity {
                 moneyExpense,moneyGot,moneyGotPurpose,moneyExpensePurpose);
        model.insertData(myData);
     }
+   private void makeAllListNull(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                moneyGot.clear();
+                moneyExpense.clear();
+                mEPurpose.clear();
+                mGPurpose.clear();
+            }
+        }).start();
 
+      }
 }

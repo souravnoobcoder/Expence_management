@@ -6,59 +6,81 @@ import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.util.Pair;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.expence_management.Database.DataItems;
+import com.example.expence_management.Database.DataViewModel;
+import com.example.expence_management.RecyclerViewAdapters.mainRecycleAdapter;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final String DETAIL_DATE="da";
+    public static final String DETAIL_GROSS_MONEY_GOT="wildDog";
+    public static final String DETAIL_GROSS_MONEY_PAID="leopard";
+    public static final String DETAIL_MONEY_EXPENSE="cheetah";
+    public static final String DETAIL_MONEY_GOT="lion";
+    public static final String DETAIL_MONEY_EXPENSE_PURPOSE="hyena";
+    public static final String DETAIL_MONEY_GOT_PURPOSE="dragonLizard";
     public static final String DATE_KEY="selected date";
-    private FloatingActionButton addingData;
     private MaterialDatePicker<Long> materialDatePicker,datePickerForSearch;
     private MaterialDatePicker<Pair<Long,Long>> forMultiDates;
-    private MaterialToolbar toolbar;
+    private mainRecycleAdapter adapter;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
-        toolbar=findViewById(R.id.tool_bar);
+        MaterialToolbar toolbar = findViewById(R.id.tool_bar);
 
+        RecyclerView mainListRecyclerView = findViewById(R.id.main_list_recycleView);
+        mainListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter=new mainRecycleAdapter();
+        mainListRecyclerView.setAdapter(adapter);
 
-        addingData=findViewById(R.id.adding_element);
+        FloatingActionButton addingData = findViewById(R.id.adding_element);
        MaterialDatePicker.Builder<Long> builder= MaterialDatePicker.Builder.datePicker();
       materialDatePicker= builder.setTitleText("Select Date")
                 .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
                 .build();
-
+        DataViewModel viewModel = ViewModelProviders.of(this).get(DataViewModel.class);
+    viewModel.getAllDataDescending().observe(this, dataItems -> setDataItemsList(dataItems));
       datePickerForSearch=builder.setTitleText("Search by date")
               .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
               .build();
       MaterialDatePicker.Builder<Pair<Long, Long>> multiBuilder=MaterialDatePicker.Builder.dateRangePicker();
       forMultiDates=multiBuilder.setTitleText("Select multi dates")
               .build();
+
       addingData.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-              materialDatePicker.show(getSupportFragmentManager(),"Yes");
+              materialDatePicker.show(MainActivity.this.getSupportFragmentManager(), "Yes");
           }
       });
-     materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
-         @Override
-         public void onPositiveButtonClick(Long selection) {
-             String date= DateFormat.format("dd/MM/yy",new Date(selection)).toString();
-             Intent intent=new Intent(MainActivity.this,AddingToDatabase.class);
-             intent.putExtra(DATE_KEY,date);
-             startActivity(intent);
-         }
+     materialDatePicker.addOnPositiveButtonClickListener(selection -> {
+         String date= DateFormat.format("dd/MM/yy",new Date(selection)).toString();
+         Intent intent=new Intent(MainActivity.this,AddingToDatabase.class);
+         intent.putExtra(DATE_KEY,date);
+         startActivity(intent);
      });
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -75,6 +97,29 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        adapter.setOnItemClickListener(new mainRecycleAdapter.onItemClickListener() {
+            @Override
+            public void onItemClicked(DataItems data) {
+                Intent dataIntent=new Intent(MainActivity.this,detailed_data.class);
+                dataIntent.putExtra(DETAIL_DATE,data.getDate());
+                dataIntent.putExtra(DETAIL_GROSS_MONEY_PAID,String.valueOf(data.getGrossMoneyExpense()));
+                dataIntent.putExtra(DETAIL_GROSS_MONEY_GOT,String.valueOf(data.getGrossMoneyGot()));
+                dataIntent.putIntegerArrayListExtra(DETAIL_MONEY_EXPENSE, (ArrayList<Integer>) data.getMoneyExpense());
+                dataIntent.putIntegerArrayListExtra(DETAIL_MONEY_GOT, (ArrayList<Integer>) data.getMoneyGot());
+                dataIntent.putStringArrayListExtra(DETAIL_MONEY_EXPENSE_PURPOSE, (ArrayList<String>) data.getMoneyExpensePurposes());
+                dataIntent.putStringArrayListExtra(DETAIL_MONEY_GOT_PURPOSE, (ArrayList<String>) data.getMoneyGotPurposes());
+                MainActivity.this.startActivity(dataIntent);
+            }
+        });
     }
-
+    void setDataItemsList(List<DataItems> dataItems){
+        List<DataItems> dataItemsList = new ArrayList<>();
+        if (dataItemsList ==null)
+            dataItemsList =new ArrayList<>();
+        dataItemsList.clear();
+        dataItemsList.addAll(dataItems);
+        if (dataItemsList !=null)
+            adapter.setDataItemsList(dataItems);
+        adapter.notifyDataSetChanged();
+    }
 }
