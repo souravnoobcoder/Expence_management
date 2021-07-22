@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String DETAIL_MONEY_EXPENSE_PURPOSE="hyena";
     public static final String DETAIL_MONEY_GOT_PURPOSE="dragonLizard";
     public static final String DATE_KEY="selected date";
+    public static final String MY_KEY="key";
     private MaterialDatePicker<Long> materialDatePicker,datePickerForSearch;
     private MaterialDatePicker<Pair<Long,Long>> forMultiDates;
     private mainRecycleAdapter adapter;

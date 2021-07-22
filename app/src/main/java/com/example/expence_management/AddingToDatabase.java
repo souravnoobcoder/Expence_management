@@ -23,6 +23,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.expence_management.MainActivity.DETAIL_GROSS_MONEY_PAID;
+
 
 public class AddingToDatabase extends AppCompatActivity {
     private TextInputEditText amount,detail;
@@ -70,7 +72,17 @@ public class AddingToDatabase extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.preview:
-
+                        Intent i=new Intent(AddingToDatabase.this,detailed_data.class);
+                        int exp=setGrossMoney(moneyExpense);
+                        int go=setGrossMoney(moneyGot);
+                        i.putExtra(MainActivity.DETAIL_DATE,inputDate);
+                        i.putExtra(DETAIL_GROSS_MONEY_PAID,String.valueOf(exp));
+                        i.putExtra(MainActivity.DETAIL_GROSS_MONEY_GOT,String.valueOf(go));
+                        i.putIntegerArrayListExtra(MainActivity.DETAIL_MONEY_EXPENSE, (ArrayList<Integer>) moneyExpense);
+                        i.putIntegerArrayListExtra(MainActivity.DETAIL_MONEY_GOT, (ArrayList<Integer>) moneyGot);
+                        i.putStringArrayListExtra(MainActivity.DETAIL_MONEY_EXPENSE_PURPOSE, (ArrayList<String>) mEPurpose);
+                        i.putStringArrayListExtra(MainActivity.DETAIL_MONEY_GOT_PURPOSE, (ArrayList<String>) mGPurpose);
+                        startActivity(i);
                         return true;
                     case R.id.save_data:
                         setInsert(inputDate,moneyExpense,moneyGot,mGPurpose,mEPurpose);
