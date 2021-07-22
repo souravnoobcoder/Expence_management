@@ -20,8 +20,8 @@
         android:id="@+id/paid_amount"
         android:layout_width="204dp"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
         android:textAlignment="center"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/date_of_detail" />
 
@@ -29,8 +29,8 @@
         android:id="@+id/gain_amount"
         android:layout_width="204dp"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
         android:textAlignment="center"
+        android:textSize="20sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/paid_amount"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/paid_amount" />
@@ -41,7 +41,6 @@
         android:layout_height="0dp"
         android:padding="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/gain_recyclerView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/paid_amount" />
 
