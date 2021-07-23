@@ -2,6 +2,7 @@ package com.example.expence_management;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -28,10 +29,7 @@ import static com.example.expence_management.MainActivity.DETAIL_GROSS_MONEY_PAI
 
 public class AddingToDatabase extends AppCompatActivity {
     private TextInputEditText amount,detail;
-    private MaterialToolbar bar;
-    private TextView date;
     private RadioButton gain,paid;
-    private FloatingActionButton addingMore;
     private DataViewModel model;
     private List<Integer> moneyExpense,moneyGot;
     private List<String> mEPurpose,mGPurpose;
@@ -44,11 +42,11 @@ public class AddingToDatabase extends AppCompatActivity {
 
         amount=findViewById(R.id.money);
         detail=findViewById(R.id.money_explain);
-        addingMore=findViewById(R.id.add_more_subData);
+        FloatingActionButton addingMore = findViewById(R.id.add_more_subData);
         gain=findViewById(R.id.gain);
         paid=findViewById(R.id.paid);
-        bar=findViewById(R.id.input_toolbar);
-        date=findViewById(R.id.date_of_input);
+        MaterialToolbar bar = findViewById(R.id.input_toolbar);
+        TextView date = findViewById(R.id.date_of_input);
 
         model= ViewModelProviders.of(this).get(DataViewModel.class);
         moneyExpense= new ArrayList<>();
@@ -126,7 +124,7 @@ public class AddingToDatabase extends AppCompatActivity {
         amount.setText(null);
         detail.setText(null);
         gain.setChecked(false);
-        paid.setChecked(true);
+        paid.setChecked(false);
     }
     private int setGrossMoney(List<Integer> money){
         int i,gross=0,value;

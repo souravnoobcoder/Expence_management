@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.example.expence_management.RecyclerViewAdapters.detailed_adapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -23,8 +24,13 @@ public class detailed_data extends AppCompatActivity {
     String date,grossGot,grossPaid,cheek;
     List<String> gotDescription,paidDescription;
     List<Integer> got,paid;
-    detailed_adapter forGain,forExpense;
-
+    detailed_adapter forGainAdapter, forExpenseAdapter;
+    public static final String UPDATE_MONEY="OK";
+    public static final String UPDATE_MONEY_DESCRIPTION="hello";
+    public static final String UPDATE_MONEY_LIST="bye";
+    public static final String UPDATE_MONEY_DESCRIPTION_LIST="seeYou";
+    public static final String OUR_DATE="date";
+    public static final String LIST_POSITION="position";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,17 +60,45 @@ public class detailed_data extends AppCompatActivity {
             go.setText("Got:"+grossGot);
             pa.setText("Paid:"+grossPaid);
 
-            forExpense=new detailed_adapter(paid,paidDescription);
-            forGain=new detailed_adapter(got,gotDescription);
+            forExpenseAdapter =new detailed_adapter(paid,paidDescription,cheek);
+            forGainAdapter =new detailed_adapter(got,gotDescription,cheek);
 
             gainRecycle.setLayoutManager(new LinearLayoutManager(this));
             expenseRecycle.setLayoutManager(new LinearLayoutManager(this));
-            gainRecycle.setAdapter(forGain);
-            expenseRecycle.setAdapter(forExpense);
+            gainRecycle.setAdapter(forGainAdapter);
+            expenseRecycle.setAdapter(forExpenseAdapter);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
+                }
+            });
+            forGainAdapter.setOnItemLongClickListener(new detailed_adapter.onItemLongClickListener() {
+                @Override
+                public void onItemLongClicked(List<Integer> integerData, List<String> stringsData
+                        , String integer, String string,String listPosition) {
+                    Intent forEditIntent=new Intent(detailed_data.this,editHandler.class);
+                    forEditIntent.putExtra(UPDATE_MONEY,integer);
+                    forEditIntent.putExtra(UPDATE_MONEY_DESCRIPTION,string);
+                    forEditIntent.putIntegerArrayListExtra(UPDATE_MONEY_LIST, (ArrayList<Integer>) integerData);
+                    forEditIntent.putStringArrayListExtra(UPDATE_MONEY_DESCRIPTION_LIST, (ArrayList<String>) stringsData);
+                    forEditIntent.putExtra(OUR_DATE,date);
+                    forEditIntent.putExtra(LIST_POSITION,listPosition);
+                   detailed_data.this.startActivity(forEditIntent);
+                }
+            });
+            forExpenseAdapter.setOnItemLongClickListener(new detailed_adapter.onItemLongClickListener() {
+                @Override
+                public void onItemLongClicked(List<Integer> integerData, List<String> stringsData
+                        , String integer, String string, String listPosition) {
+                    Intent forEditIntent=new Intent(detailed_data.this,editHandler.class);
+                    forEditIntent.putExtra(UPDATE_MONEY,integer);
+                    forEditIntent.putExtra(UPDATE_MONEY_DESCRIPTION,string);
+                    forEditIntent.putIntegerArrayListExtra(UPDATE_MONEY_LIST, (ArrayList<Integer>) integerData);
+                    forEditIntent.putStringArrayListExtra(UPDATE_MONEY_DESCRIPTION_LIST, (ArrayList<String>) stringsData);
+                    forEditIntent.putExtra(OUR_DATE,date);
+                    forEditIntent.putExtra(LIST_POSITION,listPosition);
+                    detailed_data.this.startActivity(forEditIntent);
                 }
             });
 

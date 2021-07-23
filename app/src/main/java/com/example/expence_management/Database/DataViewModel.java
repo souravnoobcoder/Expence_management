@@ -32,4 +32,19 @@ public class DataViewModel extends AndroidViewModel {
     public void deleteData(DataItems items){
         this.repository.deleteData(items);
     }
+    public void updateDate(String uDate,String date){
+        this.repository.updateDate(uDate,date);
+    }
+    public void updateMoneyGotList(String date,List<Integer> moneyList,int money){
+        this.repository.updateMoneyGotList(date,moneyList,money);
+    }
+    public void updateMoneyExpenseList(String date,List<Integer> moneyList,int money){
+        this.repository.updateMoneyExpenseList(date,moneyList,money);
+    }
+    public void updateMoneyGotDescriptionList(String date,List<String> moneyDescriptionList){
+        this.repository.updateMoneyGotDescriptionList(date,moneyDescriptionList);
+    }
+    public void updateMoneyExpenseDescriptionList(String date,List<String> moneyDescriptionList){
+        this.repository.updateMoneyExpenseDescriptionList(date,moneyDescriptionList);
+    }
 }
