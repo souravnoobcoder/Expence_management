@@ -34,6 +34,7 @@ public class detailed_adapter extends RecyclerView.Adapter<detailed_adapter.Hold
     public detailed_adapter.Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_for_showing_details,parent,false);
         return new Holder(view);
+
     }
 
     @Override
@@ -58,6 +59,7 @@ public class detailed_adapter extends RecyclerView.Adapter<detailed_adapter.Hold
             super(itemView);
             val=itemView.findViewById(R.id.data_amount);
             des=itemView.findViewById(R.id.data_amount_description);
+
         }
     }
 }

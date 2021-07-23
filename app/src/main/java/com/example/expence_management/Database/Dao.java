@@ -16,6 +16,10 @@ public interface Dao {
     @Delete
     void delete(DataItems items);
 
+//    @Query("UPDATE EXPENSES SET DATE =:string WHERE DATE =:string2")
+//    void updateDate(String string,String string2);
+//
+//    void update
     @Query("SELECT * FROM EXPENSES ORDER BY DATE")
     LiveData<List<DataItems>> getAllAscending();
 

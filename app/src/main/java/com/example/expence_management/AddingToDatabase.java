@@ -23,8 +23,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.expence_management.MainActivity.CHECK;
 import static com.example.expence_management.MainActivity.DETAIL_GROSS_MONEY_PAID;
-
 
 public class AddingToDatabase extends AppCompatActivity {
     private TextInputEditText amount,detail;
@@ -82,6 +82,7 @@ public class AddingToDatabase extends AppCompatActivity {
                         i.putIntegerArrayListExtra(MainActivity.DETAIL_MONEY_GOT, (ArrayList<Integer>) moneyGot);
                         i.putStringArrayListExtra(MainActivity.DETAIL_MONEY_EXPENSE_PURPOSE, (ArrayList<String>) mEPurpose);
                         i.putStringArrayListExtra(MainActivity.DETAIL_MONEY_GOT_PURPOSE, (ArrayList<String>) mGPurpose);
+                        i.putExtra(CHECK,"no");
                         startActivity(i);
                         return true;
                     case R.id.save_data:
@@ -124,8 +125,8 @@ public class AddingToDatabase extends AppCompatActivity {
     private void makeEditTextNullAgain(){
         amount.setText(null);
         detail.setText(null);
-        gain.setSelected(false);
-        paid.setSelected(false);
+        gain.setChecked(false);
+        paid.setChecked(true);
     }
     private int setGrossMoney(List<Integer> money){
         int i,gross=0,value;

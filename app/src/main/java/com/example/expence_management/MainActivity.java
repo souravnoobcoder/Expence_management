@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String DETAIL_MONEY_GOT_PURPOSE="dragonLizard";
     public static final String DATE_KEY="selected date";
     public static final String MY_KEY="key";
+    public static final String CHECK="check";
     private MaterialDatePicker<Long> materialDatePicker,datePickerForSearch;
     private MaterialDatePicker<Pair<Long,Long>> forMultiDates;
     private mainRecycleAdapter adapter;
@@ -109,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
                 dataIntent.putIntegerArrayListExtra(DETAIL_MONEY_GOT, (ArrayList<Integer>) data.getMoneyGot());
                 dataIntent.putStringArrayListExtra(DETAIL_MONEY_EXPENSE_PURPOSE, (ArrayList<String>) data.getMoneyExpensePurposes());
                 dataIntent.putStringArrayListExtra(DETAIL_MONEY_GOT_PURPOSE, (ArrayList<String>) data.getMoneyGotPurposes());
+                dataIntent.putExtra(CHECK,"yes");
                 MainActivity.this.startActivity(dataIntent);
             }
         });
