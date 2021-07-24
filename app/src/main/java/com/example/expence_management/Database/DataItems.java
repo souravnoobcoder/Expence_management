@@ -107,4 +107,18 @@ public class DataItems {
     public void setMoneyExpensePurposes(List<String> moneyExpensePurposes) {
         this.moneyExpensePurposes = moneyExpensePurposes;
     }
+
+    @Override
+    public String toString() {
+        return "DataItems{" +
+                "id=" + id +
+                ", date='" + date + '\'' +
+                ", grossMoneyExpense=" + grossMoneyExpense +
+                ", grossMoneyGot=" + grossMoneyGot +
+                ", moneyExpense=" + moneyExpense +
+                ", moneyGot=" + moneyGot +
+                ", moneyGotPurposes=" + moneyGotPurposes +
+                ", moneyExpensePurposes=" + moneyExpensePurposes +
+                '}';
+    }
 }

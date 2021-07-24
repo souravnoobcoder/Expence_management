@@ -60,6 +60,13 @@ public class editHandler extends AppCompatActivity {
         money.setText(updateMoney);
         description.setText(updateMoneyDescription);
 
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent=new Intent(editHandler.this,detailed_data.class);
+//                startActivity(intent);
+//            }
+//        });
 
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -83,41 +90,23 @@ public class editHandler extends AppCompatActivity {
 
         });
     }
-
-
     void setNewData(int position, int money,
                             String description) {
-        int pos=position;
-        int mon=money;
-        String des=description;
-        List<Integer> mList=new ArrayList<>();
-        List<String> dList=new ArrayList<>();
-        mList.clear();
-        dList.clear();
+
         if (gain.isChecked()) {
-            mList.addAll(d.getMoneyGot());
-            dList.addAll(d.getMoneyGotPurposes());
-            mList.set(pos, money);
-            dList.set(pos, description);
-            int grossMoney = setGrossMoney(mList);
-           d.setMoneyGot(mList);
-           d.setMoneyGotPurposes(dList);
-           d.setGrossMoneyGot(grossMoney);
+            d.getMoneyGot().set(position,money);
+            d.getMoneyGotPurposes().set(position,description);
+            d.setGrossMoneyGot(setGrossMoney(d.getMoneyGot()));
            model.update(d);
-           makeToast(mList.toString());
+           makeToast("Updated");
         } else if (paid.isChecked()) {
-            mList.addAll(d.getMoneyExpense());
-            dList.addAll(d.getMoneyExpensePurposes());
-            mList.set(pos, money);
-            dList.set(pos, description);
-            int grossMoney = setGrossMoney(mList);
-            d.setMoneyExpense(mList);
-            d.setMoneyExpensePurposes(dList);
-            d.setGrossMoneyExpense(grossMoney);
+            d.getMoneyExpense().set(position,money);
+            d.getMoneyExpensePurposes().set(position,description);
+            d.setGrossMoneyExpense(setGrossMoney(d.getMoneyExpense()));
             model.update(d);
-            makeToast(""+pos);
+             makeToast("Updated");
         } else {
-            makeToast(pos+" Position");
+            makeToast(""+position);
         }
     }
 
@@ -137,4 +126,6 @@ public class editHandler extends AppCompatActivity {
     private void makeToast(String message){
         Toast.makeText(editHandler.this, message, Toast.LENGTH_LONG).show();
     }
+
+
 }
