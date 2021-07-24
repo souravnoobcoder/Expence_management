@@ -2,11 +2,11 @@
 
 package com.example.expence_management.Database;
 
+
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-import androidx.room.TypeConverter;
-import androidx.room.TypeConverters;
+
 
 import java.util.List;
 
@@ -44,7 +44,6 @@ public class DataItems {
         this.moneyGotPurposes = moneyGotPurposes;
         this.moneyExpensePurposes = moneyExpensePurposes;
     }
-
     public int getId() {
         return id;
     }

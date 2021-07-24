@@ -3,18 +3,18 @@ package com.example.expence_management.dataClasses;
 import java.util.List;
 
 public class dataClassMoney {
-        private String date;
+        private int id;
         private List<Integer> moneyList;
         private int money;
 
-    public dataClassMoney(String date, List<Integer> moneyList, int money) {
-        this.date = date;
+    public dataClassMoney(int id, List<Integer> moneyList, int money) {
+        this.id = id;
         this.moneyList = moneyList;
         this.money = money;
     }
 
-    public String getDate() {
-        return date;
+    public int getId() {
+        return id;
     }
 
     public List<Integer> getMoneyList() {

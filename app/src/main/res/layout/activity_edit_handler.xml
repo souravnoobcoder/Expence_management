@@ -39,6 +39,7 @@
         android:text="Today Date"
         android:fontFamily="@font/stalinist_one"
         android:textSize="20sp"
+        android:onClick="onclickDate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/coordinatorLayout2" />
 

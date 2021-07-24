@@ -44,7 +44,7 @@ public class dataConverter implements Serializable {
         return json;
     }
     @TypeConverter
-    public List<String> formoneyExpensePurposes(String string){
+    public List<String> tomoneyExpensePurposes(String string){
         if (string==null)
             return null;
         Gson gson=new Gson();

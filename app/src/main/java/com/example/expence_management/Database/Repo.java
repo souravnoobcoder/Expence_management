@@ -57,8 +57,8 @@ public class Repo {
             return null;
         }
     }
-    public void updateDate(String uDate,String date){
-        dataClassDates d=new dataClassDates(uDate,date);
+    public void updateDate(String uDate,int id){
+        dataClassDates d=new dataClassDates(uDate,id);
         new updateDateAsyncTask(dao).execute(d);
     }
 
@@ -71,12 +71,12 @@ public class Repo {
 
         @Override
         protected Void doInBackground(dataClassDates... dataClasses) {
-            AsyncTaskDao.updateDate(dataClasses[0].getuDate(),dataClasses[0].getDate());
+            AsyncTaskDao.updateDate(dataClasses[0].getuDate(),dataClasses[0].getId());
             return null;
         }
     }
-    public void updateMoneyGotList(String date,List<Integer> moneyList,int money){
-        dataClassMoney de=new dataClassMoney(date,moneyList,money);
+    public void updateMoneyGotList(int id,List<Integer> moneyList,int money){
+        dataClassMoney de=new dataClassMoney(id,moneyList,money);
         new updateMoneyGotAsyncTask(dao).execute(de);
     }
 
@@ -89,13 +89,13 @@ public class Repo {
 
         @Override
         protected Void doInBackground(dataClassMoney... dataClass) {
-            AsyncTaskDao.updateMoneyGotList(dataClass[0].getDate()
+            AsyncTaskDao.updateMoneyGotList(dataClass[0].getId()
                     ,dataClass[0].getMoneyList(),dataClass[0].getMoney());
             return null;
         }
     }
-    public void updateMoneyExpenseList(String date,List<Integer> moneyList,int money){
-        dataClassMoney dataClassMoney=new dataClassMoney(date,moneyList,money);
+    public void updateMoneyExpenseList(int id,List<Integer> moneyList,int money){
+        dataClassMoney dataClassMoney=new dataClassMoney(id,moneyList,money);
         new updateMoneyExpenseListAsyncTask(dao).execute(dataClassMoney);
     }
     private class updateMoneyExpenseListAsyncTask extends AsyncTask<dataClassMoney,Void,Void>{
@@ -107,13 +107,13 @@ public class Repo {
 
         @Override
         protected Void doInBackground(dataClassMoney... dataClassMonies) {
-            AsyncTaskDao.updateMoneyExpenseList(dataClassMonies[0].getDate()
+            AsyncTaskDao.updateMoneyExpenseList(dataClassMonies[0].getId()
                     ,dataClassMonies[0].getMoneyList(),dataClassMonies[0].getMoney());
             return null;
         }
     }
-    public void updateMoneyGotDescriptionList(String date,List<String> moneyDescriptionList){
-        dataClassDescription dataClassDescription=new dataClassDescription(date,moneyDescriptionList);
+    public void updateMoneyGotDescriptionList(int id,List<String> moneyDescriptionList){
+        dataClassDescription dataClassDescription=new dataClassDescription(id,moneyDescriptionList);
         new updateMoneyGotDescriptionListAsyncTask(dao).execute(dataClassDescription);
     }
     private class updateMoneyGotDescriptionListAsyncTask extends AsyncTask<dataClassDescription,Void,Void>{
@@ -125,14 +125,14 @@ public class Repo {
 
         @Override
         protected Void doInBackground(dataClassDescription... dataClassDescriptions) {
-            AsyncTaskDao.updateMoneyGotDescriptionList(dataClassDescriptions[0].getDate()
+            AsyncTaskDao.updateMoneyGotDescriptionList(dataClassDescriptions[0].getId()
                     ,dataClassDescriptions[0].getMoneyDescriptionList());
             return null;
         }
     }
-    public void updateMoneyExpenseDescriptionList(String date,List<String> moneyDescriptionList){
-        dataClassDescription dataClassDescription=new dataClassDescription(date,moneyDescriptionList);
-        new updateMoneyGotDescriptionListAsyncTask(dao).execute(dataClassDescription);
+    public void updateMoneyExpenseDescriptionList(int id,List<String> moneyDescriptionList){
+        dataClassDescription dataClassDescription=new dataClassDescription(id,moneyDescriptionList);
+        new updateMoneyExpenseDescriptionListAsyncTask(dao).execute(dataClassDescription);
     }
     private class updateMoneyExpenseDescriptionListAsyncTask extends AsyncTask<dataClassDescription,Void,Void>{
         private Dao AsyncTaskDao;
@@ -143,9 +143,27 @@ public class Repo {
 
         @Override
         protected Void doInBackground(dataClassDescription... dataClassDescriptions) {
-            AsyncTaskDao.updateMoneyExpenceDescriptionList(dataClassDescriptions[0].getDate()
+            AsyncTaskDao.updateMoneyExpenseDescriptionList(dataClassDescriptions[0].getId()
                     ,dataClassDescriptions[0].getMoneyDescriptionList());
             return null;
         }
     }
+    public void update(DataItems items){
+      new update(dao).execute(items);
+    }
+    private class update extends AsyncTask<DataItems,Void,Void>{
+        private Dao AsyncTaskDao;
+        public update(Dao asyncTaskDao) {
+            AsyncTaskDao = asyncTaskDao;
+        }
+        @Override
+        protected Void doInBackground(DataItems... dataItems) {
+            AsyncTaskDao.update(dataItems[0]);
+            return null;
+        }
+    }
+    public LiveData<DataItems >getRow(int id){
+        return this.dao.getRow(id);
+    }
+
 }

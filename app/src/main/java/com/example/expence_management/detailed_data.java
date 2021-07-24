@@ -18,6 +18,7 @@ import java.util.List;
 
 public class detailed_data extends AppCompatActivity {
 
+    int id=-1,position=-1;
     FloatingActionButton button;
     RecyclerView gainRecycle,expenseRecycle;
     TextView da,pa,go;
@@ -48,6 +49,8 @@ public class detailed_data extends AppCompatActivity {
         if (cheek.equals("yes")){
            button.setVisibility(View.VISIBLE);
         }
+            position=intent.getIntExtra(MainActivity.POSITION,-1);
+            id=intent.getIntExtra(MainActivity.DATA_ID,-1);
             date=intent.getStringExtra(MainActivity.DETAIL_DATE);
             grossGot=intent.getStringExtra(MainActivity.DETAIL_GROSS_MONEY_GOT);
             grossPaid=intent.getStringExtra(MainActivity.DETAIL_GROSS_MONEY_PAID);
@@ -76,8 +79,9 @@ public class detailed_data extends AppCompatActivity {
             forGainAdapter.setOnItemLongClickListener(new detailed_adapter.onItemLongClickListener() {
                 @Override
                 public void onItemLongClicked(List<Integer> integerData, List<String> stringsData
-                        , String integer, String string,String listPosition) {
+                        , String integer, String string,int listPosition) {
                     Intent forEditIntent=new Intent(detailed_data.this,editHandler.class);
+                    forEditIntent.putExtra(MainActivity.DATA_ID,id);
                     forEditIntent.putExtra(UPDATE_MONEY,integer);
                     forEditIntent.putExtra(UPDATE_MONEY_DESCRIPTION,string);
                     forEditIntent.putIntegerArrayListExtra(UPDATE_MONEY_LIST, (ArrayList<Integer>) integerData);
@@ -90,8 +94,10 @@ public class detailed_data extends AppCompatActivity {
             forExpenseAdapter.setOnItemLongClickListener(new detailed_adapter.onItemLongClickListener() {
                 @Override
                 public void onItemLongClicked(List<Integer> integerData, List<String> stringsData
-                        , String integer, String string, String listPosition) {
+                        , String integer, String string, int listPosition) {
                     Intent forEditIntent=new Intent(detailed_data.this,editHandler.class);
+                    forEditIntent.putExtra(MainActivity.POSITION,position);
+                    forEditIntent.putExtra(MainActivity.DATA_ID,id);
                     forEditIntent.putExtra(UPDATE_MONEY,integer);
                     forEditIntent.putExtra(UPDATE_MONEY_DESCRIPTION,string);
                     forEditIntent.putIntegerArrayListExtra(UPDATE_MONEY_LIST, (ArrayList<Integer>) integerData);

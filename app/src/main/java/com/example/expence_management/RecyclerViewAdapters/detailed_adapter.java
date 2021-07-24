@@ -1,5 +1,6 @@
 package com.example.expence_management.RecyclerViewAdapters;
 
+import android.os.Parcel;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,7 @@ import com.example.expence_management.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class detailed_adapter extends RecyclerView.Adapter<detailed_adapter.Holder> {
+public class detailed_adapter extends RecyclerView.Adapter<detailed_adapter.Holder>  {
     List<Integer> value;
     List<String> description;
     boolean check = false;
@@ -39,7 +40,6 @@ public class detailed_adapter extends RecyclerView.Adapter<detailed_adapter.Hold
     public detailed_adapter.Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_for_showing_details,parent,false);
         return new Holder(view);
-
     }
 
     @Override
@@ -62,7 +62,8 @@ public class detailed_adapter extends RecyclerView.Adapter<detailed_adapter.Hold
     }
 
     public interface onItemLongClickListener {
-        void onItemLongClicked(List<Integer> integerData, List<String> stringsData, String integer, String string, String listPosition);
+        void onItemLongClicked(List<Integer> integerData, List<String> stringsData
+                , String integer, String string,int position);
     }
 
     public class Holder extends RecyclerView.ViewHolder {
@@ -78,7 +79,8 @@ public class detailed_adapter extends RecyclerView.Adapter<detailed_adapter.Hold
                     public boolean onLongClick(View v) {
                         int position = Holder.this.getAdapterPosition();
                         if (listener != null && position != RecyclerView.NO_POSITION)
-                            listener.onItemLongClicked(value, description, String.valueOf(value.get(position)), description.get(position), String.valueOf(position));
+                            listener.onItemLongClicked(value, description, String.valueOf(value.get(position))
+                                    , description.get(position),position);
                         return true;
                     }
                 });

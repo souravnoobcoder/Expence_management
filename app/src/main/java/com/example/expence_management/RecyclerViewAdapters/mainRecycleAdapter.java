@@ -71,7 +71,7 @@ public class mainRecycleAdapter extends RecyclerView.Adapter<mainRecycleAdapter.
                 public void onClick(View v) {
                     int position=ViewHolder.this.getAdapterPosition();
                     if (listener!=null&&position!=RecyclerView.NO_POSITION)
-                        listener.onItemClicked(dataItemsList.get(position));
+                        listener.onItemClicked(dataItemsList.get(position),position);
                 }
             });
         }
@@ -80,6 +80,6 @@ public class mainRecycleAdapter extends RecyclerView.Adapter<mainRecycleAdapter.
         this.listener=listener;
     }
     public interface onItemClickListener {
-        void onItemClicked(DataItems data);
+        void onItemClicked(DataItems data,int position);
     }
 }

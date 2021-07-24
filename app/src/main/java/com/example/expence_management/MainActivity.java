@@ -3,6 +3,7 @@ package com.example.expence_management;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.text.format.DateFormat;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  {
 
     public static final String DETAIL_DATE="da";
     public static final String DETAIL_GROSS_MONEY_GOT="wildDog";
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String DATE_KEY="selected date";
     public static final String MY_KEY="key";
     public static final String CHECK="check";
+    public static final String DATA_ID="idkd";
+    public static final String POSITION="position";
     private MaterialDatePicker<Long> materialDatePicker,datePickerForSearch;
     private MaterialDatePicker<Pair<Long,Long>> forMultiDates;
     private mainRecycleAdapter adapter;
@@ -64,7 +67,12 @@ public class MainActivity extends AppCompatActivity {
                 .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
                 .build();
         DataViewModel viewModel = ViewModelProviders.of(this).get(DataViewModel.class);
-    viewModel.getAllDataDescending().observe(this, dataItems -> setDataItemsList(dataItems));
+    viewModel.getAllDataDescending().observe(this, new Observer<List<DataItems>>() {
+        @Override
+        public void onChanged(List<DataItems> dataItems) {
+            MainActivity.this.setDataItemsList(dataItems);
+        }
+    });
       datePickerForSearch=builder.setTitleText("Search by date")
               .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
               .build();
@@ -101,8 +109,9 @@ public class MainActivity extends AppCompatActivity {
         });
         adapter.setOnItemClickListener(new mainRecycleAdapter.onItemClickListener() {
             @Override
-            public void onItemClicked(DataItems data) {
+            public void onItemClicked(DataItems data,int position) {
                 Intent dataIntent=new Intent(MainActivity.this,detailed_data.class);
+                dataIntent.putExtra(DATA_ID,data.getId());
                 dataIntent.putExtra(DETAIL_DATE,data.getDate());
                 dataIntent.putExtra(DETAIL_GROSS_MONEY_PAID,String.valueOf(data.getGrossMoneyExpense()));
                 dataIntent.putExtra(DETAIL_GROSS_MONEY_GOT,String.valueOf(data.getGrossMoneyGot()));
@@ -111,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
                 dataIntent.putStringArrayListExtra(DETAIL_MONEY_EXPENSE_PURPOSE, (ArrayList<String>) data.getMoneyExpensePurposes());
                 dataIntent.putStringArrayListExtra(DETAIL_MONEY_GOT_PURPOSE, (ArrayList<String>) data.getMoneyGotPurposes());
                 dataIntent.putExtra(CHECK,"yes");
+                dataIntent.putExtra(POSITION,position);
                 MainActivity.this.startActivity(dataIntent);
             }
         });

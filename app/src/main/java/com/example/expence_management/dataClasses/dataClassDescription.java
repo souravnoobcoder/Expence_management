@@ -3,16 +3,16 @@ package com.example.expence_management.dataClasses;
 import java.util.List;
 
 public class dataClassDescription {
-    private String date;
+    private int id;
     private List<String> moneyDescriptionList;
 
-    public dataClassDescription(String date, List<String> moneyDescriptionList) {
-        this.date = date;
+    public dataClassDescription(int id, List<String> moneyDescriptionList) {
+        this.id = id;
         this.moneyDescriptionList = moneyDescriptionList;
     }
 
-    public String getDate() {
-        return date;
+    public int getId() {
+        return id;
     }
 
     public List<String> getMoneyDescriptionList() {

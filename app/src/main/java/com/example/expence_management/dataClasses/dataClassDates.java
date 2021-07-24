@@ -2,19 +2,26 @@ package com.example.expence_management.dataClasses;
 
 public class dataClassDates {
     private String uDate;
-    private String date;
+    private int id;
 
-    public dataClassDates(String uDate, String date) {
+    public dataClassDates(String uDate, int id) {
         this.uDate = uDate;
-        this.date = date;
+        this.id = id;
     }
+
     public String getuDate() {
         return uDate;
     }
 
-    public String getDate() {
-        return date;
+    public void setuDate(String uDate) {
+        this.uDate = uDate;
     }
 
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 }
