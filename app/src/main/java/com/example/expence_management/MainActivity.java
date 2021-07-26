@@ -115,7 +115,14 @@ public class MainActivity extends AppCompatActivity  {
                 MainActivity.this.startActivity(dataIntent);
             }
         });
+        datePickerForSearch.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
+            @Override
+            public void onPositiveButtonClick(Long selection) {
+
+            }
+        });
     }
+
     void setDataItemsList(List<DataItems> dataItems){
         List<DataItems> dataItemsList = new ArrayList<>();
         if (dataItemsList ==null)

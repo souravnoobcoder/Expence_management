@@ -41,6 +41,7 @@ public class detailed_data extends AppCompatActivity {
     public static final String UPDATE_MONEY_DESCRIPTION="hello";
     public static final String OUR_DATE="date";
     public static final String LIST_POSITION="position";
+    public static final String LOOK="look";
     private DataItems dataItems;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +133,7 @@ public class detailed_data extends AppCompatActivity {
                     forEditIntent.putExtra(OUR_DATE,date);
                     forEditIntent.putExtra(LIST_POSITION,listPosition);
                     forEditIntent.putExtra(CHECK,false);
+                    forEditIntent.putExtra(LOOK,true);
                    detailed_data.this.startActivity(forEditIntent);
                 }
             });
@@ -143,7 +145,9 @@ public class detailed_data extends AppCompatActivity {
                     forEditIntent.putExtra(UPDATE_MONEY,integer);
                     forEditIntent.putExtra(UPDATE_MONEY_DESCRIPTION,string);
                     forEditIntent.putExtra(OUR_DATE,date);
+                    forEditIntent.putExtra(CHECK,false);
                     forEditIntent.putExtra(LIST_POSITION,listPosition);
+                    forEditIntent.putExtra(LOOK,false);
                     detailed_data.this.startActivity(forEditIntent);
                 }
             });

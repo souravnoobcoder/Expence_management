@@ -23,6 +23,7 @@ import java.util.List;
 
 import static com.example.expence_management.MainActivity.CHECK;
 import static com.example.expence_management.MainActivity.DATA_ID;
+import static com.example.expence_management.detailed_data.LOOK;
 import static com.example.expence_management.detailed_data.OUR_DATE;
 
 public class  editHandler extends AppCompatActivity {
@@ -35,7 +36,7 @@ public class  editHandler extends AppCompatActivity {
     String upDate,updateMoney,updateMoneyDescription;
     long dateId =-1;
     DataItems d;
-    boolean see=false;
+    boolean see=false,look=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,11 +54,16 @@ public class  editHandler extends AppCompatActivity {
         Intent intent = getIntent();
         see=intent.getBooleanExtra(CHECK,false);
         if (!see){
+            look=intent.getBooleanExtra(LOOK,false);
             position=intent.getIntExtra(detailed_data.LIST_POSITION,-1);
             upDate = intent.getStringExtra(OUR_DATE);
             dateId = intent.getLongExtra(MainActivity.DATA_ID,-1);
             updateMoney = intent.getStringExtra(detailed_data.UPDATE_MONEY);
              updateMoneyDescription = intent.getStringExtra(detailed_data.UPDATE_MONEY_DESCRIPTION);
+             if (look)
+                 gain.setChecked(true);
+             else
+                 paid.setChecked(true);
         }else {
            dateId= intent.getLongExtra(DATA_ID,-1);
            upDate= intent.getStringExtra(OUR_DATE);
@@ -164,5 +170,12 @@ public class  editHandler extends AppCompatActivity {
 
     private void makeToast(String message){
         Toast.makeText(editHandler.this, message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent=new Intent();
+        finish();
+
     }
 }
