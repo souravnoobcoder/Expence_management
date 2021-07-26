@@ -1,6 +1,7 @@
 package com.example.expence_management;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +20,7 @@ import com.example.expence_management.Database.myDatabase;
 import com.example.expence_management.Database.DataItems;
 import com.example.expence_management.Database.DataViewModel;
 import com.example.expence_management.RecyclerViewAdapters.detailed_adapter;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -29,6 +32,7 @@ import static com.example.expence_management.MainActivity.CHECK;
 
 public class detailed_data extends AppCompatActivity {
 
+    MaterialToolbar detailedViewToolbar;
     long dateId =-1;
     FloatingActionButton button;
     RecyclerView gainRecycle,expenseRecycle;
@@ -43,11 +47,14 @@ public class detailed_data extends AppCompatActivity {
     public static final String LIST_POSITION="position";
     public static final String LOOK="look";
     private DataItems dataItems;
+    boolean adapterCheck=false;
+    Intent forEditIntent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detailed_data);
 
+        detailedViewToolbar=findViewById(R.id.detailed_toolBar);
         button=findViewById(R.id.add_while_watching);
         da=findViewById(R.id.date_of_detail);
         pa=findViewById(R.id.paid_amount);
@@ -55,6 +62,7 @@ public class detailed_data extends AppCompatActivity {
         gainRecycle=findViewById(R.id.gain_recyclerView);
         expenseRecycle=findViewById(R.id.expense_recyclerView);
         Intent intent=getIntent();
+
 
         cheek=intent.getStringExtra(CHECK);
         if (cheek.equals("yes")){
@@ -68,7 +76,7 @@ public class detailed_data extends AppCompatActivity {
                 }
             }).start();
             try {
-                Thread.sleep(200);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -121,34 +129,38 @@ public class detailed_data extends AppCompatActivity {
                     addNew.putExtra(OUR_DATE,date);
                     addNew.putExtra(CHECK,true);
                     startActivity(addNew);
+                    finish();
                 }
             });
             forGainAdapter.setOnItemLongClickListener(new detailed_adapter.onItemLongClickListener() {
                 @Override
                 public void onItemLongClicked( String integer, String string,int listPosition) {
-                    Intent forEditIntent=new Intent(detailed_data.this,editHandler.class);
-                    forEditIntent.putExtra(MainActivity.DATA_ID, dateId);
-                    forEditIntent.putExtra(UPDATE_MONEY,integer);
-                    forEditIntent.putExtra(UPDATE_MONEY_DESCRIPTION,string);
-                    forEditIntent.putExtra(OUR_DATE,date);
-                    forEditIntent.putExtra(LIST_POSITION,listPosition);
-                    forEditIntent.putExtra(CHECK,false);
-                    forEditIntent.putExtra(LOOK,true);
-                   detailed_data.this.startActivity(forEditIntent);
+                    setForAdapterIntent(true,integer,string,listPosition);
+                    if (detailedViewToolbar.getVisibility()==View.GONE)
+                        detailedViewToolbar.setVisibility(View.VISIBLE);
+                    else detailedViewToolbar.setVisibility(View.GONE);
                 }
             });
             forExpenseAdapter.setOnItemLongClickListener(new detailed_adapter.onItemLongClickListener() {
                 @Override
                 public void onItemLongClicked( String integer, String string, int listPosition) {
-                    Intent forEditIntent=new Intent(detailed_data.this,editHandler.class);
-                    forEditIntent.putExtra(MainActivity.DATA_ID, dateId);
-                    forEditIntent.putExtra(UPDATE_MONEY,integer);
-                    forEditIntent.putExtra(UPDATE_MONEY_DESCRIPTION,string);
-                    forEditIntent.putExtra(OUR_DATE,date);
-                    forEditIntent.putExtra(CHECK,false);
-                    forEditIntent.putExtra(LIST_POSITION,listPosition);
-                    forEditIntent.putExtra(LOOK,false);
-                    detailed_data.this.startActivity(forEditIntent);
+                    setForAdapterIntent(false,integer,string,listPosition);
+                    if (detailedViewToolbar.getVisibility()==View.GONE)
+                    detailedViewToolbar.setVisibility(View.VISIBLE);
+                    else detailedViewToolbar.setVisibility(View.GONE);
+                }
+            });
+            detailedViewToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    if (item.getItemId()==R.id.edit_detailed){
+                            startActivity(forEditIntent);
+                        return true;
+                    }else if (item.getItemId()==R.id.delete_detailed){
+
+                        return true;
+                    }
+                    return false;
                 }
             });
     }
@@ -160,5 +172,26 @@ public class detailed_data extends AppCompatActivity {
         got=new ArrayList<>();
         paidDescription=new ArrayList<>();
         gotDescription=new ArrayList<>();
+    }
+    void setForAdapterIntent(boolean adapterCheck,String integer, String string, int listPosition){
+        if (adapterCheck){
+         forEditIntent=new Intent(detailed_data.this,editHandler.class);
+            forEditIntent.putExtra(MainActivity.DATA_ID, dateId);
+            forEditIntent.putExtra(UPDATE_MONEY,integer);
+            forEditIntent.putExtra(UPDATE_MONEY_DESCRIPTION,string);
+            forEditIntent.putExtra(OUR_DATE,date);
+            forEditIntent.putExtra(LIST_POSITION,listPosition);
+            forEditIntent.putExtra(CHECK,false);
+            forEditIntent.putExtra(LOOK,true);
+        }else {
+            forEditIntent=new Intent(detailed_data.this,editHandler.class);
+            forEditIntent.putExtra(MainActivity.DATA_ID, dateId);
+            forEditIntent.putExtra(UPDATE_MONEY,integer);
+            forEditIntent.putExtra(UPDATE_MONEY_DESCRIPTION,string);
+            forEditIntent.putExtra(OUR_DATE,date);
+            forEditIntent.putExtra(CHECK,false);
+            forEditIntent.putExtra(LIST_POSITION,listPosition);
+            forEditIntent.putExtra(LOOK,false);
+        }
     }
 }

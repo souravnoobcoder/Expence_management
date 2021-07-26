@@ -6,6 +6,27 @@
     android:layout_height="match_parent"
     tools:context=".detailed_data">
 
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@+id/date_of_detail"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/detailed_toolBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:menu="@menu/for_detailed"
+                app:title="Select any" />
+        </com.google.android.material.appbar.AppBarLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
     <TextView
         android:id="@+id/date_of_detail"
         android:layout_width="match_parent"
@@ -51,6 +72,7 @@
         android:padding="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/expense_recyclerView"
         app:layout_constraintTop_toBottomOf="@+id/gain_amount" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

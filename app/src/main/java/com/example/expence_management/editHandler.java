@@ -60,10 +60,16 @@ public class  editHandler extends AppCompatActivity {
             dateId = intent.getLongExtra(MainActivity.DATA_ID,-1);
             updateMoney = intent.getStringExtra(detailed_data.UPDATE_MONEY);
              updateMoneyDescription = intent.getStringExtra(detailed_data.UPDATE_MONEY_DESCRIPTION);
-             if (look)
+             if (look){
                  gain.setChecked(true);
-             else
-                 paid.setChecked(true);
+                 paid.setVisibility(View.GONE);
+             }
+
+             else{
+                paid.setChecked(true);
+                gain.setVisibility(View.GONE);
+            }
+
         }else {
            dateId= intent.getLongExtra(DATA_ID,-1);
            upDate= intent.getStringExtra(OUR_DATE);
@@ -74,13 +80,16 @@ public class  editHandler extends AppCompatActivity {
         money.setText(updateMoney);
         description.setText(updateMoneyDescription);
 
-//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent=new Intent(editHandler.this,detailed_data.class);
-//                startActivity(intent);
-//            }
-//        });
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(editHandler.this,detailed_data.class);
+                intent.putExtra(CHECK,"yes");
+                intent.putExtra(DATA_ID,dateId);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -107,7 +116,7 @@ public class  editHandler extends AppCompatActivity {
                 }
             }).start();
             try {
-                Thread.sleep(200);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -174,8 +183,10 @@ public class  editHandler extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent=new Intent();
+        Intent intent=new Intent(editHandler.this,detailed_data.class);
+        intent.putExtra(CHECK,"yes");
+        intent.putExtra(DATA_ID,dateId);
+        startActivity(intent);
         finish();
-
     }
 }

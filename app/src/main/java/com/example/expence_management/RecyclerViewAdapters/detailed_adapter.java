@@ -1,5 +1,6 @@
 package com.example.expence_management.RecyclerViewAdapters;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,6 +80,7 @@ public class detailed_adapter extends RecyclerView.Adapter<detailed_adapter.Hold
                         if (listener != null && position != RecyclerView.NO_POSITION)
                             listener.onItemLongClicked( String.valueOf(value.get(position))
                                     , description.get(position),position);
+                        v.setBackgroundColor(Color.rgb(4,44,76));
                         return true;
                     }
                 });
