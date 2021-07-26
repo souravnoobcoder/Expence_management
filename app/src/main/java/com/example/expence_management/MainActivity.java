@@ -2,12 +2,17 @@ package com.example.expence_management;
 
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.text.format.DateFormat;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.expence_management.Database.DataItems;
 import com.example.expence_management.Database.DataViewModel;
+import com.example.expence_management.Database.myDatabase;
 import com.example.expence_management.RecyclerViewAdapters.mainRecycleAdapter;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -47,7 +53,7 @@ public class MainActivity extends AppCompatActivity  {
     private MaterialDatePicker<Long> materialDatePicker,datePickerForSearch;
     private MaterialDatePicker<Pair<Long,Long>> forMultiDates;
     private mainRecycleAdapter adapter;
-
+    DataItems items;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,6 +125,38 @@ public class MainActivity extends AppCompatActivity  {
             @Override
             public void onPositiveButtonClick(Long selection) {
 
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        items= myDatabase.getDbINSTANCE(MainActivity.this).Dao().getRoww(selection);
+                    }
+                }).start();
+
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                myDatabase.DELETE_INSTANCE();
+                if (items==null){
+                   LayoutInflater layoutInflater=getLayoutInflater();
+                   View layout=layoutInflater.inflate(R.layout.cusom_toast,findViewById(R.id.toast_custom));
+                   TextView textView=layout.findViewById(R.id.tvtoast);
+                   textView.setText(makeDate(selection)+"Not found");
+                   textView.setTextColor(Color.rgb(0, 132, 219));
+                   textView.setTextSize(40);
+                   Toast toast=new Toast(getApplicationContext());
+                   toast.setView(layout);
+                   toast.setDuration(Toast.LENGTH_LONG);
+                   toast.setGravity(Gravity.CENTER,0,0);
+                   toast.show();
+               }
+                else{
+                    Intent intent=new Intent(MainActivity.this,detailed_data.class);
+                    intent.putExtra(CHECK,"yes");
+                    intent.putExtra(DATA_ID,selection);
+                    startActivity(intent);
+                }
             }
         });
     }
@@ -132,5 +170,8 @@ public class MainActivity extends AppCompatActivity  {
         if (dataItemsList !=null)
             adapter.setDataItemsList(dataItems);
         adapter.notifyDataSetChanged();
+    }
+    String makeDate(long l){
+        return DateFormat.format("dd/MM/yy",new Date(l)).toString();
     }
 }
