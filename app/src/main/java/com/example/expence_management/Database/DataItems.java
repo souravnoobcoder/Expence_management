@@ -12,10 +12,10 @@ import java.util.List;
 
 @Entity(tableName = "expenses")
 public class DataItems {
-    @PrimaryKey(autoGenerate = true)
-    private int id;
 
-    private String date;
+
+    @PrimaryKey
+    private long date;
 
     private int grossMoneyExpense;
 
@@ -30,12 +30,9 @@ public class DataItems {
     private List<String> moneyExpensePurposes;
 
     public DataItems(){
-
     }
     @Ignore
-    public DataItems(String date, int grossMoneyExpense, int grossMoneyGot,
-                     List<Integer> moneyExpense, List<Integer> moneyGot,
-                     List<String> moneyGotPurposes, List<String> moneyExpensePurposes) {
+    public DataItems(long date, int grossMoneyExpense, int grossMoneyGot, List<Integer> moneyExpense, List<Integer> moneyGot, List<String> moneyGotPurposes, List<String> moneyExpensePurposes) {
         this.date = date;
         this.grossMoneyExpense = grossMoneyExpense;
         this.grossMoneyGot = grossMoneyGot;
@@ -44,19 +41,12 @@ public class DataItems {
         this.moneyGotPurposes = moneyGotPurposes;
         this.moneyExpensePurposes = moneyExpensePurposes;
     }
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(long date) {
         this.date = date;
     }
 
@@ -106,19 +96,5 @@ public class DataItems {
 
     public void setMoneyExpensePurposes(List<String> moneyExpensePurposes) {
         this.moneyExpensePurposes = moneyExpensePurposes;
-    }
-
-    @Override
-    public String toString() {
-        return "DataItems{" +
-                "id=" + id +
-                ", date='" + date + '\'' +
-                ", grossMoneyExpense=" + grossMoneyExpense +
-                ", grossMoneyGot=" + grossMoneyGot +
-                ", moneyExpense=" + moneyExpense +
-                ", moneyGot=" + moneyGot +
-                ", moneyGotPurposes=" + moneyGotPurposes +
-                ", moneyExpensePurposes=" + moneyExpensePurposes +
-                '}';
     }
 }

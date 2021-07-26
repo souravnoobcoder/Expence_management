@@ -2,7 +2,7 @@ package com.example.expence_management;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
+import android.text.format.DateFormat;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -22,6 +22,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.example.expence_management.MainActivity.CHECK;
@@ -62,8 +63,9 @@ public class AddingToDatabase extends AppCompatActivity {
             }
         });
         Intent intent=getIntent();
-        String inputDate=intent.getStringExtra(MainActivity.DATE_KEY);
-        date.setText(inputDate);
+        long inputDate=intent.getLongExtra(MainActivity.DATE_KEY,-1);
+        String stringDate=makeDate(inputDate);
+        date.setText(stringDate);
         // Menu clickListener
         bar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -73,7 +75,7 @@ public class AddingToDatabase extends AppCompatActivity {
                         Intent i=new Intent(AddingToDatabase.this,detailed_data.class);
                         int exp=setGrossMoney(moneyExpense);
                         int go=setGrossMoney(moneyGot);
-                        i.putExtra(MainActivity.DETAIL_DATE,inputDate);
+                        i.putExtra(MainActivity.DETAIL_DATE,stringDate);
                         i.putExtra(DETAIL_GROSS_MONEY_PAID,String.valueOf(exp));
                         i.putExtra(MainActivity.DETAIL_GROSS_MONEY_GOT,String.valueOf(go));
                         i.putIntegerArrayListExtra(MainActivity.DETAIL_MONEY_EXPENSE, (ArrayList<Integer>) moneyExpense);
@@ -100,12 +102,13 @@ public class AddingToDatabase extends AppCompatActivity {
              String amountPurpose=detail.getText().toString();
              if (gain.isChecked()){
                     settingToGain(amountUsed,amountPurpose);
+                 makeEditTextNullAgain();
              }else if (paid.isChecked()){
                         settingToExpense(amountUsed,amountPurpose);
+                 makeEditTextNullAgain();
              }else{
                     makeToast("please select Gain or Paid");
              }
-             makeEditTextNullAgain();
          }
      });
     }
@@ -136,7 +139,7 @@ public class AddingToDatabase extends AppCompatActivity {
        }
         return gross;
     }
-    private void setInsert(String date,List<Integer> moneyExpense, List<Integer> moneyGot
+    private void setInsert(long date,List<Integer> moneyExpense, List<Integer> moneyGot
     ,List<String> moneyGotPurpose,List<String> moneyExpensePurpose){
        int grossExpense= setGrossMoney(moneyExpense);
        int grossGot=setGrossMoney(moneyGot);
@@ -159,6 +162,8 @@ public class AddingToDatabase extends AppCompatActivity {
                 mGPurpose.clear();
             }
         }).start();
-
+      }
+      String makeDate(long l){
+        return DateFormat.format("dd/MM/yy",new Date(l)).toString();
       }
 }

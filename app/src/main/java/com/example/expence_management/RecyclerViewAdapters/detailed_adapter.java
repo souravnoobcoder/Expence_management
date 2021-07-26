@@ -1,6 +1,5 @@
 package com.example.expence_management.RecyclerViewAdapters;
 
-import android.os.Parcel;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,8 +61,7 @@ public class detailed_adapter extends RecyclerView.Adapter<detailed_adapter.Hold
     }
 
     public interface onItemLongClickListener {
-        void onItemLongClicked(List<Integer> integerData, List<String> stringsData
-                , String integer, String string,int position);
+        void onItemLongClicked( String integer, String string,int position);
     }
 
     public class Holder extends RecyclerView.ViewHolder {
@@ -79,7 +77,7 @@ public class detailed_adapter extends RecyclerView.Adapter<detailed_adapter.Hold
                     public boolean onLongClick(View v) {
                         int position = Holder.this.getAdapterPosition();
                         if (listener != null && position != RecyclerView.NO_POSITION)
-                            listener.onItemLongClicked(value, description, String.valueOf(value.get(position))
+                            listener.onItemLongClicked( String.valueOf(value.get(position))
                                     , description.get(position),position);
                         return true;
                     }

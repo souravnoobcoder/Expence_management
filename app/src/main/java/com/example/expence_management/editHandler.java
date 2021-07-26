@@ -14,24 +14,28 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.expence_management.Database.DataItems;
 import com.example.expence_management.Database.DataViewModel;
-import com.example.expence_management.RecyclerViewAdapters.mainRecycleAdapter;
+import com.example.expence_management.Database.myDatabase;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.radiobutton.MaterialRadioButton;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class editHandler extends AppCompatActivity {
+import static com.example.expence_management.MainActivity.CHECK;
+import static com.example.expence_management.MainActivity.DATA_ID;
+import static com.example.expence_management.detailed_data.OUR_DATE;
 
+public class  editHandler extends AppCompatActivity {
+    int position=-1;
     TextView date;
     MaterialRadioButton gain, paid;
     TextInputEditText money, description;
     MaterialToolbar toolbar;
     DataViewModel model;
-    String upDate;
-    int id=-1,mainPosition=-1;
+    String upDate,updateMoney,updateMoneyDescription;
+    long dateId =-1;
     DataItems d;
+    boolean see=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,14 +51,18 @@ public class editHandler extends AppCompatActivity {
         model = ViewModelProviders.of(editHandler.this).get(DataViewModel.class);
 
         Intent intent = getIntent();
-       int position=intent.getIntExtra(detailed_data.LIST_POSITION,-1);
-        upDate = intent.getStringExtra(detailed_data.OUR_DATE);
-        id= intent.getIntExtra(MainActivity.DATA_ID,-1);
-       // mainPosition=intent.getIntExtra(MainActivity.POSITION,-1);
-        String updateMoney = intent.getStringExtra(detailed_data.UPDATE_MONEY);
-        String updateMoneyDescription = intent.getStringExtra(detailed_data.UPDATE_MONEY_DESCRIPTION);
-        List<Integer> updateMoneyList = intent.getIntegerArrayListExtra(detailed_data.UPDATE_MONEY_LIST);
-        List<String> updateMoneyDescriptionList = intent.getStringArrayListExtra(detailed_data.UPDATE_MONEY_DESCRIPTION_LIST);
+        see=intent.getBooleanExtra(CHECK,false);
+        if (!see){
+            position=intent.getIntExtra(detailed_data.LIST_POSITION,-1);
+            upDate = intent.getStringExtra(OUR_DATE);
+            dateId = intent.getLongExtra(MainActivity.DATA_ID,-1);
+            updateMoney = intent.getStringExtra(detailed_data.UPDATE_MONEY);
+             updateMoneyDescription = intent.getStringExtra(detailed_data.UPDATE_MONEY_DESCRIPTION);
+        }else {
+           dateId= intent.getLongExtra(DATA_ID,-1);
+           upDate= intent.getStringExtra(OUR_DATE);
+        }
+
 
         date.setText(upDate);
         money.setText(updateMoney);
@@ -76,20 +84,38 @@ public class editHandler extends AppCompatActivity {
                     String updatedDescription = description.getText().toString();
                     if (position==-1)
                         makeToast("Sorry for you effort");
+                    if (see)
+                        addNew(updatedMoney,updatedDescription);
+                        else
                     setNewData(position, updatedMoney, updatedDescription);
                     return true;
                 }
                 return false;
             }
         });
-        model.getRow(id).observe(this, new Observer<DataItems>() {
-            @Override
-            public void onChanged(DataItems items) {
-                d=items;
+        if (see){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    d=  myDatabase.getDbINSTANCE(editHandler.this).Dao().getRoww(dateId);
+                }
+            }).start();
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+            myDatabase.DELETE_INSTANCE();
+        } else {
+            model.getRow(dateId).observe(editHandler.this, new Observer<DataItems>() {
+                @Override
+                public void onChanged(DataItems items) {
+                    d=items;
+                }
+            });
+        }
+        }
 
-        });
-    }
     void setNewData(int position, int money,
                             String description) {
 
@@ -98,16 +124,31 @@ public class editHandler extends AppCompatActivity {
             d.getMoneyGotPurposes().set(position,description);
             d.setGrossMoneyGot(setGrossMoney(d.getMoneyGot()));
            model.update(d);
-           makeToast("Updated");
+           makeToast(money+" "+description+" Updated");
         } else if (paid.isChecked()) {
             d.getMoneyExpense().set(position,money);
             d.getMoneyExpensePurposes().set(position,description);
             d.setGrossMoneyExpense(setGrossMoney(d.getMoneyExpense()));
             model.update(d);
-             makeToast("Updated");
+            makeToast(money+" "+description+" Updated");
         } else {
             makeToast(""+position);
         }
+    }
+    void addNew(int money,String description){
+        if (gain.isChecked()){
+            d.getMoneyGot().add(money);
+            d.getMoneyGotPurposes().add(description);
+            d.setGrossMoneyGot(setGrossMoney(d.getMoneyGot()));
+            makeToast(money+" "+description+" Added");
+            model.update(d);
+        }else if (paid.isChecked()){
+            d.getMoneyExpense().add(money);
+            d.getMoneyExpensePurposes().add(description);
+            d.setGrossMoneyExpense(setGrossMoney(d.getMoneyExpense()));
+            model.update(d);
+            makeToast(money+" "+description+" Added");
+        }else makeToast("Select Paid Or gain");
     }
 
     private int setGrossMoney(List<Integer> money) {
@@ -121,11 +162,7 @@ public class editHandler extends AppCompatActivity {
         return gross;
     }
 
-    public void onclickDate(View view) {
-    }
     private void makeToast(String message){
         Toast.makeText(editHandler.this, message, Toast.LENGTH_LONG).show();
     }
-
-
 }

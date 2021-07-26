@@ -87,9 +87,8 @@ public class MainActivity extends AppCompatActivity  {
           }
       });
      materialDatePicker.addOnPositiveButtonClickListener(selection -> {
-         String date= DateFormat.format("dd/MM/yy",new Date(selection)).toString();
          Intent intent=new Intent(MainActivity.this,AddingToDatabase.class);
-         intent.putExtra(DATE_KEY,date);
+         intent.putExtra(DATE_KEY,selection);
          startActivity(intent);
      });
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -109,18 +108,10 @@ public class MainActivity extends AppCompatActivity  {
         });
         adapter.setOnItemClickListener(new mainRecycleAdapter.onItemClickListener() {
             @Override
-            public void onItemClicked(DataItems data,int position) {
+            public void onItemClicked(DataItems data) {
                 Intent dataIntent=new Intent(MainActivity.this,detailed_data.class);
-                dataIntent.putExtra(DATA_ID,data.getId());
-                dataIntent.putExtra(DETAIL_DATE,data.getDate());
-                dataIntent.putExtra(DETAIL_GROSS_MONEY_PAID,String.valueOf(data.getGrossMoneyExpense()));
-                dataIntent.putExtra(DETAIL_GROSS_MONEY_GOT,String.valueOf(data.getGrossMoneyGot()));
-                dataIntent.putIntegerArrayListExtra(DETAIL_MONEY_EXPENSE, (ArrayList<Integer>) data.getMoneyExpense());
-                dataIntent.putIntegerArrayListExtra(DETAIL_MONEY_GOT, (ArrayList<Integer>) data.getMoneyGot());
-                dataIntent.putStringArrayListExtra(DETAIL_MONEY_EXPENSE_PURPOSE, (ArrayList<String>) data.getMoneyExpensePurposes());
-                dataIntent.putStringArrayListExtra(DETAIL_MONEY_GOT_PURPOSE, (ArrayList<String>) data.getMoneyGotPurposes());
+                dataIntent.putExtra(DATA_ID,data.getDate());
                 dataIntent.putExtra(CHECK,"yes");
-                dataIntent.putExtra(POSITION,position);
                 MainActivity.this.startActivity(dataIntent);
             }
         });

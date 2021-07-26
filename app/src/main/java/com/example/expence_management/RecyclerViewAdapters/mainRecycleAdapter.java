@@ -1,5 +1,6 @@
 package com.example.expence_management.RecyclerViewAdapters;
 
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import com.example.expence_management.Database.DataItems;
 import com.example.expence_management.R;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class mainRecycleAdapter extends RecyclerView.Adapter<mainRecycleAdapter.ViewHolder> {
@@ -44,7 +46,8 @@ public class mainRecycleAdapter extends RecyclerView.Adapter<mainRecycleAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             TextView date=holder.date;
-            date.setText(dataItemsList.get(position).getDate());
+            String stringDate= DateFormat.format("dd/MM/yy",new Date(dataItemsList.get(position).getDate())).toString();
+            date.setText(stringDate);
             TextView gainMoney=holder.gain;
             gainMoney.setText(""+dataItemsList.get(position).getGrossMoneyGot());
             TextView paidMoney=holder.paid;
@@ -71,7 +74,7 @@ public class mainRecycleAdapter extends RecyclerView.Adapter<mainRecycleAdapter.
                 public void onClick(View v) {
                     int position=ViewHolder.this.getAdapterPosition();
                     if (listener!=null&&position!=RecyclerView.NO_POSITION)
-                        listener.onItemClicked(dataItemsList.get(position),position);
+                        listener.onItemClicked(dataItemsList.get(position));
                 }
             });
         }
@@ -80,6 +83,6 @@ public class mainRecycleAdapter extends RecyclerView.Adapter<mainRecycleAdapter.
         this.listener=listener;
     }
     public interface onItemClickListener {
-        void onItemClicked(DataItems data,int position);
+        void onItemClicked(DataItems data);
     }
 }

@@ -21,4 +21,8 @@ public abstract class myDatabase extends RoomDatabase {
         }
         return INSTANCE;
     }
+    public static void DELETE_INSTANCE(){
+        if (INSTANCE!=null)
+            INSTANCE=null;
+    }
 }
