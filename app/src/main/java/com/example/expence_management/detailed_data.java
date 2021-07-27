@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.example.expence_management.MainActivity.CHECK;
+import static com.example.expence_management.MainActivity.DATA_ID;
 
 
 public class detailed_data extends AppCompatActivity {
@@ -46,14 +47,17 @@ public class detailed_data extends AppCompatActivity {
     public static final String OUR_DATE="date";
     public static final String LIST_POSITION="position";
     public static final String LOOK="look";
-    private DataItems dataItems;
+    private DataItems dataItems,items;
     boolean adapterCheck=false;
+    private int deletePosition=-1;
     Intent forEditIntent;
+    private DataViewModel model;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detailed_data);
 
+        model=ViewModelProviders.of(this).get(DataViewModel.class);
         detailedViewToolbar=findViewById(R.id.detailed_toolBar);
         button=findViewById(R.id.add_while_watching);
         da=findViewById(R.id.date_of_detail);
@@ -67,7 +71,7 @@ public class detailed_data extends AppCompatActivity {
         cheek=intent.getStringExtra(CHECK);
         if (cheek.equals("yes")){
            button.setVisibility(View.VISIBLE);
-            dateId =intent.getLongExtra(MainActivity.DATA_ID,-1);
+            dateId =intent.getLongExtra(DATA_ID,-1);
             System.out.println("yes its"+dateId);
             new Thread(new Runnable() {
                 @Override
@@ -81,17 +85,6 @@ public class detailed_data extends AppCompatActivity {
                 e.printStackTrace();
             }
             myDatabase.DELETE_INSTANCE();
-//            DataViewModel model= ViewModelProviders.of(detailed_data.this).get(DataViewModel.class);
-//            model.getRow(dateId).observe(detailed_data.this, new Observer<DataItems>() {
-//                @Override
-//                public void onChanged(DataItems items) {
-////                    da.setText(makeDate(items.getDate()));
-////                    go.setText("Got "+items.getGrossMoneyGot());
-////                    pa.setText("Pain "+items.getGrossMoneyExpense());
-////                    forExpenseAdapter=new detailed_adapter(items.getMoneyExpense(),items.getMoneyExpensePurposes(),cheek);
-//                   // forGainAdapter=new detailed_adapter(items.getMoneyGot(),items.getMoneyGotPurposes(),cheek);
-//                }
-//            });
             initializeLists();
             date=makeDate(dataItems.getDate());
             grossGot=String.valueOf(dataItems.getGrossMoneyGot());
@@ -125,7 +118,7 @@ public class detailed_data extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                 Intent addNew=new Intent(detailed_data.this,editHandler.class);
-                addNew.putExtra(MainActivity.DATA_ID, dateId);
+                addNew.putExtra(DATA_ID, dateId);
                     addNew.putExtra(OUR_DATE,date);
                     addNew.putExtra(CHECK,true);
                     startActivity(addNew);
@@ -158,6 +151,37 @@ public class detailed_data extends AppCompatActivity {
                         return true;
                     }else if (item.getItemId()==R.id.delete_detailed){
 
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                     items= myDatabase.getDbINSTANCE(detailed_data.this).Dao().getRoww(dateId);
+                                    }
+                                }).start();
+                                try {
+                                    Thread.sleep(200);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                myDatabase.DELETE_INSTANCE();
+                                if (adapterCheck){
+                                    items.getMoneyGot().remove(deletePosition);
+                                    items.setGrossMoneyGot(editHandler.setGrossMoney(items.getMoneyGot()));
+                                    items.getMoneyGotPurposes().remove(deletePosition);
+                                }else {
+                                    items.getMoneyExpense().remove(deletePosition);
+                                    items.setGrossMoneyExpense(editHandler.setGrossMoney(items.getMoneyExpense()));
+                                    items.getMoneyExpensePurposes().remove(deletePosition);
+                                }
+                                model.update(items);
+                            }
+                        }).start();
+                        Intent dataIntent=new Intent(detailed_data.this,detailed_data.class);
+                        dataIntent.putExtra(DATA_ID,dateId);
+                        dataIntent.putExtra(CHECK,"yes");
+                        startActivity(dataIntent);
                         return true;
                     }
                     return false;
@@ -174,18 +198,20 @@ public class detailed_data extends AppCompatActivity {
         gotDescription=new ArrayList<>();
     }
     void setForAdapterIntent(boolean adapterCheck,String integer, String string, int listPosition){
+        this.deletePosition=listPosition;
         if (adapterCheck){
          forEditIntent=new Intent(detailed_data.this,editHandler.class);
-            forEditIntent.putExtra(MainActivity.DATA_ID, dateId);
+            forEditIntent.putExtra(DATA_ID, dateId);
             forEditIntent.putExtra(UPDATE_MONEY,integer);
             forEditIntent.putExtra(UPDATE_MONEY_DESCRIPTION,string);
             forEditIntent.putExtra(OUR_DATE,date);
             forEditIntent.putExtra(LIST_POSITION,listPosition);
             forEditIntent.putExtra(CHECK,false);
             forEditIntent.putExtra(LOOK,true);
+            this.adapterCheck=true;
         }else {
             forEditIntent=new Intent(detailed_data.this,editHandler.class);
-            forEditIntent.putExtra(MainActivity.DATA_ID, dateId);
+            forEditIntent.putExtra(DATA_ID, dateId);
             forEditIntent.putExtra(UPDATE_MONEY,integer);
             forEditIntent.putExtra(UPDATE_MONEY_DESCRIPTION,string);
             forEditIntent.putExtra(OUR_DATE,date);
@@ -193,5 +219,11 @@ public class detailed_data extends AppCompatActivity {
             forEditIntent.putExtra(LIST_POSITION,listPosition);
             forEditIntent.putExtra(LOOK,false);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent=new Intent(detailed_data.this,MainActivity.class);
+        startActivity(intent);
     }
 }

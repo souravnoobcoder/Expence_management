@@ -24,6 +24,9 @@ public interface Dao {
     @Query("UPDATE EXPENSES SET DATE =:uDate WHERE date =:date")
     void updateDate(long uDate,long date);
 
+//    @Query("SELECT date FROM EXPENSES ORDER BY DATE")
+//    List<Long> getAllDate();
+
 //    @Query("UPDATE EXPENSES SET MONEYGOT =:moneyList,GROSSMONEYGOT=:money WHERE ID =:id")
 //    void updateMoneyGotList(int id,List<Integer> moneyList,int money);
 //
@@ -44,6 +47,7 @@ public interface Dao {
 
     @Query("select *from expenses where date=:date ")
     LiveData<DataItems> getRow(long date);
+
     @Query("select *from expenses where date=:date ")
     DataItems getRoww(long date);
 }

@@ -21,8 +21,8 @@
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/detailed_toolBar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:visibility="gone"
+                android:layout_height="wrap_content"
                 app:menu="@menu/for_detailed"
                 app:title="Select any" />
         </com.google.android.material.appbar.AppBarLayout>
@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:textSize="30sp"
+        android:textSize="42sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/paid_amount"
         app:layout_constraintTop_toTopOf="parent" />

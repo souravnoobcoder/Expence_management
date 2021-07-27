@@ -97,13 +97,15 @@ public class  editHandler extends AppCompatActivity {
                 if (item.getItemId() == R.id.save_edit_data) {
                     int updatedMoney = Integer.parseInt(money.getText().toString());
                     String updatedDescription = description.getText().toString();
-                    if (position==-1)
-                        makeToast("Sorry for you effort");
-                    if (see)
+                    if (see){
                         addNew(updatedMoney,updatedDescription);
-                        else
-                    setNewData(position, updatedMoney, updatedDescription);
-                    return true;
+                        return true;
+                    } else if (position==-1)
+                        makeToast("Sorry for you effort");
+                    else {
+                            setNewData(position, updatedMoney, updatedDescription);
+                        return true;
+                    }
                 }
                 return false;
             }
@@ -116,7 +118,7 @@ public class  editHandler extends AppCompatActivity {
                 }
             }).start();
             try {
-                Thread.sleep(100);
+                Thread.sleep(200);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -166,7 +168,7 @@ public class  editHandler extends AppCompatActivity {
         }else makeToast("Select Paid Or gain");
     }
 
-    private int setGrossMoney(List<Integer> money) {
+    public static int setGrossMoney(List<Integer> money) {
         int i, gross = 0, value;
         if (money==null)
             return 0;

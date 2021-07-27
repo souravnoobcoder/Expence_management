@@ -73,8 +73,8 @@ public class AddingToDatabase extends AppCompatActivity {
                 switch (item.getItemId()){
                     case R.id.preview:
                         Intent i=new Intent(AddingToDatabase.this,detailed_data.class);
-                        int exp=setGrossMoney(moneyExpense);
-                        int go=setGrossMoney(moneyGot);
+                        int exp=editHandler.setGrossMoney(moneyExpense);
+                        int go=editHandler.setGrossMoney(moneyGot);
                         i.putExtra(MainActivity.DETAIL_DATE,stringDate);
                         i.putExtra(DETAIL_GROSS_MONEY_PAID,String.valueOf(exp));
                         i.putExtra(MainActivity.DETAIL_GROSS_MONEY_GOT,String.valueOf(go));
@@ -129,20 +129,10 @@ public class AddingToDatabase extends AppCompatActivity {
         gain.setChecked(false);
         paid.setChecked(false);
     }
-    private int setGrossMoney(List<Integer> money){
-        int i,gross=0,value;
-        if (money.isEmpty())
-            return 0;
-       for (i=0;i<money.size();i++){
-           value =Integer.parseInt(money.get(i).toString());
-           gross+=value;
-       }
-        return gross;
-    }
     private void setInsert(long date,List<Integer> moneyExpense, List<Integer> moneyGot
     ,List<String> moneyGotPurpose,List<String> moneyExpensePurpose){
-       int grossExpense= setGrossMoney(moneyExpense);
-       int grossGot=setGrossMoney(moneyGot);
+       int grossExpense= editHandler.setGrossMoney(moneyExpense);
+       int grossGot=editHandler.setGrossMoney(moneyGot);
         DataItems myData=new DataItems(date,grossExpense,grossGot,
                 moneyExpense,moneyGot,moneyGotPurpose,moneyExpensePurpose);
        model.insertData(myData);
