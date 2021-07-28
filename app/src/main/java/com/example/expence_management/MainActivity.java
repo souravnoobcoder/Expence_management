@@ -1,10 +1,10 @@
 package com.example.expence_management;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.text.format.DateFormat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.util.Pair;
@@ -33,11 +34,12 @@ import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClic
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity  {
-
+    List<Long> dates;
     public static final String DETAIL_DATE="da";
     public static final String DETAIL_GROSS_MONEY_GOT="wildDog";
     public static final String DETAIL_GROSS_MONEY_PAID="leopard";
@@ -54,6 +56,8 @@ public class MainActivity extends AppCompatActivity  {
     private MaterialDatePicker<Pair<Long,Long>> forMultiDates;
     private mainRecycleAdapter adapter;
     DataItems items;
+    AlertDialog.Builder dialogBuilder;
+    AlertDialog dialog;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,9 +97,29 @@ public class MainActivity extends AppCompatActivity  {
           }
       });
      materialDatePicker.addOnPositiveButtonClickListener(selection -> {
-         Intent intent=new Intent(MainActivity.this,AddingToDatabase.class);
-         intent.putExtra(DATE_KEY,selection);
-         startActivity(intent);
+
+         new Thread(new Runnable() {
+             @Override
+             public void run() {
+                 dates=myDatabase.getDbINSTANCE(MainActivity.this).Dao().getAllDate();
+             }
+         }).start();
+         try {
+             Thread.sleep(100);
+         } catch (InterruptedException e) {
+             e.printStackTrace();
+         }
+         myDatabase.DELETE_INSTANCE();
+         int get=Arrays.binarySearch(dates.toArray(),selection);
+         if (get==-1){
+             Intent intent=new Intent(MainActivity.this,AddingToDatabase.class);
+             intent.putExtra(DATE_KEY,selection);
+             startActivity(intent);
+         }else {
+                makeAlertDailogbBox(selection);
+                dialog.show();
+         }
+
      });
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -124,7 +148,6 @@ public class MainActivity extends AppCompatActivity  {
         datePickerForSearch.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
             @Override
             public void onPositiveButtonClick(Long selection) {
-
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -173,5 +196,26 @@ public class MainActivity extends AppCompatActivity  {
     }
     String makeDate(long l){
         return DateFormat.format("dd/MM/yy",new Date(l)).toString();
+    }
+    void makeAlertDailogbBox(long longDate){
+            this.dialogBuilder =new AlertDialog.Builder(MainActivity.this);
+            dialogBuilder.setTitle("Already in Database")
+                    .setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent=new Intent(MainActivity.this,detailed_data.class);
+                            intent.putExtra(CHECK,"yes");
+                            intent.putExtra(DATA_ID,longDate);
+                            startActivity(intent);
+                        }
+                    }).setNegativeButton("Replace", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent=new Intent(MainActivity.this,AddingToDatabase.class);
+                    intent.putExtra(DATE_KEY,longDate);
+                    startActivity(intent);
+                }
+            });
+            dialog=dialogBuilder.create();
     }
 }

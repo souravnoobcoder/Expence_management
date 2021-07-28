@@ -118,7 +118,7 @@ public class  editHandler extends AppCompatActivity {
                 }
             }).start();
             try {
-                Thread.sleep(200);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

@@ -1,5 +1,6 @@
 package com.example.expence_management;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
@@ -8,6 +9,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -29,11 +31,11 @@ import java.util.List;
 
 import static com.example.expence_management.MainActivity.CHECK;
 import static com.example.expence_management.MainActivity.DATA_ID;
+import static com.example.expence_management.MainActivity.DATE_KEY;
 
 
 public class detailed_data extends AppCompatActivity {
 
-    MaterialToolbar detailedViewToolbar;
     long dateId =-1;
     FloatingActionButton button;
     RecyclerView gainRecycle,expenseRecycle;
@@ -51,6 +53,8 @@ public class detailed_data extends AppCompatActivity {
     boolean adapterCheck=false;
     private int deletePosition=-1;
     Intent forEditIntent;
+    AlertDialog.Builder dialogBuilder;
+    AlertDialog dialog;
     private DataViewModel model;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +62,6 @@ public class detailed_data extends AppCompatActivity {
         setContentView(R.layout.detailed_data);
 
         model=ViewModelProviders.of(this).get(DataViewModel.class);
-        detailedViewToolbar=findViewById(R.id.detailed_toolBar);
         button=findViewById(R.id.add_while_watching);
         da=findViewById(R.id.date_of_detail);
         pa=findViewById(R.id.paid_amount);
@@ -129,64 +132,19 @@ public class detailed_data extends AppCompatActivity {
                 @Override
                 public void onItemLongClicked( String integer, String string,int listPosition) {
                     setForAdapterIntent(true,integer,string,listPosition);
-                    if (detailedViewToolbar.getVisibility()==View.GONE)
-                        detailedViewToolbar.setVisibility(View.VISIBLE);
-                    else detailedViewToolbar.setVisibility(View.GONE);
+                    makeAlertDailogbBox(integer,string);
+                    dialog.show();
                 }
             });
             forExpenseAdapter.setOnItemLongClickListener(new detailed_adapter.onItemLongClickListener() {
                 @Override
                 public void onItemLongClicked( String integer, String string, int listPosition) {
                     setForAdapterIntent(false,integer,string,listPosition);
-                    if (detailedViewToolbar.getVisibility()==View.GONE)
-                    detailedViewToolbar.setVisibility(View.VISIBLE);
-                    else detailedViewToolbar.setVisibility(View.GONE);
+                    makeAlertDailogbBox(integer,string);
+                    dialog.show();
                 }
             });
-            detailedViewToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    if (item.getItemId()==R.id.edit_detailed){
-                            startActivity(forEditIntent);
-                        return true;
-                    }else if (item.getItemId()==R.id.delete_detailed){
 
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                new Thread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                     items= myDatabase.getDbINSTANCE(detailed_data.this).Dao().getRoww(dateId);
-                                    }
-                                }).start();
-                                try {
-                                    Thread.sleep(200);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                                myDatabase.DELETE_INSTANCE();
-                                if (adapterCheck){
-                                    items.getMoneyGot().remove(deletePosition);
-                                    items.setGrossMoneyGot(editHandler.setGrossMoney(items.getMoneyGot()));
-                                    items.getMoneyGotPurposes().remove(deletePosition);
-                                }else {
-                                    items.getMoneyExpense().remove(deletePosition);
-                                    items.setGrossMoneyExpense(editHandler.setGrossMoney(items.getMoneyExpense()));
-                                    items.getMoneyExpensePurposes().remove(deletePosition);
-                                }
-                                model.update(items);
-                            }
-                        }).start();
-                        Intent dataIntent=new Intent(detailed_data.this,detailed_data.class);
-                        dataIntent.putExtra(DATA_ID,dateId);
-                        dataIntent.putExtra(CHECK,"yes");
-                        startActivity(dataIntent);
-                        return true;
-                    }
-                    return false;
-                }
-            });
     }
     String makeDate(long l){
         return DateFormat.format("dd/MM/yy",new Date(l)).toString();
@@ -225,5 +183,56 @@ public class detailed_data extends AppCompatActivity {
     public void onBackPressed() {
         Intent intent=new Intent(detailed_data.this,MainActivity.class);
         startActivity(intent);
+    }
+    void makeAlertDailogbBox(String money,String description){
+        this.dialogBuilder =new AlertDialog.Builder(detailed_data.this);
+        dialogBuilder. setTitle( "Money : "+money+"\n Description : "+ description)
+                .setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(forEditIntent);
+                    }
+                }).setNegativeButton("Delete", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                items= myDatabase.getDbINSTANCE(detailed_data.this).Dao().getRoww(dateId);
+                            }
+                        }).start();
+                        try {
+                            Thread.sleep(150);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        myDatabase.DELETE_INSTANCE();
+                        if (adapterCheck){
+                            items.getMoneyGot().remove(deletePosition);
+                            items.setGrossMoneyGot(editHandler.setGrossMoney(items.getMoneyGot()));
+                            items.getMoneyGotPurposes().remove(deletePosition);
+                        }else {
+                            items.getMoneyExpense().remove(deletePosition);
+                            items.setGrossMoneyExpense(editHandler.setGrossMoney(items.getMoneyExpense()));
+                            items.getMoneyExpensePurposes().remove(deletePosition);
+                        }
+                        model.update(items);
+                    }
+                }).start();
+                try {
+                    Thread.sleep(250);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                Intent dataIntent=new Intent(detailed_data.this,detailed_data.class);
+                dataIntent.putExtra(DATA_ID,dateId);
+                dataIntent.putExtra(CHECK,"yes");
+                startActivity(dataIntent);
+            }
+        });
+        dialog=dialogBuilder.create();
     }
 }

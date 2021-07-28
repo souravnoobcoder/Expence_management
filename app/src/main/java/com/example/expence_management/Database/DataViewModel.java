@@ -35,18 +35,6 @@ public class DataViewModel extends AndroidViewModel {
     public void updateDate(long uDate,long date){
         this.repository.updateDate(uDate,date);
     }
-//    public void updateMoneyGotList(int id,List<Integer> moneyList,int money){
-//        this.repository.updateMoneyGotList(id,moneyList,money);
-//    }
-//    public void updateMoneyExpenseList(int id,List<Integer> moneyList,int money){
-//        this.repository.updateMoneyExpenseList(id,moneyList,money);
-//    }
-//    public void updateMoneyGotDescriptionList(int id,List<String> moneyDescriptionList){
-//        this.repository.updateMoneyGotDescriptionList(id,moneyDescriptionList);
-//    }
-//    public void updateMoneyExpenseDescriptionList(int id,List<String> moneyDescriptionList){
-//        this.repository.updateMoneyExpenseDescriptionList(id,moneyDescriptionList);
-//    }
     public void update(DataItems items){
         this.repository.update(items);
     }
