@@ -56,8 +56,9 @@ public class MainActivity extends AppCompatActivity  {
     private MaterialDatePicker<Pair<Long,Long>> forMultiDates;
     private mainRecycleAdapter adapter;
     DataItems items;
-    AlertDialog.Builder dialogBuilder;
-    AlertDialog dialog;
+    AlertDialog.Builder dialogBuilder,deleteDialogBuilder;
+    AlertDialog dialog,deleteDialog;
+    DataViewModel viewModel;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity  {
       materialDatePicker= builder.setTitleText("Select Date")
                 .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
                 .build();
-        DataViewModel viewModel = ViewModelProviders.of(this).get(DataViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(DataViewModel.class);
     viewModel.getAllDataDescending().observe(this, new Observer<List<DataItems>>() {
         @Override
         public void onChanged(List<DataItems> dataItems) {
@@ -134,6 +135,12 @@ public class MainActivity extends AppCompatActivity  {
                     default:
                         return false;
                 }
+            }
+        });
+        adapter.setOnItemLongClickListener(new mainRecycleAdapter.onItemLongClickListener() {
+            @Override
+            public void onItemLongClicked(DataItems data) {
+                alertForDelete(data);
             }
         });
         adapter.setOnItemClickListener(new mainRecycleAdapter.onItemClickListener() {
@@ -217,5 +224,20 @@ public class MainActivity extends AppCompatActivity  {
                 }
             });
             dialog=dialogBuilder.create();
+    }
+    void alertForDelete(DataItems dataItem){
+        this.deleteDialogBuilder=new AlertDialog.Builder(MainActivity.this);
+        deleteDialogBuilder.setTitle("Do you really want to delete "+makeDate(dataItem.getDate()) +"date data")
+                .setMessage("\n\n")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        viewModel.deleteData(dataItem);
+                       finish();
+                       startActivity(getIntent());
+                    }
+                });
+        deleteDialog=deleteDialogBuilder.create();
+        deleteDialog.show();
     }
 }

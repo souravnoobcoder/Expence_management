@@ -20,6 +20,7 @@ public class mainRecycleAdapter extends RecyclerView.Adapter<mainRecycleAdapter.
 
     List<DataItems> dataItemsList;
     private onItemClickListener listener;
+    private onItemLongClickListener longListener;
 
     public mainRecycleAdapter(){
 
@@ -77,7 +78,22 @@ public class mainRecycleAdapter extends RecyclerView.Adapter<mainRecycleAdapter.
                         listener.onItemClicked(dataItemsList.get(position));
                 }
             });
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    int position=ViewHolder.this.getAdapterPosition();
+                    if (longListener!=null&&position!=RecyclerView.NO_POSITION)
+                        longListener.onItemLongClicked(dataItemsList.get(position));
+                    return true;
+                }
+            });
         }
+    }
+    public void setOnItemLongClickListener(onItemLongClickListener longListener){
+        this.longListener=longListener;
+    }
+    public interface onItemLongClickListener {
+        void onItemLongClicked(DataItems data);
     }
     public void setOnItemClickListener(onItemClickListener listener){
         this.listener=listener;
