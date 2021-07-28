@@ -27,6 +27,7 @@ import java.util.List;
 
 import static com.example.expence_management.MainActivity.CHECK;
 import static com.example.expence_management.MainActivity.DETAIL_GROSS_MONEY_PAID;
+import static com.example.expence_management.MainActivity.makeDate;
 
 public class AddingToDatabase extends AppCompatActivity {
     private TextInputEditText amount,detail;
@@ -152,8 +153,5 @@ public class AddingToDatabase extends AppCompatActivity {
                 mGPurpose.clear();
             }
         }).start();
-      }
-      String makeDate(long l){
-        return DateFormat.format("dd/MM/yy",new Date(l)).toString();
       }
 }

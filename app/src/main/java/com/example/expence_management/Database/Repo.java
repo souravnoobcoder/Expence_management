@@ -47,6 +47,7 @@ public class Repo {
 
     private class deleteAsyncTask extends AsyncTask<DataItems,Void,Void> {
         private Dao AsyncTaskDao;
+        
 
         private deleteAsyncTask(Dao asyncTaskDao) {
            this.AsyncTaskDao = asyncTaskDao;

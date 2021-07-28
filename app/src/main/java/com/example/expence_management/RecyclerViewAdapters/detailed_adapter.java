@@ -77,7 +77,7 @@ public class detailed_adapter extends RecyclerView.Adapter<detailed_adapter.Hold
                 itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-
+                            position=Holder.this.getAdapterPosition();
                         if (listener != null && position != RecyclerView.NO_POSITION)
                             listener.onItemLongClicked( String.valueOf(value.get(position))
                                     , description.get(position),position);

@@ -23,15 +23,19 @@ import com.example.expence_management.Database.DataItems;
 import com.example.expence_management.Database.DataViewModel;
 import com.example.expence_management.RecyclerViewAdapters.detailed_adapter;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import static com.example.expence_management.MainActivity.CHECK;
 import static com.example.expence_management.MainActivity.DATA_ID;
 import static com.example.expence_management.MainActivity.DATE_KEY;
+import static com.example.expence_management.MainActivity.makeDate;
 
 
 public class detailed_data extends AppCompatActivity {
@@ -43,6 +47,7 @@ public class detailed_data extends AppCompatActivity {
     String date,grossGot,grossPaid,cheek;
     List<String> gotDescription,paidDescription;
     List<Integer> got,paid;
+    List<Long> dates;
     detailed_adapter forGainAdapter, forExpenseAdapter;
     public static final String UPDATE_MONEY="OK";
     public static final String UPDATE_MONEY_DESCRIPTION="hello";
@@ -53,9 +58,10 @@ public class detailed_data extends AppCompatActivity {
     boolean adapterCheck=false;
     private int deletePosition=-1;
     Intent forEditIntent;
-    AlertDialog.Builder dialogBuilder;
-    AlertDialog dialog;
+    AlertDialog.Builder dialogBuilder,dateDailogBuilder;
+    AlertDialog dialog,dateDailog;
     private DataViewModel model;
+    private MaterialDatePicker<Long> changeDatePicker;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +76,50 @@ public class detailed_data extends AppCompatActivity {
         expenseRecycle=findViewById(R.id.expense_recyclerView);
         Intent intent=getIntent();
 
+        MaterialDatePicker.Builder<Long> builder= MaterialDatePicker.Builder.datePicker();
+        changeDatePicker= builder.setTitleText("Select Date")
+                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                .build();
+        changeDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
+            @Override
+            public void onPositiveButtonClick(Long selection) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dates=myDatabase.getDbINSTANCE(detailed_data.this).Dao().getAllDate();
+                    }
+                }).start();
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                myDatabase.DELETE_INSTANCE();
+                int get= Arrays.binarySearch(dates.toArray(),selection);
+                if (get<0){
+                    model.updateDate(dateId,selection);
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Intent dataIntent=new Intent(detailed_data.this,detailed_data.class);
+                    dataIntent.putExtra(DATA_ID,selection);
+                    dataIntent.putExtra(CHECK,"yes");
+                    startActivity(dataIntent);
+                }else {
+                 changeDateAlert(selection);
+                }
 
+            }
+        });
+        da.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                changeDatePicker.show(getSupportFragmentManager(),null);
+                return false;
+            }
+        });
         cheek=intent.getStringExtra(CHECK);
         if (cheek.equals("yes")){
            button.setVisibility(View.VISIBLE);
@@ -145,9 +194,6 @@ public class detailed_data extends AppCompatActivity {
                 }
             });
 
-    }
-    String makeDate(long l){
-        return DateFormat.format("dd/MM/yy",new Date(l)).toString();
     }
     void initializeLists(){
         paid=new ArrayList<>();
@@ -234,5 +280,17 @@ public class detailed_data extends AppCompatActivity {
             }
         });
         dialog=dialogBuilder.create();
+    }
+    void changeDateAlert(long date){
+        this.dateDailogBuilder=new AlertDialog.Builder(detailed_data.this);
+        dateDailogBuilder.setTitle(makeDate(date)+" Already exists ")
+                .setPositiveButton("Change", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        changeDatePicker.show(getSupportFragmentManager(),null);
+                    }
+                });
+        dateDailog=dateDailogBuilder.create();
+        dateDailog.show();
     }
 }

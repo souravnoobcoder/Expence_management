@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity  {
          }
          myDatabase.DELETE_INSTANCE();
          int get=Arrays.binarySearch(dates.toArray(),selection);
-         if (get==-1){
+         if (get<0){
              Intent intent=new Intent(MainActivity.this,AddingToDatabase.class);
              intent.putExtra(DATE_KEY,selection);
              startActivity(intent);
@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity  {
             adapter.setDataItemsList(dataItems);
         adapter.notifyDataSetChanged();
     }
-    String makeDate(long l){
+    public static String makeDate(long l){
         return DateFormat.format("dd/MM/yy",new Date(l)).toString();
     }
     void makeAlertDailogbBox(long longDate){
