@@ -2,7 +2,7 @@ package com.example.expence_management;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.format.DateFormat;
+import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -22,7 +22,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.example.expence_management.MainActivity.CHECK;
@@ -89,6 +88,7 @@ public class AddingToDatabase extends AppCompatActivity {
                     case R.id.save_data:
                         setInsert(inputDate,moneyExpense,moneyGot,mGPurpose,mEPurpose);
                         makeToast("Your data is saved");
+                        backOnSave(1000);
                         makeAllListNull();
                         return true;
                     default:
@@ -154,4 +154,22 @@ public class AddingToDatabase extends AppCompatActivity {
             }
         }).start();
       }
+
+    @Override
+    public void onBackPressed() {
+        makeIntent();
+        finish();
+    }
+    private void backOnSave(int pauseTime){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                makeIntent();
+            }
+        },pauseTime);
+    }
+    private void makeIntent(){
+        Intent intent=new Intent(AddingToDatabase.this,MainActivity.class);
+        startActivity(intent);
+    }
 }

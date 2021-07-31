@@ -36,6 +36,17 @@ public interface Dao {
     @Query("SELECT *FROM EXPENSES ORDER BY DATE DESC")
     LiveData<List<DataItems>> getAllDescending();
 
+    @Query("SELECT *FROM EXPENSES ORDER BY grossMoneyGot DESC")
+    LiveData<List<DataItems>> getAllGotDescending();
+
+    @Query("SELECT *FROM EXPENSES ORDER BY grossMoneyExpense DESC")
+    LiveData<List<DataItems>> getAllExpenseDescending();
+
+    @Query("SELECT * FROM EXPENSES ORDER BY grossMoneyGot")
+    LiveData<List<DataItems>> getAllGotAscending();
+
+    @Query("SELECT * FROM EXPENSES ORDER BY grossMoneyExpense")
+    LiveData<List<DataItems>> getAllExpenseAscending();
     @Query("select *from expenses where date=:date ")
     LiveData<DataItems> getRow(long date);
 

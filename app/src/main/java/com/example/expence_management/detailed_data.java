@@ -55,7 +55,7 @@ public class detailed_data extends AppCompatActivity {
     public static final String LIST_POSITION="position";
     public static final String LOOK="look";
     private DataItems dataItems,items;
-    boolean adapterCheck=false;
+    boolean adapterCheck=false,aBoolean=false;
     private int deletePosition=-1;
     Intent forEditIntent;
     AlertDialog.Builder dialogBuilder,dateDailogBuilder;
@@ -113,13 +113,6 @@ public class detailed_data extends AppCompatActivity {
 
             }
         });
-        da.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                changeDatePicker.show(getSupportFragmentManager(),null);
-                return false;
-            }
-        });
         cheek=intent.getStringExtra(CHECK);
         if (cheek.equals("yes")){
            button.setVisibility(View.VISIBLE);
@@ -154,13 +147,13 @@ public class detailed_data extends AppCompatActivity {
             paid=intent.getIntegerArrayListExtra(MainActivity.DETAIL_MONEY_EXPENSE);
             gotDescription=intent.getStringArrayListExtra(MainActivity.DETAIL_MONEY_GOT_PURPOSE);
             paidDescription=intent.getStringArrayListExtra(MainActivity.DETAIL_MONEY_EXPENSE_PURPOSE);
-
+            aBoolean=true;
         }
         da.setText(date);
-        go.setText("Got:"+grossGot);
-        pa.setText("Paid:"+grossPaid);
-            forExpenseAdapter =new detailed_adapter(paid,paidDescription,cheek);
-            forGainAdapter =new detailed_adapter(got,gotDescription,cheek);
+        go.setText("Got : "+grossGot);
+        pa.setText("Paid : "+grossPaid);
+            forExpenseAdapter =new detailed_adapter(paid,paidDescription,cheek,false);
+            forGainAdapter =new detailed_adapter(got,gotDescription,cheek,true);
 
             gainRecycle.setLayoutManager(new LinearLayoutManager(this));
             expenseRecycle.setLayoutManager(new LinearLayoutManager(this));
@@ -193,7 +186,15 @@ public class detailed_data extends AppCompatActivity {
                     dialog.show();
                 }
             });
-
+            if (!aBoolean){
+                da.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        changeDatePicker.show(getSupportFragmentManager(),null);
+                        return false;
+                    }
+                });
+            }
     }
     void initializeLists(){
         paid=new ArrayList<>();
@@ -227,8 +228,9 @@ public class detailed_data extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent=new Intent(detailed_data.this,MainActivity.class);
-        startActivity(intent);
+            Intent intent=new Intent(detailed_data.this,MainActivity.class);
+            startActivity(intent);
+            finish();
     }
     void makeAlertDailogbBox(String money,String description){
         this.dialogBuilder =new AlertDialog.Builder(detailed_data.this);

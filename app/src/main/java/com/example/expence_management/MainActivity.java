@@ -1,25 +1,25 @@
 package com.example.expence_management;
 
 
-import android.content.DialogInterface;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.format.DateFormat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.util.Pair;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,7 +30,6 @@ import com.example.expence_management.Database.myDatabase;
 import com.example.expence_management.RecyclerViewAdapters.mainRecycleAdapter;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -48,16 +47,15 @@ public class MainActivity extends AppCompatActivity  {
     public static final String DETAIL_MONEY_EXPENSE_PURPOSE="hyena";
     public static final String DETAIL_MONEY_GOT_PURPOSE="dragonLizard";
     public static final String DATE_KEY="selected date";
-    public static final String MY_KEY="key";
     public static final String CHECK="check";
     public static final String DATA_ID="idkd";
-    public static final String POSITION="position";
     private MaterialDatePicker<Long> materialDatePicker,datePickerForSearch;
     private MaterialDatePicker<Pair<Long,Long>> forMultiDates;
     private mainRecycleAdapter adapter;
     DataItems items;
-    AlertDialog.Builder dialogBuilder,deleteDialogBuilder;
-    AlertDialog dialog,deleteDialog;
+    boolean doubleBackToExitPressedOnce = false;
+    AlertDialog.Builder dialogBuilder,deleteDialogBuilder,sortAlertBuilder;
+    AlertDialog dialog,deleteDialog,sortAlert;
     DataViewModel viewModel;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,33 +76,17 @@ public class MainActivity extends AppCompatActivity  {
                 .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
                 .build();
         viewModel = ViewModelProviders.of(this).get(DataViewModel.class);
-    viewModel.getAllDataDescending().observe(this, new Observer<List<DataItems>>() {
-        @Override
-        public void onChanged(List<DataItems> dataItems) {
-            MainActivity.this.setDataItemsList(dataItems);
-        }
-    });
+    viewModel.getAllDataDescending().observe(this, MainActivity.this::setDataItemsList);
       datePickerForSearch=builder.setTitleText("Search by date")
               .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
               .build();
       MaterialDatePicker.Builder<Pair<Long, Long>> multiBuilder=MaterialDatePicker.Builder.dateRangePicker();
       forMultiDates=multiBuilder.setTitleText("Select multi dates")
               .build();
-
-      addingData.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-              materialDatePicker.show(MainActivity.this.getSupportFragmentManager(), "Yes");
-          }
-      });
+      addingData.setOnClickListener(v -> materialDatePicker.show(MainActivity.this.getSupportFragmentManager(), "Yes"));
      materialDatePicker.addOnPositiveButtonClickListener(selection -> {
 
-         new Thread(new Runnable() {
-             @Override
-             public void run() {
-                 dates=myDatabase.getDbINSTANCE(MainActivity.this).Dao().getAllDate();
-             }
-         }).start();
+         new Thread(() -> dates=myDatabase.getDbINSTANCE(MainActivity.this).Dao().getAllDate()).start();
          try {
              Thread.sleep(100);
          } catch (InterruptedException e) {
@@ -122,71 +104,55 @@ public class MainActivity extends AppCompatActivity  {
          }
 
      });
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.search_by_date:
-                        datePickerForSearch.show(getSupportFragmentManager(),"ust");
-                        return true;
-                    case R.id.search_for_multi_days:
-                        forMultiDates.show(getSupportFragmentManager(),"get");
-                        return true;
-                    default:
-                        return false;
-                }
+        toolbar.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()){
+                case R.id.search_by_date:
+                    datePickerForSearch.show(getSupportFragmentManager(),"ust");
+                    return true;
+                case R.id.search_for_multi_days:
+                    forMultiDates.show(getSupportFragmentManager(),"get");
+                    return true;
+                case R.id.sort:
+                    alertSort();
+                    return true;
+                default:
+                    return false;
             }
         });
-        adapter.setOnItemLongClickListener(new mainRecycleAdapter.onItemLongClickListener() {
-            @Override
-            public void onItemLongClicked(DataItems data) {
-                alertForDelete(data);
-            }
+        adapter.setOnItemLongClickListener(this::alertForDelete);
+        adapter.setOnItemClickListener(data -> {
+            Intent dataIntent=new Intent(MainActivity.this,detailed_data.class);
+            dataIntent.putExtra(DATA_ID,data.getDate());
+            dataIntent.putExtra(CHECK,"yes");
+            MainActivity.this.startActivity(dataIntent);
         });
-        adapter.setOnItemClickListener(new mainRecycleAdapter.onItemClickListener() {
-            @Override
-            public void onItemClicked(DataItems data) {
-                Intent dataIntent=new Intent(MainActivity.this,detailed_data.class);
-                dataIntent.putExtra(DATA_ID,data.getDate());
-                dataIntent.putExtra(CHECK,"yes");
-                MainActivity.this.startActivity(dataIntent);
-            }
-        });
-        datePickerForSearch.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
-            @Override
-            public void onPositiveButtonClick(Long selection) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        items= myDatabase.getDbINSTANCE(MainActivity.this).Dao().getRoww(selection);
-                    }
-                }).start();
+        datePickerForSearch.addOnPositiveButtonClickListener(selection -> {
+            new Thread(() -> items= myDatabase.getDbINSTANCE(MainActivity.this).Dao().getRoww(selection)).start();
 
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                myDatabase.DELETE_INSTANCE();
-                if (items==null){
-                   LayoutInflater layoutInflater=getLayoutInflater();
-                   View layout=layoutInflater.inflate(R.layout.cusom_toast,findViewById(R.id.toast_custom));
-                   TextView textView=layout.findViewById(R.id.tvtoast);
-                   textView.setText(makeDate(selection)+"Not found");
-                   textView.setTextColor(Color.rgb(0, 132, 219));
-                   textView.setTextSize(40);
-                   Toast toast=new Toast(getApplicationContext());
-                   toast.setView(layout);
-                   toast.setDuration(Toast.LENGTH_LONG);
-                   toast.setGravity(Gravity.CENTER,0,0);
-                   toast.show();
-               }
-                else{
-                    Intent intent=new Intent(MainActivity.this,detailed_data.class);
-                    intent.putExtra(CHECK,"yes");
-                    intent.putExtra(DATA_ID,selection);
-                    startActivity(intent);
-                }
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            myDatabase.DELETE_INSTANCE();
+            if (items==null){
+               LayoutInflater layoutInflater=getLayoutInflater();
+               View layout=layoutInflater.inflate(R.layout.cusom_toast,findViewById(R.id.toast_custom));
+               TextView textView=layout.findViewById(R.id.tvtoast);
+               textView.setText(makeDate(selection)+" Not found");
+               textView.setTextColor(Color.rgb(0, 132, 219));
+               textView.setTextSize(20);
+               Toast toast=new Toast(getApplicationContext());
+               toast.setView(layout);
+               toast.setDuration(Toast.LENGTH_LONG);
+               toast.setGravity(Gravity.CENTER,0,0);
+               toast.show();
+           }
+            else{
+                Intent intent=new Intent(MainActivity.this,detailed_data.class);
+                intent.putExtra(CHECK,"yes");
+                intent.putExtra(DATA_ID,selection);
+                startActivity(intent);
             }
         });
     }
@@ -207,37 +173,85 @@ public class MainActivity extends AppCompatActivity  {
     void makeAlertDailogbBox(long longDate){
             this.dialogBuilder =new AlertDialog.Builder(MainActivity.this);
             dialogBuilder.setTitle("Already in Database")
-                    .setPositiveButton("Update", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent=new Intent(MainActivity.this,detailed_data.class);
-                            intent.putExtra(CHECK,"yes");
-                            intent.putExtra(DATA_ID,longDate);
-                            startActivity(intent);
-                        }
-                    }).setNegativeButton("Replace", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent intent=new Intent(MainActivity.this,AddingToDatabase.class);
-                    intent.putExtra(DATE_KEY,longDate);
-                    startActivity(intent);
-                }
-            });
+                    .setPositiveButton("Update", (dialog, which) -> {
+                        Intent intent=new Intent(MainActivity.this,detailed_data.class);
+                        intent.putExtra(CHECK,"yes");
+                        intent.putExtra(DATA_ID,longDate);
+                        startActivity(intent);
+                    }).setNegativeButton("Replace", (dialog, which) -> {
+                        Intent intent=new Intent(MainActivity.this,AddingToDatabase.class);
+                        intent.putExtra(DATE_KEY,longDate);
+                        startActivity(intent);
+                    });
             dialog=dialogBuilder.create();
     }
     void alertForDelete(DataItems dataItem){
         this.deleteDialogBuilder=new AlertDialog.Builder(MainActivity.this);
-        deleteDialogBuilder.setTitle("Do you really want to delete "+makeDate(dataItem.getDate()) +"date data")
-                .setMessage("\n\n")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        viewModel.deleteData(dataItem);
-                       finish();
-                       startActivity(getIntent());
-                    }
+        deleteDialogBuilder.setTitle("Do you really want to delete ")
+                .setMessage("\n"+makeDate(dataItem.getDate()) +" date data")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    viewModel.deleteData(dataItem);
+                   finish();
+                   startActivity(getIntent());
                 });
         deleteDialog=deleteDialogBuilder.create();
         deleteDialog.show();
+    }
+    void alertSort(){
+        LayoutInflater inflater=this.getLayoutInflater();
+        View dialogView=inflater.inflate(R.layout.sort_selection,null);
+        RadioButton date=dialogView.findViewById(R.id.by_date);
+        RadioButton got=dialogView.findViewById(R.id.by_gainMoney);
+        RadioButton expense=dialogView.findViewById(R.id.by_expense);
+        RadioButton ascending=dialogView.findViewById(R.id.ascending);
+        RadioButton descending=dialogView.findViewById(R.id.descending);
+        this.sortAlertBuilder=new AlertDialog.Builder(MainActivity.this);
+        sortAlertBuilder.setView(dialogView)
+                .setTitle("Sorting")
+                .setPositiveButton("Ok", (dialog, which) -> {
+                    if (date.isChecked()&&ascending.isChecked())
+                        dateA();
+                    else if (date.isChecked()&&descending.isChecked())
+                        dateD();
+                    else if (got.isChecked()&&ascending.isChecked())
+                        gotA();
+                    else if (got.isChecked()&&descending.isChecked())
+                        gotD();
+                    else if (expense.isChecked()&&ascending.isChecked())
+                        expenseA();
+                    else expenseD();
+                });
+        sortAlert=sortAlertBuilder.create();
+        sortAlert.show();
+    }
+    void gotA(){
+        viewModel.getAllGotDataAscending().observe(MainActivity.this, this::setDataItemsList);
+    }
+    void expenseA(){
+        viewModel.getAllExpenseDataAscending().observe(MainActivity.this, this::setDataItemsList);
+    }
+    void expenseD(){
+        viewModel.getAllExpenseDataDescending().observe(MainActivity.this, this::setDataItemsList);
+    }
+    void gotD(){
+    viewModel.getAllGotDataDescending().observe(MainActivity.this, this::setDataItemsList);
+    }
+    void dateA(){
+        viewModel.getAllDataAscending().observe(MainActivity.this, this::setDataItemsList);
+    }
+    void dateD(){
+        viewModel.getAllDataDescending().observe(MainActivity.this, this::setDataItemsList);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+          super.onBackPressed();
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler(Looper.getMainLooper()).postDelayed(() -> doubleBackToExitPressedOnce=false, 2000);
     }
 }

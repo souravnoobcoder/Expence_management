@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RadioButton
+            android:checked="true"
+            android:id="@+id/by_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"
+            android:text="by Date" />
+
+        <RadioButton
+            android:id="@+id/by_gainMoney"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="by Gain Money" />
+
+        <RadioButton
+            android:id="@+id/by_expense"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="by_expenseMoney" />
+    </RadioGroup>
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView">
+        <RadioButton
+            android:checked="true"
+            android:id="@+id/ascending"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ascending" />
+
+        <RadioButton
+            android:id="@+id/descending"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="descending" />
+
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="-----------------------------------------------------------------"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+</androidx.constraintlayout.widget.ConstraintLayout>

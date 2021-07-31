@@ -13,4 +13,9 @@
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_for_multi_date"/>
 
+    <item
+        android:id="@+id/sort"
+        android:title="sort"
+        android:icon="@drawable/ic_sort"
+        app:showAsAction="ifRoom"/>
 </menu>

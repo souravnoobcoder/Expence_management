@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinatorLayout2"
@@ -21,6 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:menu="@menu/adding_menu"
+                android:background="@color/red"
                 app:navigationIcon="@drawable/ic_back_for_adding_data"
                 app:title="Add Data"
                />
@@ -35,7 +37,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:text="Today Date"
-        android:fontFamily="@font/stalinist_one"
+        android:textStyle="bold"
+        android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/coordinatorLayout2" />
@@ -75,7 +78,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:baselineAligned="false"
-            android:hint="Enter Expense Detail"
+            android:hint="Enter Detail"
             android:inputType="number" />
     </com.google.android.material.textfield.TextInputLayout>
 

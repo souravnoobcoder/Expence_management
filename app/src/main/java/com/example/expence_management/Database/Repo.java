@@ -25,6 +25,18 @@ public class Repo {
     public LiveData<List<DataItems>> getDataDescending(){
         return dao.getAllDescending();
     }
+    public LiveData<List<DataItems>> getDataGotAscending(){
+        return dao.getAllGotAscending();
+    }
+    public LiveData<List<DataItems>> getDataExpenseAscending(){
+        return dao.getAllExpenseAscending();
+    }
+    public LiveData<List<DataItems>> getDataExpenseDescending(){
+        return dao.getAllExpenseDescending();
+    }
+    public LiveData<List<DataItems>> getDataGotDescending(){
+        return dao.getAllGotDescending();
+    }
     public void insertData(DataItems dataItems){
         new insertAsyncTask(dao).execute(dataItems);
     }

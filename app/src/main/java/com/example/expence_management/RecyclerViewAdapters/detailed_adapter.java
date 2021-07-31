@@ -1,5 +1,6 @@
 package com.example.expence_management.RecyclerViewAdapters;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +14,17 @@ import com.example.expence_management.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.expence_management.R.*;
+
 public class detailed_adapter extends RecyclerView.Adapter<detailed_adapter.Holder>  {
 
     List<Integer> value;
     List<String> description;
-    boolean check = false;
+    boolean check = false,gain=false;
     private onItemLongClickListener listener;
 
-    public detailed_adapter(List<Integer> value, List<String> description, String cheek) {
+    public detailed_adapter(List<Integer> value, List<String> description, String cheek,boolean gain) {
+        this.gain=gain;
         this.value = new ArrayList<>();
         this.description = new ArrayList<>();
         if (value.isEmpty())
@@ -38,7 +42,7 @@ public class detailed_adapter extends RecyclerView.Adapter<detailed_adapter.Hold
     @NonNull
     @Override
     public detailed_adapter.Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_for_showing_details,parent,false);
+        View view= LayoutInflater.from(parent.getContext()).inflate(layout.recycler_view_for_showing_details,parent,false);
         return new Holder(view);
     }
 
@@ -48,6 +52,15 @@ public class detailed_adapter extends RecyclerView.Adapter<detailed_adapter.Hold
         val.setText(String.valueOf(value.get(position)));
         TextView des=holder.des;
         des.setText(description.get(position));
+        if (gain){
+            val.setTextColor(Color.GREEN);
+            des.setTextColor(Color.GREEN);
+        }
+        else{
+            val.setTextColor(Color.RED);
+            des.setTextColor(Color.RED);
+        }
+
     }
 
     @Override
@@ -71,8 +84,8 @@ public class detailed_adapter extends RecyclerView.Adapter<detailed_adapter.Hold
 
         public Holder(@NonNull View itemView) {
             super(itemView);
-            val = itemView.findViewById(R.id.data_amount);
-            des = itemView.findViewById(R.id.data_amount_description);
+            val = itemView.findViewById(id.data_amount);
+            des = itemView.findViewById(id.data_amount_description);
             if (check) {
                 itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,14 +30,14 @@ import static com.example.expence_management.detailed_data.OUR_DATE;
 public class  editHandler extends AppCompatActivity {
     int position=-1;
     TextView date;
-    MaterialRadioButton gain, paid;
+    RadioButton gain, paid;
     TextInputEditText money, description;
     MaterialToolbar toolbar;
     DataViewModel model;
     String upDate,updateMoney,updateMoneyDescription;
     long dateId =-1;
     DataItems d;
-    boolean see=false,look=false;
+    boolean see=false,look=false,aBoolean=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,13 +65,14 @@ public class  editHandler extends AppCompatActivity {
                  gain.setChecked(true);
                  paid.setVisibility(View.GONE);
              }
-
              else{
+
                 paid.setChecked(true);
                 gain.setVisibility(View.GONE);
             }
 
         }else {
+            aBoolean=true;
            dateId= intent.getLongExtra(DATA_ID,-1);
            upDate= intent.getStringExtra(OUR_DATE);
         }
@@ -79,7 +81,6 @@ public class  editHandler extends AppCompatActivity {
         date.setText(upDate);
         money.setText(updateMoney);
         description.setText(updateMoneyDescription);
-
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -151,6 +152,7 @@ public class  editHandler extends AppCompatActivity {
         } else {
             makeToast(""+position);
         }
+
     }
     void addNew(int money,String description){
         if (gain.isChecked()){
@@ -166,6 +168,9 @@ public class  editHandler extends AppCompatActivity {
             model.update(d);
             makeToast(money+" "+description+" Added");
         }else makeToast("Select Paid Or gain");
+        if (aBoolean)
+        makeNullAgain();
+
     }
 
     public static int setGrossMoney(List<Integer> money) {
@@ -190,5 +195,11 @@ public class  editHandler extends AppCompatActivity {
         intent.putExtra(DATA_ID,dateId);
         startActivity(intent);
         finish();
+    }
+    void makeNullAgain(){
+        money.setText(null);
+        description.setText(null);
+        gain.setChecked(false);
+        paid.setChecked(false);
     }
 }

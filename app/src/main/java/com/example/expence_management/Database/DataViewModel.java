@@ -26,6 +26,22 @@ public class DataViewModel extends AndroidViewModel {
         this.liveDataList=this.repository.getDataDescending();
         return liveDataList;
     }
+    public LiveData<List<DataItems>> getAllExpenseDataDescending(){
+        this.liveDataList=this.repository.getDataExpenseDescending();
+        return liveDataList;
+    }
+    public LiveData<List<DataItems>> getAllGotDataDescending(){
+        this.liveDataList=this.repository.getDataGotDescending();
+        return liveDataList;
+    }
+    public LiveData<List<DataItems>> getAllExpenseDataAscending(){
+        this.liveDataList=this.repository.getDataExpenseAscending();
+        return liveDataList;
+    }
+    public LiveData<List<DataItems>> getAllGotDataAscending(){
+        this.liveDataList=this.repository.getDataGotAscending();
+        return liveDataList;
+    }
     public void insertData(DataItems items){
         this.repository.insertData(items);
     }
