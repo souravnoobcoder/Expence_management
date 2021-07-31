@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static java.lang.String.*;
+
 public class mainRecycleAdapter extends RecyclerView.Adapter<mainRecycleAdapter.ViewHolder> {
 
     List<DataItems> dataItemsList;
@@ -52,7 +54,7 @@ public class mainRecycleAdapter extends RecyclerView.Adapter<mainRecycleAdapter.
             TextView gainMoney=holder.gain;
             gainMoney.setText(""+dataItemsList.get(position).getGrossMoneyGot());
             TextView paidMoney=holder.paid;
-            paidMoney.setText(""+dataItemsList.get(position).getGrossMoneyExpense());
+            paidMoney.setText(format("%d", dataItemsList.get(position).getGrossMoneyExpense()));
 
     }
 

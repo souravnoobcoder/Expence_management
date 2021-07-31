@@ -194,7 +194,7 @@ public class  editHandler extends AppCompatActivity {
         intent.putExtra(CHECK,"yes");
         intent.putExtra(DATA_ID,dateId);
         startActivity(intent);
-        finish();
+        this.finish();
     }
     void makeNullAgain(){
         money.setText(null);

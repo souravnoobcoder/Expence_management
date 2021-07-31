@@ -158,7 +158,7 @@ public class AddingToDatabase extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         makeIntent();
-        finish();
+        this.finish();
     }
     private void backOnSave(int pauseTime){
         new Handler().postDelayed(new Runnable() {
@@ -171,5 +171,6 @@ public class AddingToDatabase extends AppCompatActivity {
     private void makeIntent(){
         Intent intent=new Intent(AddingToDatabase.this,MainActivity.class);
         startActivity(intent);
+        AddingToDatabase.this.finish();
     }
 }

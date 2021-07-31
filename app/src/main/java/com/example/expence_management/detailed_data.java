@@ -230,7 +230,7 @@ public class detailed_data extends AppCompatActivity {
     public void onBackPressed() {
             Intent intent=new Intent(detailed_data.this,MainActivity.class);
             startActivity(intent);
-            finish();
+            this.finish();
     }
     void makeAlertDailogbBox(String money,String description){
         this.dialogBuilder =new AlertDialog.Builder(detailed_data.this);

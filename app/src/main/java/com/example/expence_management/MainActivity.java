@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity  {
                LayoutInflater layoutInflater=getLayoutInflater();
                View layout=layoutInflater.inflate(R.layout.cusom_toast,findViewById(R.id.toast_custom));
                TextView textView=layout.findViewById(R.id.tvtoast);
-               textView.setText(makeDate(selection)+" Not found");
+               textView.setText(new StringBuilder().append(makeDate(selection)).append(" Not found").toString());
                textView.setTextColor(Color.rgb(0, 132, 219));
                textView.setTextSize(20);
                Toast toast=new Toast(getApplicationContext());
@@ -246,9 +246,8 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
-          super.onBackPressed();
+          this.finish();
         }
-
         this.doubleBackToExitPressedOnce = true;
         Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
 

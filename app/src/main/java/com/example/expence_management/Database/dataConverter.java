@@ -3,7 +3,6 @@ package com.example.expence_management.Database;
 import androidx.room.TypeConverter;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.Serializable;
@@ -19,8 +18,7 @@ public class dataConverter implements Serializable {
         Gson gson=new Gson();
         Type type=new TypeToken<List<Integer>>(){
         }.getType();
-    String json=gson.toJson(list,type);
-    return json;
+        return gson.toJson(list,type);
     }
 
     @TypeConverter
@@ -30,8 +28,7 @@ public class dataConverter implements Serializable {
         Gson gson=new Gson();
         Type type=new TypeToken<List<Integer>>(){
         }.getType();
-        List<Integer> moneyList=gson.fromJson(moneyExpenseString,type);
-        return moneyList;
+        return gson.fromJson(moneyExpenseString,type);
     }
     @TypeConverter
    public String formoneyExpensePurposes(List<String> purposeList){
@@ -40,8 +37,7 @@ public class dataConverter implements Serializable {
         Gson gson=new Gson();
         Type type=new TypeToken<List<String>>(){
         }.getType();
-        String json=gson.toJson(purposeList,type);
-        return json;
+        return gson.toJson(purposeList,type);
     }
     @TypeConverter
     public List<String> tomoneyExpensePurposes(String string){
@@ -50,7 +46,6 @@ public class dataConverter implements Serializable {
         Gson gson=new Gson();
         Type type=new TypeToken<List<String>>(){
         }.getType();
-        List<String> list=gson.fromJson(string,type);
-        return list;
+        return gson.fromJson(string,type);
     }
 }
