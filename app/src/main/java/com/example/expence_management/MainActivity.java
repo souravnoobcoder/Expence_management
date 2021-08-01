@@ -125,6 +125,7 @@ public class MainActivity extends AppCompatActivity  {
             dataIntent.putExtra(DATA_ID,data.getDate());
             dataIntent.putExtra(CHECK,"yes");
             MainActivity.this.startActivity(dataIntent);
+            finish();
         });
         datePickerForSearch.addOnPositiveButtonClickListener(selection -> {
             new Thread(() -> items= myDatabase.getDbINSTANCE(MainActivity.this).Dao().getRoww(selection)).start();
@@ -153,6 +154,7 @@ public class MainActivity extends AppCompatActivity  {
                 intent.putExtra(CHECK,"yes");
                 intent.putExtra(DATA_ID,selection);
                 startActivity(intent);
+                finish();
             }
         });
     }
@@ -178,10 +180,12 @@ public class MainActivity extends AppCompatActivity  {
                         intent.putExtra(CHECK,"yes");
                         intent.putExtra(DATA_ID,longDate);
                         startActivity(intent);
+                        finish();
                     }).setNegativeButton("Replace", (dialog, which) -> {
                         Intent intent=new Intent(MainActivity.this,AddingToDatabase.class);
                         intent.putExtra(DATE_KEY,longDate);
                         startActivity(intent);
+                        finish();
                     });
             dialog=dialogBuilder.create();
     }
@@ -246,7 +250,9 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
-          this.finish();
+           this.finish();
+            this.finish();
+          return;
         }
         this.doubleBackToExitPressedOnce = true;
         Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();

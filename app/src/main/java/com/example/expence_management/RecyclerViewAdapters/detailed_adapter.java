@@ -58,8 +58,8 @@ public class detailed_adapter extends RecyclerView.Adapter<detailed_adapter.Hold
             des.setTextColor(Color.GREEN);
         }
         else{
-            val.setTextColor(Color.RED);
-            des.setTextColor(Color.RED);
+            val.setTextColor(Color.rgb(239,38,38));
+            des.setTextColor(Color.rgb(239,38,38));
         }
 
     }

@@ -1,40 +1,32 @@
 package com.example.expence_management;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
-import android.text.format.DateFormat;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
-import com.example.expence_management.Database.myDatabase;
-
 import com.example.expence_management.Database.DataItems;
 import com.example.expence_management.Database.DataViewModel;
+import com.example.expence_management.Database.myDatabase;
 import com.example.expence_management.RecyclerViewAdapters.detailed_adapter;
-import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import static com.example.expence_management.MainActivity.CHECK;
 import static com.example.expence_management.MainActivity.DATA_ID;
-import static com.example.expence_management.MainActivity.DATE_KEY;
 import static com.example.expence_management.MainActivity.makeDate;
 
 
@@ -65,6 +57,7 @@ public class detailed_data extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.detailed_data);
 
         model=ViewModelProviders.of(this).get(DataViewModel.class);
@@ -228,9 +221,14 @@ public class detailed_data extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-            Intent intent=new Intent(detailed_data.this,MainActivity.class);
+        if (aBoolean) {
+            super.onBackPressed();
+        } else {
+            Intent intent = new Intent(detailed_data.this, MainActivity.class);
             startActivity(intent);
             this.finish();
+        }
+
     }
     void makeAlertDailogbBox(String money,String description){
         this.dialogBuilder =new AlertDialog.Builder(detailed_data.this);
@@ -239,6 +237,7 @@ public class detailed_data extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         startActivity(forEditIntent);
+                        finish();
                     }
                 }).setNegativeButton("Delete", new DialogInterface.OnClickListener() {
             @Override
@@ -279,6 +278,7 @@ public class detailed_data extends AppCompatActivity {
                 dataIntent.putExtra(DATA_ID,dateId);
                 dataIntent.putExtra(CHECK,"yes");
                 startActivity(dataIntent);
+                finish();
             }
         });
         dialog=dialogBuilder.create();
