@@ -16,7 +16,7 @@ public abstract class myDatabase extends RoomDatabase {
 
     public static myDatabase getDbINSTANCE(@Nullable Context context){
         if(INSTANCE==null){
-            INSTANCE= Room.databaseBuilder(context.getApplicationContext(),myDatabase.class,"contact.database")
+            INSTANCE= Room.databaseBuilder(context.getApplicationContext(),myDatabase.class,"expense.database")
                     .build();
         }
         return INSTANCE;

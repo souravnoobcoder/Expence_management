@@ -8,14 +8,22 @@
         app:showAsAction="ifRoom"
         android:title="@string/searching_by_date" />
     <item
+        android:id="@+id/sort"
+        android:title="sort"
+        android:icon="@drawable/ic_sort"
+        app:showAsAction="ifRoom"/>
+    <item
         android:id="@+id/search_for_multi_days"
         android:title="@string/searching"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_for_multi_date"/>
 
     <item
-        android:id="@+id/sort"
-        android:title="sort"
-        android:icon="@drawable/ic_sort"
-        app:showAsAction="ifRoom"/>
+        android:id="@+id/get_backup"
+        android:title="get backup"
+       />
+    <item
+        android:id="@+id/set_backup"
+        android:title="save Backup"
+        />
 </menu>
