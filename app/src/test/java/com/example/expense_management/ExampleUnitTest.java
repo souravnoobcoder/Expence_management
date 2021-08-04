@@ -1,4 +1,4 @@
-package com.example.expence_management;
+package com.example.expense_management;
 
 import org.junit.Test;
 

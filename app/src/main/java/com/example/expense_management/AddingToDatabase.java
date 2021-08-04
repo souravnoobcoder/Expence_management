@@ -1,4 +1,4 @@
-package com.example.expence_management;
+package com.example.expense_management;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,8 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.expence_management.Database.DataItems;
-import com.example.expence_management.Database.DataViewModel;
+import com.example.expense_management.Database.DataItems;
+import com.example.expense_management.Database.DataViewModel;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -24,9 +24,9 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.expence_management.MainActivity.CHECK;
-import static com.example.expence_management.MainActivity.DETAIL_GROSS_MONEY_PAID;
-import static com.example.expence_management.MainActivity.makeDate;
+import static com.example.expense_management.MainActivity.CHECK;
+import static com.example.expense_management.MainActivity.DETAIL_GROSS_MONEY_PAID;
+import static com.example.expense_management.MainActivity.makeDate;
 
 public class AddingToDatabase extends AppCompatActivity {
     private TextInputEditText amount,detail;

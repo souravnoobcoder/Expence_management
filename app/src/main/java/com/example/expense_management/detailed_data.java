@@ -1,4 +1,4 @@
-package com.example.expence_management;
+package com.example.expense_management;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,10 +13,10 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.expence_management.Database.DataItems;
-import com.example.expence_management.Database.DataViewModel;
-import com.example.expence_management.Database.myDatabase;
-import com.example.expence_management.RecyclerViewAdapters.detailed_adapter;
+import com.example.expense_management.Database.DataItems;
+import com.example.expense_management.Database.DataViewModel;
+import com.example.expense_management.Database.myDatabase;
+import com.example.expense_management.RecyclerViewAdapters.detailed_adapter;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -25,9 +25,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.example.expence_management.MainActivity.CHECK;
-import static com.example.expence_management.MainActivity.DATA_ID;
-import static com.example.expence_management.MainActivity.makeDate;
+import static com.example.expense_management.MainActivity.CHECK;
+import static com.example.expense_management.MainActivity.DATA_ID;
+import static com.example.expense_management.MainActivity.makeDate;
 
 
 public class detailed_data extends AppCompatActivity {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.expence_management">
+    package="com.example.expense_management">
 
    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
@@ -11,10 +11,10 @@
         android:roundIcon="@drawable/background"
         android:supportsRtl="true"
         android:theme="@style/Theme.Expence_management">
-        <activity android:name=".editHandler"></activity>
-        <activity android:name=".detailed_data" />
-        <activity android:name=".AddingToDatabase" />
-        <activity android:name=".MainActivity">
+        <activity android:name="com.example.expense_management.editHandler"></activity>
+        <activity android:name="com.example.expense_management.detailed_data" />
+        <activity android:name="com.example.expense_management.AddingToDatabase" />
+        <activity android:name="com.example.expense_management.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

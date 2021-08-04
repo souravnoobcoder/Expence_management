@@ -1,4 +1,4 @@
-package com.example.expence_management;
+package com.example.expense_management;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,19 +14,18 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.expence_management.Database.DataItems;
-import com.example.expence_management.Database.DataViewModel;
-import com.example.expence_management.Database.myDatabase;
+import com.example.expense_management.Database.DataItems;
+import com.example.expense_management.Database.DataViewModel;
+import com.example.expense_management.Database.myDatabase;
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.radiobutton.MaterialRadioButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.List;
 
-import static com.example.expence_management.MainActivity.CHECK;
-import static com.example.expence_management.MainActivity.DATA_ID;
-import static com.example.expence_management.detailed_data.LOOK;
-import static com.example.expence_management.detailed_data.OUR_DATE;
+import static com.example.expense_management.MainActivity.CHECK;
+import static com.example.expense_management.MainActivity.DATA_ID;
+import static com.example.expense_management.detailed_data.LOOK;
+import static com.example.expense_management.detailed_data.OUR_DATE;
 
 public class  editHandler extends AppCompatActivity {
     int position=-1;

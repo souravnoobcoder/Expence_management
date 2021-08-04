@@ -1,4 +1,4 @@
-package com.example.expence_management.dataClasses;
+package com.example.expense_management.dataClasses;
 
 public class dataClassDates {
 

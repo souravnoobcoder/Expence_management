@@ -1,6 +1,6 @@
 
 
-package com.example.expence_management.Database;
+package com.example.expense_management.Database;
 
 
 import androidx.room.Entity;

@@ -1,13 +1,11 @@
-package com.example.expence_management.Database;
+package com.example.expense_management.Database;
 
 import android.app.Application;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
-import com.example.expence_management.dataClasses.dataClassDates;
-import com.example.expence_management.dataClasses.dataClassDescription;
-import com.example.expence_management.dataClasses.dataClassMoney;
+import com.example.expense_management.dataClasses.dataClassDates;
 
 import java.util.List;
 

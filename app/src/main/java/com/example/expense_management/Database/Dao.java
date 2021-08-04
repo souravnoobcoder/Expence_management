@@ -1,4 +1,4 @@
-package com.example.expence_management.Database;
+package com.example.expense_management.Database;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Delete;

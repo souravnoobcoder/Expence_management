@@ -1,9 +1,6 @@
-package com.example.expence_management;
+package com.example.expense_management;
 
 
-import android.Manifest;
-import android.app.backup.BackupHelper;
-import android.app.backup.RestoreObserver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -11,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.util.Pair;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,10 +27,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ebner.roomdatabasebackup.core.OnCompleteListener;
 import com.ebner.roomdatabasebackup.core.RoomBackup;
-import com.example.expence_management.Database.DataItems;
-import com.example.expence_management.Database.DataViewModel;
-import com.example.expence_management.Database.myDatabase;
-import com.example.expence_management.RecyclerViewAdapters.mainRecycleAdapter;
+import com.example.expense_management.Database.DataItems;
+import com.example.expense_management.Database.DataViewModel;
+import com.example.expense_management.Database.myDatabase;
+import com.example.expense_management.RecyclerViewAdapters.mainRecycleAdapter;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;

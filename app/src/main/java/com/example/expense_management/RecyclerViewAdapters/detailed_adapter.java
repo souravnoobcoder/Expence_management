@@ -1,7 +1,6 @@
-package com.example.expence_management.RecyclerViewAdapters;
+package com.example.expense_management.RecyclerViewAdapters;
 
 import android.graphics.Color;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +9,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.expence_management.R;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.expence_management.R.*;
+import static com.example.expense_management.R.*;
 
 public class detailed_adapter extends RecyclerView.Adapter<detailed_adapter.Holder>  {
 

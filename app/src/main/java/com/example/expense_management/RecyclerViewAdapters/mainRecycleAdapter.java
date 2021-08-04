@@ -1,4 +1,4 @@
-package com.example.expence_management.RecyclerViewAdapters;
+package com.example.expense_management.RecyclerViewAdapters;
 
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -9,8 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.expence_management.Database.DataItems;
-import com.example.expence_management.R;
+import com.example.expense_management.Database.DataItems;
+import com.example.expense_management.R;
 
 import java.util.ArrayList;
 import java.util.Date;
