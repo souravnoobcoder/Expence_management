@@ -4,12 +4,14 @@ package com.example.expence_management;
 import android.Manifest;
 import android.app.backup.BackupHelper;
 import android.app.backup.RestoreObserver;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +30,8 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ebner.roomdatabasebackup.core.OnCompleteListener;
+import com.ebner.roomdatabasebackup.core.RoomBackup;
 import com.example.expence_management.Database.DataItems;
 import com.example.expence_management.Database.DataViewModel;
 import com.example.expence_management.Database.myDatabase;
@@ -117,25 +122,24 @@ public class MainActivity extends AppCompatActivity {
 
         });
         toolbar.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.search_by_date:
-                    datePickerForSearch.show(getSupportFragmentManager(), "ust");
-                    return true;
-                case R.id.search_for_multi_days:
-                    forMultiDates.show(getSupportFragmentManager(), "get");
-                    return true;
-                case R.id.sort:
-                    alertSort();
-                    return true;
-                case R.id.get_backup:
-                    getBackup();
-                    return true;
-                case R.id.set_backup:
-                    saveBackup();
-                    return true;
-                default:
-                    return false;
+            int itemId = item.getItemId();
+            if (itemId == R.id.search_by_date) {
+                datePickerForSearch.show(getSupportFragmentManager(), "ust");
+                return true;
+            } else if (itemId == R.id.search_for_multi_days) {
+                forMultiDates.show(getSupportFragmentManager(), "get");
+                return true;
+            } else if (itemId == R.id.sort) {
+                alertSort();
+                return true;
+            } else if (itemId == R.id.get_backup) {
+                restore(MainActivity.this);
+                return true;
+            } else if (itemId == R.id.set_backup) {
+                saveDatabase(MainActivity.this);
+                return true;
             }
+            return false;
         });
         adapter.setOnItemLongClickListener(this::alertForDelete);
         adapter.setOnItemClickListener(data -> {
@@ -289,28 +293,25 @@ public class MainActivity extends AppCompatActivity {
         new Handler(Looper.getMainLooper()).postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
     }
 
-    private void saveBackup() {
+    private void saveBackup(Context context) {
 
-        new Thread(() -> {
-            myDatabase.getDbINSTANCE(MainActivity.this).close();
-            File db = getDatabasePath("expense.database");
-            File dbShm = new File(db.getParent(), "my-db-shm");
-            File dbWal = new File(db.getParent(), "my-db-wal");
+        myDatabase.getDbINSTANCE(context).close();
+        File db = context.getDatabasePath("expense.database");
+        File dbShm = new File(db.getParent(), "my-db-shm");
+        File dbWal = new File(db.getParent(), "my-db-wal");
 
-            File db2 = new File("/sdcard/", "expense.database");
-            File dbShm2 = new File(db2.getParent(), "my-db-shm");
-            File dbWal2 = new File(db2.getParent(), "my-db-wal");
+        File db2 = new File("/sdcard/", "expense.database");
+        File dbShm2 = new File(db2.getParent(), "my-db-shm");
+        File dbWal2 = new File(db2.getParent(), "my-db-wal");
 
-            try {
-                FileUtils.copyFile(db, db2);
-                FileUtils.copyFile(dbShm, dbShm2);
-                FileUtils.copyFile(dbWal, dbWal2);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
+        try {
+            FileUtils.copyFile(db, db2);
+            FileUtils.copyFile(dbShm, dbShm2);
+            FileUtils.copyFile(dbWal, dbWal2);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-
     void getBackup() {
         new Thread(() -> {
             myDatabase.getDbINSTANCE(MainActivity.this).close();
@@ -331,5 +332,46 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
 
+   }
+   void saveDatabase(Context context){
+        final RoomBackup roomBackup=new RoomBackup();
+        roomBackup.context(context)
+                .database(myDatabase.getDbINSTANCE(context))
+                .enableLogDebug(true)
+                .backupIsEncrypted(true)
+                .useExternalStorage(true)
+                .maxFileCount(5)
+                .onCompleteListener(new OnCompleteListener() {
+                    @Override
+                    public void onComplete(boolean success, @NonNull String s) {
+                        System.out.println("is it"+success+s);
+                        if (success)roomBackup.restartApp(new Intent(getApplicationContext(),MainActivity.class));
+                    }
+                });
+       roomBackup.customEncryptPassword("klfdfldklfdklkjkd");
+        roomBackup.backup();
+   }
+   void restore(Context context){
+       final RoomBackup roomBackup = new RoomBackup();
+       roomBackup.context(context);
+       roomBackup.database(myDatabase.getDbINSTANCE(context));
+       roomBackup.enableLogDebug(true);
+       roomBackup.backupIsEncrypted(true);
+       roomBackup.customEncryptPassword("klfdfldklfdklkjkd");
+       roomBackup.useExternalStorage(true);
+       roomBackup.onCompleteListener(new OnCompleteListener() {
+           @Override
+           public void onComplete(boolean success, @NonNull String message) {
+               System.out.println("is it"+success+message);
+               if (success) roomBackup.restartApp(new Intent(getApplicationContext(), MainActivity.class));
+           }
+       });
+       roomBackup.restore();
+       new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+           @Override
+           public void run() {
+               
+           }
+       },2000);
    }
 }
