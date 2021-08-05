@@ -58,7 +58,7 @@ public class detailed_adapter extends RecyclerView.Adapter<detailed_adapter.Hold
             val.setTextColor(Color.rgb(239,38,38));
             des.setTextColor(Color.rgb(239,38,38));
         }
-
+        mainRecycleAdapter.setFadeAnimation(holder.itemView);
     }
 
     @Override

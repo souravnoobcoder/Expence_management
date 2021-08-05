@@ -4,6 +4,9 @@ import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -55,7 +58,7 @@ public class mainRecycleAdapter extends RecyclerView.Adapter<mainRecycleAdapter.
             gainMoney.setText(""+dataItemsList.get(position).getGrossMoneyGot());
             TextView paidMoney=holder.paid;
             paidMoney.setText(format("%d", dataItemsList.get(position).getGrossMoneyExpense()));
-
+            setFadeAnimation(holder.itemView);
     }
 
     @Override
@@ -102,5 +105,12 @@ public class mainRecycleAdapter extends RecyclerView.Adapter<mainRecycleAdapter.
     }
     public interface onItemClickListener {
         void onItemClicked(DataItems data);
+    }
+    public static void setFadeAnimation(View view){
+        ScaleAnimation alphaAnimation=new ScaleAnimation(0.0f,
+                1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_SELF,
+                0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        alphaAnimation.setDuration(1000);
+        view.startAnimation(alphaAnimation);
     }
 }
