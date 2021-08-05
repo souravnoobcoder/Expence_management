@@ -202,8 +202,7 @@ public class MainActivity extends AppCompatActivity {
                 .setMessage("\n" + makeDate(dataItem.getDate()) + " date data")
                 .setPositiveButton("Yes", (dialog, which) -> {
                     viewModel.deleteData(dataItem);
-                    finish();
-                    startActivity(getIntent());
+                    dateA();
                 });
         deleteDialog = deleteDialogBuilder.create();
         deleteDialog.show();
