@@ -57,6 +57,7 @@
         app:layout_constraintTop_toBottomOf="@+id/coordinatorLayout2">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/money"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter amount"
@@ -79,6 +80,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
+            android:id="@+id/money_explain"
             android:layout_height="wrap_content"
             android:baselineAligned="false"
             android:hint="Enter Detail"

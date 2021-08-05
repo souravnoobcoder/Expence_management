@@ -28,9 +28,8 @@
                 android:background="@color/red"
                 app:menu="@menu/edit_task_handler"
                 app:navigationIcon="@drawable/ic_back_for_adding_data"
-                app:title="Update Data"
                 app:subtitleTextAppearance="@color/black"
-                />
+                app:title="Update Data" />
         </com.google.android.material.appbar.AppBarLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
@@ -42,15 +41,14 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:text="Today Date"
-        android:textStyle="bold"
-        android:textSize="20sp"
         android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/coordinatorLayout2" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/money_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="200dp"
@@ -62,17 +60,16 @@
         app:layout_constraintTop_toBottomOf="@+id/coordinatorLayout2">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/update_money"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter amount"
-            android:textColor="@color/black"
-            android:id="@+id/update_money"
-            android:inputType="number" />
+            android:inputType="number"
+            android:textColor="@color/black" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/update_money_explain_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -83,13 +80,14 @@
         app:layout_constraintTop_toBottomOf="@+id/money_layout">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
             android:id="@+id/update_money_explain"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
             android:baselineAligned="false"
-            android:hint="Enter Detail" />
+            android:hint="Enter Detail"
+            android:textColor="@color/black" />
     </com.google.android.material.textfield.TextInputLayout>
+
     <RadioGroup
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

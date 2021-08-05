@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    app:layoutDescription="@xml/detailed_data_scene"
     tools:context=".detailed_data">
 
     <TextView
@@ -23,6 +24,7 @@
         android:id="@+id/paid_amount"
         android:layout_width="204dp"
         android:layout_height="wrap_content"
+        android:text="ddfdfd"
         android:textAlignment="center"
         android:textColor="@color/expense"
         android:textSize="25sp"
@@ -33,6 +35,7 @@
         android:id="@+id/gain_amount"
         android:layout_width="204dp"
         android:layout_height="wrap_content"
+        android:text="ddfdfd"
         android:textAlignment="center"
         android:textColor="@color/gain"
         android:textSize="25sp"
@@ -41,10 +44,11 @@
         app:layout_constraintStart_toEndOf="@+id/paid_amount" />
 
     <LinearLayout
-        android:background="@drawable/background"
-        android:alpha="0.7"
+        android:id="@+id/linearLayout"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
+        android:alpha="0.7"
+        android:background="@drawable/background"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -83,24 +87,24 @@
         </LinearLayout>
 
     </LinearLayout>
-<!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:id="@+id/expense_recyclerView"-->
-<!--        android:layout_width="204dp"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:padding="5dp"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/paid_amount" />-->
+    <!--    <androidx.recyclerview.widget.RecyclerView-->
+    <!--        android:id="@+id/expense_recyclerView"-->
+    <!--        android:layout_width="204dp"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        android:padding="5dp"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/paid_amount" />-->
 
-<!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:id="@+id/gain_recyclerView"-->
-<!--        android:layout_width="204dp"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:padding="5dp"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/expense_recyclerView"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/gain_amount" />-->
+    <!--    <androidx.recyclerview.widget.RecyclerView-->
+    <!--        android:id="@+id/gain_recyclerView"-->
+    <!--        android:layout_width="204dp"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        android:padding="5dp"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toEndOf="@+id/expense_recyclerView"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/gain_amount" />-->
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_while_watching"
@@ -114,4 +118,4 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.motion.widget.MotionLayout>

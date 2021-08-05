@@ -70,30 +70,29 @@ public class AddingToDatabase extends AppCompatActivity {
         bar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.preview:
-                        Intent i=new Intent(AddingToDatabase.this,detailed_data.class);
-                        int exp=editHandler.setGrossMoney(moneyExpense);
-                        int go=editHandler.setGrossMoney(moneyGot);
-                        i.putExtra(MainActivity.DETAIL_DATE,stringDate);
-                        i.putExtra(DETAIL_GROSS_MONEY_PAID,String.valueOf(exp));
-                        i.putExtra(MainActivity.DETAIL_GROSS_MONEY_GOT,String.valueOf(go));
-                        i.putIntegerArrayListExtra(MainActivity.DETAIL_MONEY_EXPENSE, (ArrayList<Integer>) moneyExpense);
-                        i.putIntegerArrayListExtra(MainActivity.DETAIL_MONEY_GOT, (ArrayList<Integer>) moneyGot);
-                        i.putStringArrayListExtra(MainActivity.DETAIL_MONEY_EXPENSE_PURPOSE, (ArrayList<String>) mEPurpose);
-                        i.putStringArrayListExtra(MainActivity.DETAIL_MONEY_GOT_PURPOSE, (ArrayList<String>) mGPurpose);
-                        i.putExtra(CHECK,"no");
-                        startActivity(i);
-                        return true;
-                    case R.id.save_data:
-                        setInsert(inputDate,moneyExpense,moneyGot,mGPurpose,mEPurpose);
-                        makeToast("Your data is saved");
-                        backOnSave(1000);
-                        makeAllListNull();
-                        return true;
-                    default:
-                        return false;
+                int itemId = item.getItemId();
+                if (itemId == R.id.preview) {
+                    Intent i = new Intent(AddingToDatabase.this, detailed_data.class);
+                    int exp = editHandler.setGrossMoney(moneyExpense);
+                    int go = editHandler.setGrossMoney(moneyGot);
+                    i.putExtra(MainActivity.DETAIL_DATE, stringDate);
+                    i.putExtra(DETAIL_GROSS_MONEY_PAID, String.valueOf(exp));
+                    i.putExtra(MainActivity.DETAIL_GROSS_MONEY_GOT, String.valueOf(go));
+                    i.putIntegerArrayListExtra(MainActivity.DETAIL_MONEY_EXPENSE, (ArrayList<Integer>) moneyExpense);
+                    i.putIntegerArrayListExtra(MainActivity.DETAIL_MONEY_GOT, (ArrayList<Integer>) moneyGot);
+                    i.putStringArrayListExtra(MainActivity.DETAIL_MONEY_EXPENSE_PURPOSE, (ArrayList<String>) mEPurpose);
+                    i.putStringArrayListExtra(MainActivity.DETAIL_MONEY_GOT_PURPOSE, (ArrayList<String>) mGPurpose);
+                    i.putExtra(CHECK, "no");
+                    startActivity(i);
+                    return true;
+                } else if (itemId == R.id.save_data) {
+                    setInsert(inputDate, moneyExpense, moneyGot, mGPurpose, mEPurpose);
+                    makeToast("Your data is saved");
+                    backOnSave(1000);
+                    makeAllListNull();
+                    return true;
                 }
+                return false;
             }
         });
      addingMore.setOnClickListener(new View.OnClickListener() {
@@ -125,8 +124,8 @@ public class AddingToDatabase extends AppCompatActivity {
         Toast.makeText(AddingToDatabase.this, message, Toast.LENGTH_SHORT).show();
     }
     private void makeEditTextNullAgain(){
-        amount.setText(null);
-        detail.setText(null);
+        amount.setText("");
+        detail.setText("");
         gain.setChecked(false);
         paid.setChecked(false);
     }
