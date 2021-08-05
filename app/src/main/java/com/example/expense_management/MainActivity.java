@@ -1,7 +1,6 @@
 package com.example.expense_management;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -16,7 +15,6 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,8 +23,6 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ebner.roomdatabasebackup.core.OnCompleteListener;
-import com.ebner.roomdatabasebackup.core.RoomBackup;
 import com.example.expense_management.Database.DataItems;
 import com.example.expense_management.Database.DataViewModel;
 import com.example.expense_management.Database.myDatabase;
@@ -35,10 +31,6 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -128,10 +120,10 @@ public class MainActivity extends AppCompatActivity {
                 alertSort();
                 return true;
             } else if (itemId == R.id.get_backup) {
-                restore(MainActivity.this);
+               makeToast("Get backup feature not available yet");
                 return true;
             } else if (itemId == R.id.set_backup) {
-                saveDatabase(MainActivity.this);
+                makeToast("Set backup feature not available yet");
                 return true;
             }
             return false;
@@ -287,86 +279,8 @@ public class MainActivity extends AppCompatActivity {
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
     }
+void makeToast(String message){
+        Toast.makeText(this,message,Toast.LENGTH_LONG).show();
+}
 
-    private void saveBackup(Context context) {
-
-        myDatabase.getDbINSTANCE(context).close();
-        File db = context.getDatabasePath("expense.database");
-        File dbShm = new File(db.getParent(), "my-db-shm");
-        File dbWal = new File(db.getParent(), "my-db-wal");
-
-        File db2 = new File("/sdcard/", "expense.database");
-        File dbShm2 = new File(db2.getParent(), "my-db-shm");
-        File dbWal2 = new File(db2.getParent(), "my-db-wal");
-
-        try {
-            FileUtils.copyFile(db, db2);
-            FileUtils.copyFile(dbShm, dbShm2);
-            FileUtils.copyFile(dbWal, dbWal2);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    void getBackup() {
-        new Thread(() -> {
-            myDatabase.getDbINSTANCE(MainActivity.this).close();
-            File db = new File("/sdcard/", "expense.database");
-            File dbShm = new File(db.getParent(), "my-db-shm");
-            File dbWal = new File(db.getParent(), "my-db-wal");
-
-            File db2 = getDatabasePath("expense.database");
-            File dbShm2 = new File(db2.getParent(), "my-db-shm");
-            File dbWal2 = new File(db2.getParent(), "my-db-wal");
-
-            try {
-                FileUtils.copyFile(db, db2);
-                FileUtils.copyFile(dbShm, dbShm2);
-                FileUtils.copyFile(dbWal, dbWal2);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).start();
-
-   }
-   void saveDatabase(Context context){
-        final RoomBackup roomBackup=new RoomBackup();
-        roomBackup.context(context)
-                .database(myDatabase.getDbINSTANCE(context))
-                .enableLogDebug(true)
-                .backupIsEncrypted(true)
-                .useExternalStorage(true)
-                .maxFileCount(5)
-                .onCompleteListener(new OnCompleteListener() {
-                    @Override
-                    public void onComplete(boolean success, @NonNull String s) {
-                        System.out.println("is it"+success+s);
-                        if (success)roomBackup.restartApp(new Intent(getApplicationContext(),MainActivity.class));
-                    }
-                });
-       roomBackup.customEncryptPassword("klfdfldklfdklkjkd");
-        roomBackup.backup();
-   }
-   void restore(Context context){
-       final RoomBackup roomBackup = new RoomBackup();
-       roomBackup.context(context);
-       roomBackup.database(myDatabase.getDbINSTANCE(context));
-       roomBackup.enableLogDebug(true);
-       roomBackup.backupIsEncrypted(true);
-       roomBackup.customEncryptPassword("klfdfldklfdklkjkd");
-       roomBackup.useExternalStorage(true);
-       roomBackup.onCompleteListener(new OnCompleteListener() {
-           @Override
-           public void onComplete(boolean success, @NonNull String message) {
-               System.out.println("is it"+success+message);
-               if (success) roomBackup.restartApp(new Intent(getApplicationContext(), MainActivity.class));
-           }
-       });
-       roomBackup.restore();
-       new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-           @Override
-           public void run() {
-               
-           }
-       },2000);
-   }
 }
