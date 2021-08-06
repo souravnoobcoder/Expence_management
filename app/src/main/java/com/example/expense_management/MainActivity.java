@@ -29,6 +29,7 @@ import com.example.expense_management.Database.myDatabase;
 import com.example.expense_management.RecyclerViewAdapters.mainRecycleAdapter;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private MaterialDatePicker<Long> materialDatePicker, datePickerForSearch;
     private MaterialDatePicker<Pair<Long, Long>> forMultiDates;
     DataViewModel viewModel;
-
+    int expense,got;
     public static String makeDate(long l) {
         return DateFormat.format("dd/MM/yy", new Date(l)).toString();
     }
@@ -89,15 +90,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         addingData.setOnClickListener(v -> materialDatePicker.show(MainActivity.this.getSupportFragmentManager(), "Yes"));
         materialDatePicker.addOnPositiveButtonClickListener(selection -> {
-
-            new Thread(() -> dates = myDatabase.getDbINSTANCE(MainActivity.this).Dao().getAllDate()).start();
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            myDatabase.DELETE_INSTANCE();
-            int get = Arrays.binarySearch(dates.toArray(), selection);
+            int get =checkDate(selection);
             if (get < 0) {
                 Intent intent = new Intent(MainActivity.this, AddingToDatabase.class);
                 intent.putExtra(DATE_KEY, selection);
@@ -105,6 +98,25 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 makeAlertDailogbBox(selection);
                 dialog.show();
+            }
+
+        });
+        forMultiDates.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Pair<Long, Long>>() {
+            @Override
+            public void onPositiveButtonClick(Pair<Long, Long> selection) {
+                new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            expense=myDatabase.getDbINSTANCE(MainActivity.this).Dao().getExpense(selection.first,selection.second);
+                            got=myDatabase.getDbINSTANCE(MainActivity.this).Dao().getGain(selection.first,selection.second);
+                        }
+                    }).start();
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    showSumAlert(expense,got,selection.first,selection.second);
             }
 
         });
@@ -207,6 +219,13 @@ public class MainActivity extends AppCompatActivity {
         deleteDialog = deleteDialogBuilder.create();
         deleteDialog.show();
     }
+    void showSumAlert(int paid,int gain,long start,long last){
+        AlertDialog dialog=new AlertDialog.Builder(MainActivity.this)
+                .setTitle(makeDate(start)+" to "+makeDate(last))
+                .setMessage("Gross Gain = "+gain+"\nGross Paid = "+paid)
+                .setPositiveButton("Ok",null).create();
+        dialog.show();
+    }
 
     void alertSort() {
         LayoutInflater inflater = this.getLayoutInflater();
@@ -282,4 +301,15 @@ void makeToast(String message){
         Toast.makeText(this,message,Toast.LENGTH_LONG).show();
 }
 
+    int checkDate(long date){
+        new Thread(() -> dates = myDatabase.getDbINSTANCE(MainActivity.this).Dao().getAllDate()).start();
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        myDatabase.DELETE_INSTANCE();
+        int get = Arrays.binarySearch(dates.toArray(), date);
+        return get;
+    }
 }

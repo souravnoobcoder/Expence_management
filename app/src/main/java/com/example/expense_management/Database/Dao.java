@@ -52,4 +52,10 @@ public interface Dao {
 
     @Query("select *from expenses where date=:date ")
     DataItems getRoww(long date);
+
+    @Query("SELECT Sum(grossMoneyExpense) FROM EXPENSES WHERE date BETWEEN :first And :last ")
+    int getExpense(long first,long last);
+
+    @Query("SELECT Sum(grossMoneyGot) FROM EXPENSES WHERE date BETWEEN :first And :last ")
+    int getGain(long first,long last);
 }
