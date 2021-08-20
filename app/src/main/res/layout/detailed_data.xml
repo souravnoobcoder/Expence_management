@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
+    app:layoutDescription="@xml/detailed_data_scene"
     tools:context=".detailed_data">
 
     <TextView
         android:id="@+id/date_of_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/purple_200"
         android:textAlignment="center"
-        android:textSize="30sp"
+        android:textColor="@color/black"
+        android:textSize="42sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/paid_amount"
         app:layout_constraintTop_toTopOf="parent" />
@@ -20,8 +24,10 @@
         android:id="@+id/paid_amount"
         android:layout_width="204dp"
         android:layout_height="wrap_content"
+        android:text="ddfdfd"
         android:textAlignment="center"
-        android:textSize="20sp"
+        android:textColor="@color/expense"
+        android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/date_of_detail" />
 
@@ -29,39 +35,87 @@
         android:id="@+id/gain_amount"
         android:layout_width="204dp"
         android:layout_height="wrap_content"
+        android:text="ddfdfd"
         android:textAlignment="center"
-        android:textSize="20sp"
+        android:textColor="@color/gain"
+        android:textSize="25sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/paid_amount"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/paid_amount" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/expense_recyclerView"
-        android:layout_width="204dp"
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:padding="5dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/paid_amount" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/gain_recyclerView"
-        android:layout_width="204dp"
-        android:layout_height="0dp"
-        android:padding="5dp"
+        android:alpha="0.7"
+        android:background="@drawable/background"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gain_amount" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/paid_amount">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/expense_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/paid_amount" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/gain_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/expense_recyclerView"
+                app:layout_constraintTop_toBottomOf="@+id/gain_amount" />
+        </LinearLayout>
+
+    </LinearLayout>
+    <!--    <androidx.recyclerview.widget.RecyclerView-->
+    <!--        android:id="@+id/expense_recyclerView"-->
+    <!--        android:layout_width="204dp"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        android:padding="5dp"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/paid_amount" />-->
+
+    <!--    <androidx.recyclerview.widget.RecyclerView-->
+    <!--        android:id="@+id/gain_recyclerView"-->
+    <!--        android:layout_width="204dp"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        android:padding="5dp"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toEndOf="@+id/expense_recyclerView"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/gain_amount" />-->
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:layout_width="wrap_content"
         android:id="@+id/add_while_watching"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="50dp"
         android:layout_marginBottom="50dp"
-        android:visibility="gone"
         android:src="@drawable/ic_adding_data"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.motion.widget.MotionLayout>

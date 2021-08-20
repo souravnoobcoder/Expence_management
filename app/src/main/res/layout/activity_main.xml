@@ -6,13 +6,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
+    android:theme="@style/Theme.Expence_management"
     android:id="@+id/main_activity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="50dp"
-        android:id="@+id/main_list_recycleView"/>
+        android:layoutAnimation="@anim/layout_animation_xml"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/main_list_recycleView"
+        android:background="@drawable/background"
+        android:alpha=".5"/>
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,11 +26,11 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/tool_bar"
             android:layout_width="match_parent"
+            android:background="@color/purple_500"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|enterAlways|snap"
             app:menu="@menu/home_menu"
-            app:title="All Details"
-            app:titleTextColor="@color/white" />
+            app:title="All Details" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
