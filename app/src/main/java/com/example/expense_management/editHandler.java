@@ -20,12 +20,16 @@ import com.example.expense_management.Database.myDatabase;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.util.List;
 
-import static com.example.expense_management.MainActivity.CHECK;
-import static com.example.expense_management.MainActivity.DATA_ID;
-import static com.example.expense_management.detailed_data.LOOK;
-import static com.example.expense_management.detailed_data.OUR_DATE;
+import static com.example.expense_management.dataClasses.psfs.CHECK;
+import static com.example.expense_management.dataClasses.psfs.DATA_ID;
+import static com.example.expense_management.dataClasses.psfs.LIST_POSITION;
+import static com.example.expense_management.dataClasses.psfs.LOOK;
+import static com.example.expense_management.dataClasses.psfs.OUR_DATE;
+import static com.example.expense_management.dataClasses.psfs.UPDATE_MONEY;
+import static com.example.expense_management.dataClasses.psfs.UPDATE_MONEY_DESCRIPTION;
+import static com.example.expense_management.dataClasses.psfs.setGrossMoney;
+
 
 public class  editHandler extends AppCompatActivity {
     int position=-1;
@@ -57,11 +61,11 @@ public class  editHandler extends AppCompatActivity {
         see=intent.getBooleanExtra(CHECK,false);
         if (!see){
             look=intent.getBooleanExtra(LOOK,false);
-            position=intent.getIntExtra(detailed_data.LIST_POSITION,-1);
+            position=intent.getIntExtra(LIST_POSITION,-1);
             upDate = intent.getStringExtra(OUR_DATE);
-            dateId = intent.getLongExtra(MainActivity.DATA_ID,-1);
-            updateMoney = intent.getStringExtra(detailed_data.UPDATE_MONEY);
-             updateMoneyDescription = intent.getStringExtra(detailed_data.UPDATE_MONEY_DESCRIPTION);
+            dateId = intent.getLongExtra(DATA_ID,-1);
+            updateMoney = intent.getStringExtra(UPDATE_MONEY);
+             updateMoneyDescription = intent.getStringExtra(UPDATE_MONEY_DESCRIPTION);
              if (look){
                  gain.setChecked(true);
                  paid.setVisibility(View.GONE);
@@ -172,17 +176,6 @@ public class  editHandler extends AppCompatActivity {
         if (aBoolean)
         makeNullAgain();
 
-    }
-
-    public static int setGrossMoney(List<Integer> money) {
-        int i, gross = 0, value;
-        if (money==null)
-            return 0;
-        for (i = 0; i < money.size(); i++) {
-            value = money.get(i);
-            gross += value;
-        }
-        return gross;
     }
 
     private void makeToast(String message){

@@ -13,10 +13,10 @@ import androidx.room.TypeConverters;
 public abstract class myDatabase extends RoomDatabase {
     public abstract Dao Dao();
     public static myDatabase INSTANCE;
-
+    public static final String DATABASE_NAME="expense.database";
     public static myDatabase getDbINSTANCE(@Nullable Context context){
         if(INSTANCE==null){
-            INSTANCE= Room.databaseBuilder(context.getApplicationContext(),myDatabase.class,"expense.database")
+            INSTANCE= Room.databaseBuilder(context.getApplicationContext(),myDatabase.class,DATABASE_NAME)
                     .build();
         }
         return INSTANCE;

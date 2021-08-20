@@ -24,9 +24,17 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.expense_management.MainActivity.CHECK;
-import static com.example.expense_management.MainActivity.DETAIL_GROSS_MONEY_PAID;
-import static com.example.expense_management.MainActivity.makeDate;
+import static com.example.expense_management.dataClasses.psfs.CHECK;
+import static com.example.expense_management.dataClasses.psfs.DATE_KEY;
+import static com.example.expense_management.dataClasses.psfs.DETAIL_DATE;
+import static com.example.expense_management.dataClasses.psfs.DETAIL_GROSS_MONEY_GOT;
+import static com.example.expense_management.dataClasses.psfs.DETAIL_GROSS_MONEY_PAID;
+import static com.example.expense_management.dataClasses.psfs.DETAIL_MONEY_EXPENSE;
+import static com.example.expense_management.dataClasses.psfs.DETAIL_MONEY_EXPENSE_PURPOSE;
+import static com.example.expense_management.dataClasses.psfs.DETAIL_MONEY_GOT;
+import static com.example.expense_management.dataClasses.psfs.DETAIL_MONEY_GOT_PURPOSE;
+import static com.example.expense_management.dataClasses.psfs.makeDate;
+import static com.example.expense_management.dataClasses.psfs.setGrossMoney;
 
 public class AddingToDatabase extends AppCompatActivity {
     private TextInputEditText amount,detail;
@@ -63,7 +71,7 @@ public class AddingToDatabase extends AppCompatActivity {
             }
         });
         Intent intent=getIntent();
-        long inputDate=intent.getLongExtra(MainActivity.DATE_KEY,-1);
+        long inputDate=intent.getLongExtra(DATE_KEY,-1);
         String stringDate=makeDate(inputDate);
         date.setText(stringDate);
         // Menu clickListener
@@ -73,15 +81,15 @@ public class AddingToDatabase extends AppCompatActivity {
                 int itemId = item.getItemId();
                 if (itemId == R.id.preview) {
                     Intent i = new Intent(AddingToDatabase.this, detailed_data.class);
-                    int exp = editHandler.setGrossMoney(moneyExpense);
-                    int go = editHandler.setGrossMoney(moneyGot);
-                    i.putExtra(MainActivity.DETAIL_DATE, stringDate);
+                    int exp = setGrossMoney(moneyExpense);
+                    int go = setGrossMoney(moneyGot);
+                    i.putExtra(DETAIL_DATE, stringDate);
                     i.putExtra(DETAIL_GROSS_MONEY_PAID, String.valueOf(exp));
-                    i.putExtra(MainActivity.DETAIL_GROSS_MONEY_GOT, String.valueOf(go));
-                    i.putIntegerArrayListExtra(MainActivity.DETAIL_MONEY_EXPENSE, (ArrayList<Integer>) moneyExpense);
-                    i.putIntegerArrayListExtra(MainActivity.DETAIL_MONEY_GOT, (ArrayList<Integer>) moneyGot);
-                    i.putStringArrayListExtra(MainActivity.DETAIL_MONEY_EXPENSE_PURPOSE, (ArrayList<String>) mEPurpose);
-                    i.putStringArrayListExtra(MainActivity.DETAIL_MONEY_GOT_PURPOSE, (ArrayList<String>) mGPurpose);
+                    i.putExtra(DETAIL_GROSS_MONEY_GOT, String.valueOf(go));
+                    i.putIntegerArrayListExtra(DETAIL_MONEY_EXPENSE, (ArrayList<Integer>) moneyExpense);
+                    i.putIntegerArrayListExtra(DETAIL_MONEY_GOT, (ArrayList<Integer>) moneyGot);
+                    i.putStringArrayListExtra(DETAIL_MONEY_EXPENSE_PURPOSE, (ArrayList<String>) mEPurpose);
+                    i.putStringArrayListExtra(DETAIL_MONEY_GOT_PURPOSE, (ArrayList<String>) mGPurpose);
                     i.putExtra(CHECK, "no");
                     startActivity(i);
                     return true;
@@ -131,8 +139,8 @@ public class AddingToDatabase extends AppCompatActivity {
     }
     private void setInsert(long date,List<Integer> moneyExpense, List<Integer> moneyGot
     ,List<String> moneyGotPurpose,List<String> moneyExpensePurpose){
-       int grossExpense= editHandler.setGrossMoney(moneyExpense);
-       int grossGot=editHandler.setGrossMoney(moneyGot);
+       int grossExpense=setGrossMoney(moneyExpense);
+       int grossGot=setGrossMoney(moneyGot);
         DataItems myData=new DataItems(date,grossExpense,grossGot,
                 moneyExpense,moneyGot,moneyGotPurpose,moneyExpensePurpose);
        model.insertData(myData);

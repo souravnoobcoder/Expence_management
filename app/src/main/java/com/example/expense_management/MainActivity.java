@@ -1,8 +1,17 @@
 package com.example.expense_management;
 
 
+import static com.example.expense_management.Database.myDatabase.DATABASE_NAME;
+import static com.example.expense_management.dataClasses.psfs.CHECK;
+import static com.example.expense_management.dataClasses.psfs.DATA_ID;
+import static com.example.expense_management.dataClasses.psfs.DATE_KEY;
+import static com.example.expense_management.dataClasses.psfs.makeDate;
+
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -15,9 +24,11 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.util.Pair;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,11 +38,16 @@ import com.example.expense_management.Database.DataItems;
 import com.example.expense_management.Database.DataViewModel;
 import com.example.expense_management.Database.myDatabase;
 import com.example.expense_management.RecyclerViewAdapters.mainRecycleAdapter;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -39,16 +55,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     List<Long> dates;
-    public static final String DETAIL_DATE = "da";
-    public static final String DETAIL_GROSS_MONEY_GOT = "wildDog";
-    public static final String DETAIL_GROSS_MONEY_PAID = "leopard";
-    public static final String DETAIL_MONEY_EXPENSE = "cheetah";
-    public static final String DETAIL_MONEY_GOT = "lion";
-    public static final String DETAIL_MONEY_EXPENSE_PURPOSE = "hyena";
-    public static final String DETAIL_MONEY_GOT_PURPOSE = "dragonLizard";
-    public static final String DATE_KEY = "selected date";
-    public static final String CHECK = "check";
-    public static final String DATA_ID = "idkd";
     AlertDialog.Builder dialogBuilder, deleteDialogBuilder, sortAlertBuilder;
     AlertDialog dialog, deleteDialog, sortAlert;
     private mainRecycleAdapter adapter;
@@ -58,9 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private MaterialDatePicker<Pair<Long, Long>> forMultiDates;
     DataViewModel viewModel;
     int expense,got;
-    public static String makeDate(long l) {
-        return DateFormat.format("dd/MM/yy", new Date(l)).toString();
-    }
+    MaterialToolbar toolbar;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
-        MaterialToolbar toolbar = findViewById(R.id.tool_bar);
+     toolbar = findViewById(R.id.tool_bar);
 
         RecyclerView mainListRecyclerView = findViewById(R.id.main_list_recycleView);
         mainListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -135,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                makeToast("Get backup feature not available yet");
                 return true;
             } else if (itemId == R.id.set_backup) {
-                makeToast("Set backup feature not available yet");
+                setBackup(R.id.set_backup);
                 return true;
             }
             return false;
@@ -311,5 +315,39 @@ void makeToast(String message){
         myDatabase.DELETE_INSTANCE();
         int get = Arrays.binarySearch(dates.toArray(), date);
         return get;
+    }
+    void setBackup(int id){
+        if(id == R.id.set_backup) {
+            int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            if(permission == PackageManager.PERMISSION_GRANTED) {
+                myDatabase.getDbINSTANCE(this).close();
+
+                File db = getDatabasePath("expense.database");
+                File dbShm = new File(db.getParent(), "expense.database-shm");
+                File dbWal = new File(db.getParent(), "expense.database-wal");
+
+                StorageReference storageReference=FirebaseStorage.getInstance().getReference();
+
+                storageReference.child("dbs.db").putFile(Uri.fromFile(db)).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+                storageReference.child("expense/Shm").putFile(Uri.fromFile(dbShm));
+                storageReference.child("expense/Wal").putFile(Uri.fromFile(dbWal));
+
+            } else {
+                Snackbar.make(toolbar, "Please allow access to your storage", Snackbar.LENGTH_LONG)
+                        .setAction("Allow", view -> ActivityCompat.requestPermissions(this, new String[] {
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        }, 0)).show();
+            }
+        }
+    }
+    void getBackup(){
+       String path= getDatabasePath(DATABASE_NAME).getAbsolutePath();
+       makeToast(path);
+        System.out.println("path is "+path);
     }
 }

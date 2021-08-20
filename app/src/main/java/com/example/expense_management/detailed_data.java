@@ -25,9 +25,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.example.expense_management.MainActivity.CHECK;
-import static com.example.expense_management.MainActivity.DATA_ID;
-import static com.example.expense_management.MainActivity.makeDate;
+import static com.example.expense_management.dataClasses.psfs.CHECK;
+import static com.example.expense_management.dataClasses.psfs.DATA_ID;
+import static com.example.expense_management.dataClasses.psfs.DETAIL_DATE;
+import static com.example.expense_management.dataClasses.psfs.DETAIL_GROSS_MONEY_GOT;
+import static com.example.expense_management.dataClasses.psfs.DETAIL_GROSS_MONEY_PAID;
+import static com.example.expense_management.dataClasses.psfs.DETAIL_MONEY_EXPENSE;
+import static com.example.expense_management.dataClasses.psfs.DETAIL_MONEY_EXPENSE_PURPOSE;
+import static com.example.expense_management.dataClasses.psfs.DETAIL_MONEY_GOT;
+import static com.example.expense_management.dataClasses.psfs.DETAIL_MONEY_GOT_PURPOSE;
+import static com.example.expense_management.dataClasses.psfs.LIST_POSITION;
+import static com.example.expense_management.dataClasses.psfs.LOOK;
+import static com.example.expense_management.dataClasses.psfs.OUR_DATE;
+import static com.example.expense_management.dataClasses.psfs.UPDATE_MONEY;
+import static com.example.expense_management.dataClasses.psfs.UPDATE_MONEY_DESCRIPTION;
+import static com.example.expense_management.dataClasses.psfs.makeDate;
+import static com.example.expense_management.dataClasses.psfs.setGrossMoney;
 
 
 public class detailed_data extends AppCompatActivity {
@@ -41,11 +54,6 @@ public class detailed_data extends AppCompatActivity {
     List<Integer> got,paid;
     List<Long> dates;
     detailed_adapter forGainAdapter, forExpenseAdapter;
-    public static final String UPDATE_MONEY="OK";
-    public static final String UPDATE_MONEY_DESCRIPTION="hello";
-    public static final String OUR_DATE="date";
-    public static final String LIST_POSITION="position";
-    public static final String LOOK="look";
     private DataItems dataItems,items;
     boolean adapterCheck=false,aBoolean=false;
     private int deletePosition=-1;
@@ -133,13 +141,13 @@ public class detailed_data extends AppCompatActivity {
             gotDescription.addAll(dataItems.getMoneyGotPurposes());
 
         }else {
-            date=intent.getStringExtra(MainActivity.DETAIL_DATE);
-            grossGot=intent.getStringExtra(MainActivity.DETAIL_GROSS_MONEY_GOT);
-            grossPaid=intent.getStringExtra(MainActivity.DETAIL_GROSS_MONEY_PAID);
-            got=intent.getIntegerArrayListExtra(MainActivity.DETAIL_MONEY_GOT);
-            paid=intent.getIntegerArrayListExtra(MainActivity.DETAIL_MONEY_EXPENSE);
-            gotDescription=intent.getStringArrayListExtra(MainActivity.DETAIL_MONEY_GOT_PURPOSE);
-            paidDescription=intent.getStringArrayListExtra(MainActivity.DETAIL_MONEY_EXPENSE_PURPOSE);
+            date=intent.getStringExtra(DETAIL_DATE);
+            grossGot=intent.getStringExtra(DETAIL_GROSS_MONEY_GOT);
+            grossPaid=intent.getStringExtra(DETAIL_GROSS_MONEY_PAID);
+            got=intent.getIntegerArrayListExtra(DETAIL_MONEY_GOT);
+            paid=intent.getIntegerArrayListExtra(DETAIL_MONEY_EXPENSE);
+            gotDescription=intent.getStringArrayListExtra(DETAIL_MONEY_GOT_PURPOSE);
+            paidDescription=intent.getStringArrayListExtra(DETAIL_MONEY_EXPENSE_PURPOSE);
             aBoolean=true;
         }
         da.setText(date);
@@ -259,11 +267,11 @@ public class detailed_data extends AppCompatActivity {
                         myDatabase.DELETE_INSTANCE();
                         if (adapterCheck){
                             items.getMoneyGot().remove(deletePosition);
-                            items.setGrossMoneyGot(editHandler.setGrossMoney(items.getMoneyGot()));
+                            items.setGrossMoneyGot(setGrossMoney(items.getMoneyGot()));
                             items.getMoneyGotPurposes().remove(deletePosition);
                         }else {
                             items.getMoneyExpense().remove(deletePosition);
-                            items.setGrossMoneyExpense(editHandler.setGrossMoney(items.getMoneyExpense()));
+                            items.setGrossMoneyExpense(setGrossMoney(items.getMoneyExpense()));
                             items.getMoneyExpensePurposes().remove(deletePosition);
                         }
                         model.update(items);

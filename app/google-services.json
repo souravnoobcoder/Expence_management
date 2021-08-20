@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "800699746946",
+    "project_id": "expence-management-cc5c6",
+    "storage_bucket": "expence-management-cc5c6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:800699746946:android:40bae18a98fbabf828c29b",
+        "android_client_info": {
+          "package_name": "com.example.expence_management"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "800699746946-afgacnmdm98jnhgd0uud89gp051lc0ps.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9-76vLWKR1D8zDBsj5qcHZXSJIkEeGBc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "800699746946-afgacnmdm98jnhgd0uud89gp051lc0ps.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
