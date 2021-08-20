@@ -40,11 +40,8 @@
 
         <TextView
             android:id="@+id/gain_data"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:layout_marginTop="7dp"
-            android:textColor="@color/black"
-            android:textSize="20sp"
+            style="@style/for_recycler_view_item"
             app:layout_constraintBottom_toTopOf="@+id/paid_data"
             app:layout_constraintEnd_toStartOf="@+id/date_of_data"
             app:layout_constraintStart_toEndOf="@+id/gain"
@@ -63,10 +60,7 @@
 
         <TextView
             android:id="@+id/paid_data"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/black"
+            style="@style/for_recycler_view_item"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/date_of_data"
             app:layout_constraintStart_toEndOf="@+id/imageView"

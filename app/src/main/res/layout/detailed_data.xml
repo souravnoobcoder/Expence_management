@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:theme="@style/Theme.Expence_management"
     app:layoutDescription="@xml/detailed_data_scene"
     tools:context=".detailed_data">
 
@@ -12,7 +12,7 @@
         android:id="@+id/date_of_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/purple_200"
+        android:background="@color/purple_500"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="42sp"
@@ -47,9 +47,9 @@
         android:id="@+id/linearLayout"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:alpha="0.7"
         android:background="@drawable/background"
         android:orientation="horizontal"
+        android:alpha=".5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

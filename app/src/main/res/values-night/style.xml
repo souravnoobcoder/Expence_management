@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="theme_for_beginner">
+        <item name="android:textColor">@color/expense</item>
+        <item name="android:textSize">25dp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+    <style name="for_recycler_view_item">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+    <style name="for_recycler_view">
+        <item name="android:background">@drawable/background</item>
+        <item name="android:alpha">.5</item>
+    </style>
+</resources>

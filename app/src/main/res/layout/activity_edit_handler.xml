@@ -25,7 +25,6 @@
                 android:id="@+id/update_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/red"
                 app:menu="@menu/edit_task_handler"
                 app:navigationIcon="@drawable/ic_back_for_adding_data"
                 app:subtitleTextAppearance="@color/black"
