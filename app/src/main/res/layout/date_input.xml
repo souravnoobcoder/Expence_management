@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:theme="@style/Theme.Expence_management"
     app:layoutDescription="@xml/date_input_scene2">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

@@ -15,7 +15,7 @@
         android:layoutAnimation="@anim/layout_animation_xml"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:id="@+id/main_list_recycleView"
-        android:theme="@style/for_recycler_view"/>
+        style="@style/for_recycler_view"/>
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

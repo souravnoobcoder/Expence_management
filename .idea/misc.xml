@@ -6,9 +6,12 @@
         <entry key="..\:/Users/pro/AndroidStudioProjects/Expence_management/app/src/main/res/drawable-night/custom_textview.xml" value="0.20833333333333334" />
         <entry key="..\:/Users/pro/AndroidStudioProjects/Expence_management/app/src/main/res/drawable-notnight/custom_textview.xml" value="0.20833333333333334" />
         <entry key="..\:/Users/pro/AndroidStudioProjects/Expence_management/app/src/main/res/drawable/custom_textview.xml" value="0.20833333333333334" />
-        <entry key="..\:/Users/pro/AndroidStudioProjects/Expence_management/app/src/main/res/layout/activity_edit_handler.xml" value="0.25" />
-        <entry key="..\:/Users/pro/AndroidStudioProjects/Expence_management/app/src/main/res/layout/activity_main.xml" value="0.2" />
-        <entry key="..\:/Users/pro/AndroidStudioProjects/Expence_management/app/src/main/res/layout/detailed_data.xml" value="0.1921875" />
+        <entry key="..\:/Users/pro/AndroidStudioProjects/Expence_management/app/src/main/res/font/stalinist_one.xml" value="0.22239583333333332" />
+        <entry key="..\:/Users/pro/AndroidStudioProjects/Expence_management/app/src/main/res/layout-1280x720/date_input.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/pro/AndroidStudioProjects/Expence_management/app/src/main/res/layout/activity_edit_handler.xml" value="0.18" />
+        <entry key="..\:/Users/pro/AndroidStudioProjects/Expence_management/app/src/main/res/layout/activity_main.xml" value="0.18" />
+        <entry key="..\:/Users/pro/AndroidStudioProjects/Expence_management/app/src/main/res/layout/date_input.xml" value="0.16944444444444445" />
+        <entry key="..\:/Users/pro/AndroidStudioProjects/Expence_management/app/src/main/res/layout/detailed_data.xml" value="0.2" />
         <entry key="..\:/Users/pro/AndroidStudioProjects/Expence_management/app/src/main/res/layout/recycler_view.xml" value="0.2" />
         <entry key="..\:/Users/pro/AndroidStudioProjects/Expence_management/app/src/main/res/layout/recycler_view_for_showing_details.xml" value="0.1921875" />
         <entry key="..\:/Users/pro/AndroidStudioProjects/Expence_management/app/src/main/res/layout/sort_selection.xml" value="0.5" />

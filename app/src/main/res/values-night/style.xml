@@ -15,6 +15,6 @@
     </style>
     <style name="for_recycler_view">
         <item name="android:background">@drawable/background</item>
-        <item name="android:alpha">.5</item>
+        <item name="android:alpha">.45</item>
     </style>
 </resources>
