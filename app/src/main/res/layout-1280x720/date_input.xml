@@ -38,7 +38,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:fontFamily="@font/stalinist_one"
-        android:text="Date is  "
+        android:text="@string/today_date"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -61,7 +61,7 @@
             android:id="@+id/money"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter amount"
+            android:hint="@string/enter_amount"
             android:inputType="number"
             android:textColor="@color/black" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -84,7 +84,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:baselineAligned="false"
-            android:hint="Enter Detail"
+            android:hint="@string/enter_detail"
             android:textColor="@color/black" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -96,7 +96,8 @@
         android:layout_marginBottom="64dp"
         android:src="@drawable/ic_adding_data"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <RadioGroup
         android:id="@+id/radio_group"
@@ -112,14 +113,14 @@
             android:id="@+id/gain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Gain"
+            android:text="@string/gain"
             android:textColor="@color/black" />
 
         <RadioButton
             android:id="@+id/paid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Paid"
+            android:text="@string/paid"
             android:textColor="@color/black" />
     </RadioGroup>
 </androidx.constraintlayout.motion.widget.MotionLayout>

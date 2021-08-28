@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:text="Today Date"
+        android:text="@string/today_date"
         android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -63,7 +63,7 @@
             android:id="@+id/update_money"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter amount"
+            android:hint="@string/enter_amount"
             android:inputType="number"
             android:textColor="@color/black" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -86,7 +86,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:baselineAligned="false"
-            android:hint="Enter Detail"
+            android:hint="@string/enter_detail"
             android:textColor="@color/black" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -104,14 +104,14 @@
             android:id="@+id/update_gain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Gain"
+            android:text="@string/gain"
             android:textColor="@color/black" />
 
         <RadioButton
             android:id="@+id/update_paid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Paid"
+            android:text="@string/paid"
             android:textColor="@color/black" />
     </RadioGroup>
 

@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.util.Pair;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,12 +35,9 @@ import static com.example.expense_management.dataClasses.psfs.DETAIL_MONEY_EXPEN
 import static com.example.expense_management.dataClasses.psfs.DETAIL_MONEY_EXPENSE_PURPOSE;
 import static com.example.expense_management.dataClasses.psfs.DETAIL_MONEY_GOT;
 import static com.example.expense_management.dataClasses.psfs.DETAIL_MONEY_GOT_PURPOSE;
-import static com.example.expense_management.dataClasses.psfs.LIST_POSITION;
-import static com.example.expense_management.dataClasses.psfs.LOOK;
 import static com.example.expense_management.dataClasses.psfs.OUR_DATE;
-import static com.example.expense_management.dataClasses.psfs.UPDATE_MONEY;
-import static com.example.expense_management.dataClasses.psfs.UPDATE_MONEY_DESCRIPTION;
 import static com.example.expense_management.dataClasses.psfs.makeDate;
+import static com.example.expense_management.dataClasses.psfs.setForAdapterIntent;
 import static com.example.expense_management.dataClasses.psfs.setGrossMoney;
 
 
@@ -174,7 +172,12 @@ public class detailed_data extends AppCompatActivity {
             forGainAdapter.setOnItemLongClickListener(new detailed_adapter.onItemLongClickListener() {
                 @Override
                 public void onItemLongClicked( String integer, String string,int listPosition) {
-                    setForAdapterIntent(true,integer,string,listPosition);
+                    deletePosition=listPosition;
+                    Pair<Intent,Boolean> intentBooleanPair;
+                 intentBooleanPair=setForAdapterIntent(true,integer,string,listPosition,
+                         dateId,date,detailed_data.this);
+                    forEditIntent=intentBooleanPair.first;
+                    adapterCheck=intentBooleanPair.second;
                     makeAlertDailogbBox(integer,string);
                     dialog.show();
                 }
@@ -182,7 +185,12 @@ public class detailed_data extends AppCompatActivity {
             forExpenseAdapter.setOnItemLongClickListener(new detailed_adapter.onItemLongClickListener() {
                 @Override
                 public void onItemLongClicked( String integer, String string, int listPosition) {
-                    setForAdapterIntent(false,integer,string,listPosition);
+                    deletePosition=listPosition;
+                    Pair<Intent,Boolean> intentBooleanPair;
+                   intentBooleanPair= setForAdapterIntent(false,integer,string,
+                           listPosition,dateId,date,detailed_data.this);
+                   forEditIntent=intentBooleanPair.first;
+                   adapterCheck=intentBooleanPair.second;
                     makeAlertDailogbBox(integer,string);
                     dialog.show();
                 }
@@ -203,29 +211,7 @@ public class detailed_data extends AppCompatActivity {
         paidDescription=new ArrayList<>();
         gotDescription=new ArrayList<>();
     }
-    void setForAdapterIntent(boolean adapterCheck,String integer, String string, int listPosition){
-        this.deletePosition=listPosition;
-        if (adapterCheck){
-         forEditIntent=new Intent(detailed_data.this,editHandler.class);
-            forEditIntent.putExtra(DATA_ID, dateId);
-            forEditIntent.putExtra(UPDATE_MONEY,integer);
-            forEditIntent.putExtra(UPDATE_MONEY_DESCRIPTION,string);
-            forEditIntent.putExtra(OUR_DATE,date);
-            forEditIntent.putExtra(LIST_POSITION,listPosition);
-            forEditIntent.putExtra(CHECK,false);
-            forEditIntent.putExtra(LOOK,true);
-            this.adapterCheck=true;
-        }else {
-            forEditIntent=new Intent(detailed_data.this,editHandler.class);
-            forEditIntent.putExtra(DATA_ID, dateId);
-            forEditIntent.putExtra(UPDATE_MONEY,integer);
-            forEditIntent.putExtra(UPDATE_MONEY_DESCRIPTION,string);
-            forEditIntent.putExtra(OUR_DATE,date);
-            forEditIntent.putExtra(CHECK,false);
-            forEditIntent.putExtra(LIST_POSITION,listPosition);
-            forEditIntent.putExtra(LOOK,false);
-        }
-    }
+
 
     @Override
     public void onBackPressed() {

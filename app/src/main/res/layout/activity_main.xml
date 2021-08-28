@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|enterAlways|snap"
             app:menu="@menu/home_menu"
-            app:title="All Details" />
+            app:title="@string/expense_details" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -39,8 +39,6 @@
         android:id="@+id/adding_element"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="250dp"
-        android:layout_marginTop="530dp"
         android:contentDescription="@string/taking_more_date"
         android:src="@drawable/ic_adding_data"
         android:visibility="visible" />

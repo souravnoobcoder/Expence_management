@@ -20,9 +20,7 @@
             android:layout_height="wrap_content"
             motion:layout_constraintTop_toBottomOf="@+id/radioGroup"
             motion:layout_constraintStart_toStartOf="parent"
-            android:alpha=".5"
-            android:scaleY=".5"
-            android:scaleX=".5" />
+            android:rotation="2000" />
         <Constraint
             motion:layout_constraintEnd_toEndOf="parent"
             android:layout_width="wrap_content"

@@ -1,20 +1,18 @@
 package com.example.expense_management;
 
 
-import static com.example.expense_management.Database.myDatabase.DATABASE_NAME;
 import static com.example.expense_management.dataClasses.psfs.CHECK;
 import static com.example.expense_management.dataClasses.psfs.DATA_ID;
 import static com.example.expense_management.dataClasses.psfs.DATE_KEY;
+import static com.example.expense_management.dataClasses.psfs.checkDate;
 import static com.example.expense_management.dataClasses.psfs.makeDate;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,11 +21,10 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.util.Pair;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,23 +34,15 @@ import com.example.expense_management.Database.DataItems;
 import com.example.expense_management.Database.DataViewModel;
 import com.example.expense_management.Database.myDatabase;
 import com.example.expense_management.RecyclerViewAdapters.mainRecycleAdapter;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    List<Long> dates;
     AlertDialog.Builder dialogBuilder, deleteDialogBuilder, sortAlertBuilder;
     AlertDialog dialog, deleteDialog, sortAlert;
     private mainRecycleAdapter adapter;
@@ -71,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
-     toolbar = findViewById(R.id.tool_bar);
+        toolbar = findViewById(R.id.tool_bar);
 
         RecyclerView mainListRecyclerView = findViewById(R.id.main_list_recycleView);
         mainListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -79,6 +68,10 @@ public class MainActivity extends AppCompatActivity {
         mainListRecyclerView.setAdapter(adapter);
 
         FloatingActionButton addingData = findViewById(R.id.adding_element);
+        CoordinatorLayout.LayoutParams layoutParams = new CoordinatorLayout.LayoutParams(-2, -2);
+        layoutParams.leftMargin = go().second - 200;
+        layoutParams.topMargin = go().first - 200;
+        addingData.setLayoutParams(layoutParams);
         MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
         materialDatePicker = builder.setTitleText("Select Date")
                 .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
@@ -93,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         addingData.setOnClickListener(v -> materialDatePicker.show(MainActivity.this.getSupportFragmentManager(), "Yes"));
         materialDatePicker.addOnPositiveButtonClickListener(selection -> {
-            int get =checkDate(selection);
+            int get = checkDate(selection, MainActivity.this);
             if (get < 0) {
                 Intent intent = new Intent(MainActivity.this, AddingToDatabase.class);
                 intent.putExtra(DATE_KEY, selection);
@@ -301,52 +294,23 @@ public class MainActivity extends AppCompatActivity {
         new Handler(Looper.getMainLooper()).postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
     }
 void makeToast(String message){
-        Toast.makeText(this,message,Toast.LENGTH_LONG).show();
+    Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 }
 
-    int checkDate(long date){
-        new Thread(() -> dates = myDatabase.getDbINSTANCE(MainActivity.this).Dao().getAllDate()).start();
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        myDatabase.DELETE_INSTANCE();
-        int get = Arrays.binarySearch(dates.toArray(), date);
-        return get;
+
+    void setBackup(int id) {
+        makeToast(getString(R.string.progress));
     }
-    void setBackup(int id){
-        if(id == R.id.set_backup) {
-            int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            if(permission == PackageManager.PERMISSION_GRANTED) {
-                myDatabase.getDbINSTANCE(this).close();
 
-                File db = getDatabasePath("expense.database");
-                File dbShm = new File(db.getParent(), "expense.database-shm");
-                File dbWal = new File(db.getParent(), "expense.database-wal");
-
-                StorageReference storageReference=FirebaseStorage.getInstance().getReference();
-
-                storageReference.child("dbs.db").putFile(Uri.fromFile(db)).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        e.printStackTrace();
-                    }
-                });
-                storageReference.child("expense/Shm").putFile(Uri.fromFile(dbShm));
-                storageReference.child("expense/Wal").putFile(Uri.fromFile(dbWal));
-
-            } else {
-                Snackbar.make(toolbar, "Please allow access to your storage", Snackbar.LENGTH_LONG)
-                        .setAction("Allow", view -> ActivityCompat.requestPermissions(this, new String[] {
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE
-                        }, 0)).show();
-            }
-        }
+    void getBackup() {
+        makeToast(getString(R.string.progress));
     }
-    void getBackup(){
-       String path= getDatabasePath(DATABASE_NAME).getAbsolutePath();
-       makeToast(path);
-        System.out.println("path is "+path);
+
+    Pair<Integer, Integer> go() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+        int width = displayMetrics.widthPixels;
+        return Pair.create(height, width);
     }
 }

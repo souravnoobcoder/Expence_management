@@ -19,21 +19,21 @@
             android:id="@+id/by_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="32dp"
+            android:layout_marginStart="32dp"
             android:checked="true"
-            android:text="by Date" />
+            android:text="@string/by_date" />
 
         <RadioButton
             android:id="@+id/by_gainMoney"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="by Gain Money" />
+            android:text="@string/by_gain_money" />
 
         <RadioButton
             android:id="@+id/by_expense"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="by_expenseMoney" />
+            android:text="@string/by_expensemoney" />
     </RadioGroup>
 
     <RadioGroup
@@ -49,13 +49,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="ascending" />
+            android:text="@string/ascending" />
 
         <RadioButton
             android:id="@+id/descending"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="descending" />
+            android:text="@string/descending" />
 
     </RadioGroup>
 
@@ -63,7 +63,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="-----------------------------------------------------------------"
+        android:text="@string/_0"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radioGroup" />

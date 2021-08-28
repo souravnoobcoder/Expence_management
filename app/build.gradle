@@ -1,7 +1,5 @@
 plugins {
     id 'com.android.application'
-    id 'kotlin-android'
-    id 'com.google.gms.google-services'
 }
 
 android {
@@ -31,7 +29,6 @@ android {
 }
 
 dependencies {
-    implementation 'com.google.firebase:firebase-storage:20.0.0'
     def room_version = "2.3.0"
 
     implementation "androidx.room:room-runtime:$room_version"
@@ -48,9 +45,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     implementation 'com.google.code.gson:gson:2.8.7'
     implementation 'com.android.support.constraint:constraint-layout:2.0.4'
-
-    // common io file utils
-    implementation group: 'commons-io', name: 'commons-io', version: '2.6'
 
 }
 repositories {

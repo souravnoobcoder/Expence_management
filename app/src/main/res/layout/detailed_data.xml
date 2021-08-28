@@ -24,7 +24,6 @@
         android:id="@+id/paid_amount"
         android:layout_width="204dp"
         android:layout_height="wrap_content"
-        android:text="ddfdfd"
         android:textAlignment="center"
         android:textColor="@color/expense"
         android:textSize="25sp"
@@ -35,7 +34,6 @@
         android:id="@+id/gain_amount"
         android:layout_width="204dp"
         android:layout_height="wrap_content"
-        android:text="ddfdfd"
         android:textAlignment="center"
         android:textColor="@color/gain"
         android:textSize="25sp"
@@ -87,25 +85,6 @@
         </LinearLayout>
 
     </LinearLayout>
-    <!--    <androidx.recyclerview.widget.RecyclerView-->
-    <!--        android:id="@+id/expense_recyclerView"-->
-    <!--        android:layout_width="204dp"-->
-    <!--        android:layout_height="0dp"-->
-    <!--        android:padding="5dp"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/paid_amount" />-->
-
-    <!--    <androidx.recyclerview.widget.RecyclerView-->
-    <!--        android:id="@+id/gain_recyclerView"-->
-    <!--        android:layout_width="204dp"-->
-    <!--        android:layout_height="0dp"-->
-    <!--        android:padding="5dp"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toEndOf="@+id/expense_recyclerView"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/gain_amount" />-->
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_while_watching"
         android:layout_width="wrap_content"

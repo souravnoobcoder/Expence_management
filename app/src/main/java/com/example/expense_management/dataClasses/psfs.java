@@ -1,10 +1,21 @@
 package com.example.expense_management.dataClasses;
 
+import android.content.Context;
+import android.content.Intent;
 import android.text.format.DateFormat;
 
 
+import androidx.core.util.Pair;
+
+import com.example.expense_management.Database.myDatabase;
+import com.example.expense_management.R;
+import com.example.expense_management.detailed_data;
+import com.example.expense_management.editHandler;
+
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class psfs {
     public static final String UPDATE_MONEY="OK";
@@ -36,5 +47,47 @@ public class psfs {
 
     public static String makeDate(long l) {
         return DateFormat.format("dd/MM/yy", new Date(l)).toString();
+    }
+    public static int checkDate(long date, Context context){
+        final List<Long>[] dates = new List[]{null};
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                dates[0] =myDatabase.getDbINSTANCE(context).Dao().getAllDate();;
+            }
+        }).start();
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        myDatabase.DELETE_INSTANCE();
+        return Arrays.binarySearch(dates[0].toArray(), date);
+    }
+    public static Pair<Intent,Boolean> setForAdapterIntent(boolean adapterCheck, String integer, String string, int listPosition,
+                               long dateId, String date,Context context){
+        Intent forEditIntent;
+        boolean adap=false;
+        if (adapterCheck){
+            forEditIntent=new Intent(context, editHandler.class);
+            forEditIntent.putExtra(DATA_ID, dateId);
+            forEditIntent.putExtra(UPDATE_MONEY,integer);
+            forEditIntent.putExtra(UPDATE_MONEY_DESCRIPTION,string);
+            forEditIntent.putExtra(OUR_DATE,date);
+            forEditIntent.putExtra(LIST_POSITION,listPosition);
+            forEditIntent.putExtra(CHECK,false);
+            forEditIntent.putExtra(LOOK,true);
+            adap=true;
+        }else {
+            forEditIntent=new Intent(context,editHandler.class);
+            forEditIntent.putExtra(DATA_ID, dateId);
+            forEditIntent.putExtra(UPDATE_MONEY,integer);
+            forEditIntent.putExtra(UPDATE_MONEY_DESCRIPTION,string);
+            forEditIntent.putExtra(OUR_DATE,date);
+            forEditIntent.putExtra(CHECK,false);
+            forEditIntent.putExtra(LIST_POSITION,listPosition);
+            forEditIntent.putExtra(LOOK,false);
+        }
+        return Pair.create(forEditIntent,adap);
     }
 }

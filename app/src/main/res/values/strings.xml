@@ -5,4 +5,17 @@
     <string name="taking_more_date">taking more date</string>
     <string name="saving_data_to_database">saving_data_to_database</string>
     <string name="data_preview">data_preview</string>
+    <string name="today_date">Today Date</string>
+    <string name="enter_amount">Enter amount</string>
+    <string name="enter_detail">Enter Detail</string>
+    <string name="paid">Paid</string>
+    <string name="gain">Gain</string>
+    <string name="_0">---------------------------------0--------------------------------</string>
+    <string name="ascending">ascending</string>
+    <string name="descending">descending</string>
+    <string name="by_expensemoney">by expenseMoney</string>
+    <string name="by_gain_money">by Gain Money</string>
+    <string name="by_date">by Date</string>
+    <string name="expense_details">Expenses</string>
+    <string name="progress">Feature in progress</string>
 </resources>

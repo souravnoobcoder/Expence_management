@@ -59,6 +59,15 @@
             motion:layout_constraintBaseline_toBaselineOf="@+id/paid_amount"
             android:scaleX="2"
             android:scaleY="2" />
+        <Constraint
+            android:id="@+id/add_while_watching"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="50dp"
+            android:visibility="gone"
+            android:layout_marginEnd="50dp" />
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
