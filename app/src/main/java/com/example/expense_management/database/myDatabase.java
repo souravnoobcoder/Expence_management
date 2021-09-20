@@ -1,4 +1,4 @@
-package com.example.expense_management.Database;
+package com.example.expense_management.database;
 
 import android.content.Context;
 
@@ -9,7 +9,7 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
 @Database(entities = {DataItems.class},version = 1,exportSchema = false)
-@TypeConverters(dataConverter.class)
+@TypeConverters(DataConverter.class)
 public abstract class myDatabase extends RoomDatabase {
     public abstract Dao Dao();
     public static myDatabase INSTANCE;

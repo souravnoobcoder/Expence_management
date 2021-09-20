@@ -1,4 +1,4 @@
-package com.example.expense_management.Database;
+package com.example.expense_management.database;
 
 import android.app.Application;
 

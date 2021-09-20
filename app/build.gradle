@@ -1,5 +1,7 @@
 plugins {
     id 'com.android.application'
+    id 'com.google.gms.google-services'
+    id 'kotlin-android'
 }
 
 android {
@@ -26,12 +28,19 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    buildFeatures {
+        viewBinding true
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 }
 
 dependencies {
+    implementation 'com.google.firebase:firebase-storage:20.0.0'
     def room_version = "2.3.0"
 
-    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
 
     // Lifecycle components
@@ -46,6 +55,8 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.7'
     implementation 'com.android.support.constraint:constraint-layout:2.0.4'
 
+    implementation group: 'commons-io', name: 'commons-io', version: '2.6'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'
 }
 repositories {
     mavenCentral()

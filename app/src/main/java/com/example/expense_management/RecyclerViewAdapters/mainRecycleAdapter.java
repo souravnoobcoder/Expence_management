@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.expense_management.Database.DataItems;
+import com.example.expense_management.database.DataItems;
 import com.example.expense_management.R;
 
 import java.util.ArrayList;

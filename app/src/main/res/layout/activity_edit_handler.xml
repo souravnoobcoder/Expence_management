@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:theme="@style/Theme.Expence_management"
     app:layoutDescription="@xml/activity_edit_handler_scene"
-    tools:context=".editHandler">
+    tools:context=".EditHandler">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinatorLayout2"
@@ -100,14 +100,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/coordinatorLayout2">
 
-        <RadioButton
+        <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/update_gain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/gain"
             android:textColor="@color/black" />
 
-        <RadioButton
+        <com.google.android.material.radiobutton.MaterialRadioButton
             android:id="@+id/update_paid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

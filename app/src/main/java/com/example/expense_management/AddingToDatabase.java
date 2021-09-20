@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,10 +14,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.expense_management.Database.DataItems;
-import com.example.expense_management.Database.DataViewModel;
+import com.example.expense_management.database.DataItems;
+import com.example.expense_management.database.DataViewModel;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.radiobutton.MaterialRadioButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
@@ -38,10 +38,10 @@ import static com.example.expense_management.dataClasses.psfs.setGrossMoney;
 
 public class AddingToDatabase extends AppCompatActivity {
     private TextInputEditText amount,detail;
-    private RadioButton gain,paid;
+    private MaterialRadioButton gain,paid;
     private DataViewModel model;
-    private List<Integer> moneyExpense,moneyGot;
-    private List<String> mEPurpose,mGPurpose;
+    private ArrayList<Integer> moneyExpense,moneyGot;
+    private ArrayList<String> mEPurpose,mGPurpose;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,11 +134,9 @@ public class AddingToDatabase extends AppCompatActivity {
     private void makeEditTextNullAgain(){
         amount.setText("");
         detail.setText("");
-        gain.setChecked(false);
-        paid.setChecked(false);
     }
-    private void setInsert(long date,List<Integer> moneyExpense, List<Integer> moneyGot
-    ,List<String> moneyGotPurpose,List<String> moneyExpensePurpose){
+    private void setInsert(long date,ArrayList<Integer> moneyExpense, ArrayList<Integer> moneyGot
+    ,ArrayList<String> moneyGotPurpose,ArrayList<String> moneyExpensePurpose){
        int grossExpense=setGrossMoney(moneyExpense);
        int grossGot=setGrossMoney(moneyGot);
         DataItems myData=new DataItems(date,grossExpense,grossGot,

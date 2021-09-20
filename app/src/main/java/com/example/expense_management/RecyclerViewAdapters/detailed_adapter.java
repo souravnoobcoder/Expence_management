@@ -14,6 +14,8 @@ import java.util.List;
 
 import static com.example.expense_management.R.*;
 
+import com.example.expense_management.R;
+
 public class detailed_adapter extends RecyclerView.Adapter<detailed_adapter.Holder>  {
 
     List<Integer> value;
@@ -51,8 +53,8 @@ public class detailed_adapter extends RecyclerView.Adapter<detailed_adapter.Hold
         TextView des=holder.des;
         des.setText(description.get(position));
         if (gain){
-            val.setTextColor(Color.GREEN);
-            des.setTextColor(Color.GREEN);
+            val.setTextColor(Color.rgb(2,120,28));
+            des.setTextColor(Color.rgb(2,120,28));
         }
         else{
             val.setTextColor(Color.rgb(239,38,38));

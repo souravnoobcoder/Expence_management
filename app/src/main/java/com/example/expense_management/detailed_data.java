@@ -14,9 +14,9 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.expense_management.Database.DataItems;
-import com.example.expense_management.Database.DataViewModel;
-import com.example.expense_management.Database.myDatabase;
+import com.example.expense_management.database.DataItems;
+import com.example.expense_management.database.DataViewModel;
+import com.example.expense_management.database.myDatabase;
 import com.example.expense_management.RecyclerViewAdapters.detailed_adapter;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
@@ -85,7 +85,7 @@ public class detailed_data extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        dates=myDatabase.getDbINSTANCE(detailed_data.this).Dao().getAllDate();
+                        dates=myDatabase.getDbINSTANCE(detailed_data.this).Dao().allDate();
                     }
                 }).start();
                 try {
@@ -161,7 +161,7 @@ public class detailed_data extends AppCompatActivity {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                Intent addNew=new Intent(detailed_data.this,editHandler.class);
+                Intent addNew=new Intent(detailed_data.this, EditHandler.class);
                 addNew.putExtra(DATA_ID, dateId);
                     addNew.putExtra(OUR_DATE,date);
                     addNew.putExtra(CHECK,true);
