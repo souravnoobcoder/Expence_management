@@ -1,21 +1,14 @@
-package com.example.expense_management
+package com.example.expense_management.activities
 
-import com.example.expense_management.dataClasses.psfs.setGrossMoney
-import androidx.appcompat.app.AppCompatActivity
-import android.widget.TextView
-import com.google.android.material.radiobutton.MaterialRadioButton
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.appbar.MaterialToolbar
-import com.example.expense_management.database.DataViewModel
-import com.example.expense_management.database.DataItems
-import android.os.Bundle
-import android.view.WindowManager
-import androidx.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.os.Bundle
 import android.view.View
-import com.example.expense_management.database.myDatabase
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProviders
+import com.example.expense_management.R
 import com.example.expense_management.dataClasses.psfs.CHECK
 import com.example.expense_management.dataClasses.psfs.DATA_ID
 import com.example.expense_management.dataClasses.psfs.LIST_POSITION
@@ -23,6 +16,16 @@ import com.example.expense_management.dataClasses.psfs.LOOK
 import com.example.expense_management.dataClasses.psfs.OUR_DATE
 import com.example.expense_management.dataClasses.psfs.UPDATE_MONEY
 import com.example.expense_management.dataClasses.psfs.UPDATE_MONEY_DESCRIPTION
+import com.example.expense_management.dataClasses.psfs.setGrossMoney
+import com.example.expense_management.database.DataItems
+import com.example.expense_management.database.DataViewModel
+import com.example.expense_management.database.myDatabase
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.radiobutton.MaterialRadioButton
+import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 
 class EditHandler : AppCompatActivity() {
     private var position = -1
@@ -43,10 +46,7 @@ class EditHandler : AppCompatActivity() {
     private var aBoolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
+
         setContentView(R.layout.activity_edit_handler)
         toolbar = findViewById(R.id.update_toolbar)
         date = findViewById(R.id.date_of_update)
@@ -81,7 +81,7 @@ class EditHandler : AppCompatActivity() {
         money?.setText(updateMoney)
         description?.setText(updateMoneyDescription)
         toolbar?.setNavigationOnClickListener {
-            val intent = Intent(this@EditHandler, detailed_data::class.java)
+            val intent = Intent(this@EditHandler, DetailedData::class.java)
             intent.putExtra(CHECK, "yes")
             intent.putExtra(DATA_ID, dateId)
             startActivity(intent)
@@ -106,14 +106,8 @@ class EditHandler : AppCompatActivity() {
             false
         })
         if (see) {
-            Thread { d = myDatabase.getDbINSTANCE(this@EditHandler).Dao().getRoww(dateId) }
-                .start()
-            try {
-                Thread.sleep(100)
-            } catch (e: InterruptedException) {
-                e.printStackTrace()
-            }
-            myDatabase.DELETE_INSTANCE()
+            CoroutineScope(IO).launch { d=myDatabase.getDbINSTANCE(this@EditHandler).Dao().getRoww(dateId) }
+
         } else {
             model!!.getRow(dateId).observe(this@EditHandler, { items -> d = items })
         }
@@ -170,7 +164,7 @@ class EditHandler : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        val intent = Intent(this@EditHandler, detailed_data::class.java)
+        val intent = Intent(this@EditHandler, DetailedData::class.java)
         intent.putExtra(CHECK, "yes")
         intent.putExtra(DATA_ID, dateId)
         startActivity(intent)

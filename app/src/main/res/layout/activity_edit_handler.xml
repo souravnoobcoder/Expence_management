@@ -7,7 +7,8 @@
     android:layout_height="match_parent"
     android:theme="@style/Theme.Expence_management"
     app:layoutDescription="@xml/activity_edit_handler_scene"
-    tools:context=".EditHandler">
+    tools:context=".activities.EditHandler">
+
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinatorLayout2"

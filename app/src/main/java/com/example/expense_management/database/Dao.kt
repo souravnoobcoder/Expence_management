@@ -19,7 +19,7 @@ interface Dao {
     suspend fun updateDate(uDate: Long, date: Long)
 
     @Query("SELECT date FROM EXPENSES ORDER BY DATE")
-    fun  allDate(): List<Long>
+    suspend fun  allDate(): List<Long>
 
     @Query("SELECT COUNT(date) FROM EXPENSES")
     fun  count(): Int?
@@ -47,11 +47,11 @@ interface Dao {
     fun getRow(date: Long): LiveData<DataItems?>?
 
     @Query("select *from expenses where date=:date ")
-    fun getRoww(date: Long): DataItems?
+    suspend fun getRoww(date: Long?): DataItems?
 
     @Query("SELECT Sum(grossMoneyExpense) FROM EXPENSES WHERE date BETWEEN :first And :last ")
-    fun getExpense(first: Long, last: Long): Int
+    suspend fun getExpense(first: Long, last: Long): Int
 
     @Query("SELECT Sum(grossMoneyGot) FROM EXPENSES WHERE date BETWEEN :first And :last ")
-    fun getGain(first: Long, last: Long): Int
+    suspend fun getGain(first: Long, last: Long): Int
 }

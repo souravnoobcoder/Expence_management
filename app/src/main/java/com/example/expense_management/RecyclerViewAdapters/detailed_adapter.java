@@ -27,15 +27,20 @@ public class detailed_adapter extends RecyclerView.Adapter<detailed_adapter.Hold
         this.gain=gain;
         this.value = new ArrayList<>();
         this.description = new ArrayList<>();
-        if (value.isEmpty())
+        if (value==null)
             this.value = new ArrayList<>();
-        if (description.isEmpty())
+        else {
+            this.value.clear();
+            this.value.addAll(value);
+        }
+        if (description==null)
             this.description = new ArrayList<>();
-        this.value.clear();
-        this.description.clear();
-        this.value.addAll(value);
-        this.description.addAll(description);
-        if (cheek.equals("yes"))
+        else {
+            this.description.clear();
+            this.description.addAll(description);
+        }
+
+        if (cheek=="yes")
             check = true;
         notifyDataSetChanged();
     }

@@ -1,4 +1,4 @@
-package com.example.expense_management
+package com.example.expense_management.activities
 
 import android.Manifest
 import com.example.expense_management.dataClasses.psfs.checkDate
@@ -33,10 +33,18 @@ import android.view.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.util.Pair
+import com.example.expense_management.R
+import com.example.expense_management.activities.AddingToDatabase
+import com.example.expense_management.activities.DetailedData
 import com.example.expense_management.dataClasses.psfs.CHECK
 import com.example.expense_management.dataClasses.psfs.DATA_ID
 import com.example.expense_management.dataClasses.psfs.DATE_KEY
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.apache.commons.io.FileUtils
 import java.io.File
 import java.lang.Exception
@@ -61,10 +69,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var toolbar: MaterialToolbar
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
+
         setContentView(R.layout.activity_main)
         toolbar = findViewById(R.id.tool_bar)
         val mainListRecyclerView = findViewById<RecyclerView>(R.id.main_list_recycleView)
@@ -108,18 +113,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         forMultiDates!!.addOnPositiveButtonClickListener { selection ->
-            Thread {
-                expense = myDatabase.getDbINSTANCE(this@MainActivity).Dao()
-                    .getExpense(selection.first, selection.second)
-                got = myDatabase.getDbINSTANCE(this@MainActivity).Dao()
-                    .getGain(selection.first, selection.second)
-            }.start()
-            try {
-                Thread.sleep(100)
-            } catch (e: InterruptedException) {
-                e.printStackTrace()
-            }
-            showSumAlert(expense, got, selection.first, selection.second)
+            CoroutineScope(IO).launch { getSumDetails(selection) }
         }
         toolbar.setOnMenuItemClickListener(Toolbar.OnMenuItemClickListener { item: MenuItem ->
             val itemId = item.itemId
@@ -144,45 +138,53 @@ class MainActivity : AppCompatActivity() {
         })
         adapter!!.setOnItemLongClickListener { dataItem: DataItems -> alertForDelete(dataItem) }
         adapter!!.setOnItemClickListener { data: DataItems ->
-            val dataIntent = Intent(this@MainActivity, detailed_data::class.java)
+            val dataIntent = Intent(this@MainActivity, DetailedData::class.java)
             dataIntent.putExtra(DATA_ID, data.date)
             dataIntent.putExtra(CHECK, "yes")
             this@MainActivity.startActivity(dataIntent)
             finish()
         }
         datePickerForSearch!!.addOnPositiveButtonClickListener { selection: Long? ->
-            Thread(Runnable {
-                items = myDatabase.getDbINSTANCE(this@MainActivity).Dao().getRoww((selection)!!)
-                try {
-                    Thread.sleep(10)
-                } catch (e: InterruptedException) {
-                    e.printStackTrace()
-                }
-            }).start()
-            if (items == null) {
-                val layoutInflater = layoutInflater
-                val layout =
-                    layoutInflater.inflate(R.layout.cusom_toast, findViewById(R.id.toast_custom))
-                val textView = layout.findViewById<TextView>(R.id.tvtoast)
-                textView.text = makeDate((selection)!!) + " Not found"
-                textView.setTextColor(Color.rgb(0, 132, 219))
-                textView.textSize = 20f
-                val toast = Toast(applicationContext)
-                toast.view = layout
-                toast.duration = Toast.LENGTH_LONG
-                toast.setGravity(Gravity.CENTER, 0, 0)
-                toast.show()
-            } else {
-                val intent = Intent(this@MainActivity, detailed_data::class.java)
-                intent.putExtra(CHECK, "yes")
-                intent.putExtra(DATA_ID, selection)
-                startActivity(intent)
-                finish()
+            CoroutineScope(IO).launch {
+                    myDatabase.getDbINSTANCE(this@MainActivity).Dao().getRoww(selection)
+                searchMain(selection)
             }
         }
     }
+    private suspend fun searchMain(selection: Long?){
+        CoroutineScope(Main).launch { search(selection) }
+    }
+    private suspend fun search(selection : Long?){
+        if (items == null) {
+            val layoutInflater = layoutInflater
+            val layout =
+                layoutInflater.inflate(R.layout.cusom_toast, findViewById(R.id.toast_custom))
+            val textView = layout.findViewById<TextView>(R.id.tvtoast)
+            textView.text = makeDate((selection)!!) + " Not found"
+            textView.setTextColor(Color.rgb(0, 132, 219))
+            textView.textSize = 20f
+            val toast = Toast(applicationContext)
+            toast.view = layout
+            toast.duration = Toast.LENGTH_LONG
+            toast.setGravity(Gravity.CENTER, 0, 0)
+            toast.show()
+        } else {
+            val intent = Intent(this@MainActivity, DetailedData::class.java)
+            intent.putExtra(CHECK, "yes")
+            intent.putExtra(DATA_ID, selection)
+            startActivity(intent)
+            finish()
+        }
+    }
+    private suspend fun getSumDetails(selection : Pair<Long,Long>) {
+        expense = myDatabase.getDbINSTANCE(this@MainActivity).Dao()
+            .getExpense(selection.first, selection.second)
+        got = myDatabase.getDbINSTANCE(this@MainActivity).Dao()
+            .getGain(selection.first, selection.second)
+        showSumAlertOnMainThread(expense,got,selection.first,selection.second)
+    }
 
-    fun setDataItemsList(dataItems: List<DataItems?>?) {
+    private fun setDataItemsList(dataItems: List<DataItems?>?) {
         var dataItemsList: MutableList<DataItems?> = ArrayList()
         if (dataItemsList == null) dataItemsList = ArrayList()
         dataItemsList.clear()
@@ -191,11 +193,11 @@ class MainActivity : AppCompatActivity() {
         adapter!!.notifyDataSetChanged()
     }
 
-    fun makeAlertDailogbBox(longDate: Long) {
+    private fun makeAlertDailogbBox(longDate: Long) {
         dialogBuilder = AlertDialog.Builder(this@MainActivity)
         dialogBuilder!!.setTitle("Already in Database")
             .setPositiveButton("Update") { _: DialogInterface?, _: Int ->
-                val intent = Intent(this@MainActivity, detailed_data::class.java)
+                val intent = Intent(this@MainActivity, DetailedData::class.java)
                 intent.putExtra(CHECK, "yes")
                 intent.putExtra(DATA_ID, longDate)
                 startActivity(intent)
@@ -209,7 +211,7 @@ class MainActivity : AppCompatActivity() {
         dialog = dialogBuilder!!.create()
     }
 
-    fun alertForDelete(dataItem: DataItems) {
+   private fun alertForDelete(dataItem: DataItems) {
         deleteDialogBuilder = AlertDialog.Builder(this@MainActivity)
         deleteDialogBuilder!!.setTitle("Do you really want to delete ")
             .setMessage(
@@ -224,7 +226,12 @@ ${makeDate(dataItem.date)} date data"""
         deleteDialog!!.show()
     }
 
-    fun showSumAlert(paid: Int, gain: Int, start: Long, last: Long) {
+    private suspend fun showSumAlertOnMainThread(paid: Int, gain: Int, start: Long, last: Long){
+        withContext(Main){
+            showSumAlert(paid,gain,start,last)
+        }
+    }
+    private fun showSumAlert(paid: Int, gain: Int, start: Long, last: Long) {
         val dialog = AlertDialog.Builder(this@MainActivity)
             .setTitle(makeDate(start) + " to " + makeDate(last))
             .setMessage("Gross Gain = $gain\nGross Paid = $paid")
@@ -232,7 +239,7 @@ ${makeDate(dataItem.date)} date data"""
         dialog.show()
     }
 
-    fun alertSort() {
+    private fun alertSort() {
         val inflater = this.layoutInflater
         val dialogView = inflater.inflate(R.layout.sort_selection, null)
         val date = dialogView.findViewById<RadioButton>(R.id.by_date)
@@ -243,42 +250,48 @@ ${makeDate(dataItem.date)} date data"""
         sortAlertBuilder = AlertDialog.Builder(this@MainActivity)
         sortAlertBuilder!!.setView(dialogView)
             .setTitle("Sorting")
-            .setPositiveButton("Ok") { _: DialogInterface?, _: Int -> if (date.isChecked && ascending.isChecked) dateA() else if (date.isChecked && descending.isChecked) dateD() else if (got.isChecked && ascending.isChecked) gotA() else if (got.isChecked && descending.isChecked) gotD() else if (expense.isChecked && ascending.isChecked) expenseA() else expenseD() }
+            .setPositiveButton("Ok")
+            { _: DialogInterface?, _: Int -> if (date.isChecked && ascending.isChecked)
+                dateA() else if (date.isChecked && descending.isChecked) dateD()
+            else if (got.isChecked && ascending.isChecked) gotA()
+                    else if (got.isChecked && descending.isChecked) gotD()
+                        else if (expense.isChecked && ascending.isChecked) expenseA()
+                            else expenseD() }
         sortAlert = sortAlertBuilder!!.create()
         sortAlert!!.show()
     }
 
-    fun gotA() {
+    private fun gotA() {
         viewModel!!.allGotDataAscending.observe(
             this@MainActivity,
             { dataItems: List<DataItems?>? -> setDataItemsList(dataItems) })
     }
 
-    fun expenseA() {
+    private fun expenseA() {
         viewModel!!.allExpenseDataAscending.observe(
             this@MainActivity,
             { dataItems: List<DataItems?>? -> setDataItemsList(dataItems) })
     }
 
-    fun expenseD() {
+    private fun expenseD() {
         viewModel!!.allExpenseDataDescending.observe(
             this@MainActivity,
             { dataItems: List<DataItems?>? -> setDataItemsList(dataItems) })
     }
 
-    fun gotD() {
+    private fun gotD() {
         viewModel!!.allGotDataDescending.observe(
             this@MainActivity,
             { dataItems: List<DataItems?>? -> setDataItemsList(dataItems) })
     }
 
-    fun dateA() {
+    private fun dateA() {
         viewModel!!.allDataAscending.observe(
             this@MainActivity,
             { dataItems: List<DataItems?>? -> setDataItemsList(dataItems) })
     }
 
-    fun dateD() {
+    private fun dateD() {
         viewModel!!.allDataDescending.observe(
             this@MainActivity,
             { dataItems: List<DataItems?>? -> setDataItemsList(dataItems) })
@@ -300,7 +313,7 @@ ${makeDate(dataItem.date)} date data"""
         Handler(Looper.getMainLooper()).postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
     }
 
-    fun makeToast(message: String?) {
+    private fun makeToast(message: String?) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
@@ -313,7 +326,7 @@ ${makeDate(dataItem.date)} date data"""
             makeToast(getString(R.string.progress))
         }
 
-    fun go(): Pair<Int, Int> {
+    private fun go(): Pair<Int, Int> {
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
         val height = displayMetrics.heightPixels
@@ -321,7 +334,7 @@ ${makeDate(dataItem.date)} date data"""
         return Pair.create(height, width)
     }
 
-    fun setBackupFirebase(id: Int) {
+    private fun setBackupFirebase(id: Int) {
         val database = "expense.database"
         val sd = Environment.getExternalStorageDirectory().path
         if (id == R.id.set_backup) {

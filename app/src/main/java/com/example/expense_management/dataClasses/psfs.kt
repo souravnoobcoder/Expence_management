@@ -1,11 +1,14 @@
 package com.example.expense_management.dataClasses
 
 import android.content.Context
-import com.example.expense_management.database.myDatabase
 import android.content.Intent
 import android.text.format.DateFormat
 import androidx.core.util.Pair
-import com.example.expense_management.EditHandler
+import com.example.expense_management.activities.EditHandler
+import com.example.expense_management.database.myDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 import java.util.*
 
 object psfs {
@@ -24,14 +27,13 @@ object psfs {
     const val DATE_KEY = "selected date"
     const val CHECK = "check"
     const val DATA_ID = "idkd"
-    lateinit var dates: Array<List<Long?>?>
+    lateinit var dates: List<Long?>
     @JvmStatic
     fun setGrossMoney(money: List<Int>?): Int {
-        var i: Int
         var gross = 0
         var value: Int
         if (money == null) return 0
-        i = 0
+        var i: Int = 0
         while (i < money.size) {
             value = money[i]
             gross += value
@@ -40,22 +42,16 @@ object psfs {
         return gross
     }
 
-    @JvmStatic
+
     fun makeDate(l: Long): String {
         return DateFormat.format("dd/MM/yy", Date(l)).toString()
     }
 
-    @JvmStatic
     fun checkDate(date: Long, context: Context?): Int {
+        CoroutineScope(IO).launch { dates = myDatabase.INSTANCE.Dao().allDate() }
 
-        Thread { dates = arrayOf(myDatabase.getDbINSTANCE(context).Dao().allDate()) }.start()
-        try {
-            Thread.sleep(100)
-        } catch (e: InterruptedException) {
-            e.printStackTrace()
-        }
         myDatabase.DELETE_INSTANCE()
-        return Arrays.binarySearch(dates[0]!!.toTypedArray(), date)
+        return Arrays.binarySearch(dates.toTypedArray(), date)
     }
 
     @JvmStatic
