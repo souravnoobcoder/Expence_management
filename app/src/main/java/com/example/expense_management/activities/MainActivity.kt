@@ -1,71 +1,68 @@
 package com.example.expense_management.activities
 
 import android.Manifest
-import com.example.expense_management.dataClasses.psfs.checkDate
-import com.example.expense_management.dataClasses.psfs.makeDate
-import androidx.appcompat.app.AppCompatActivity
-import com.example.expense_management.RecyclerViewAdapters.mainRecycleAdapter
-import com.example.expense_management.database.DataItems
-import com.google.android.material.datepicker.MaterialDatePicker
-import com.example.expense_management.database.DataViewModel
-import com.google.android.material.appbar.MaterialToolbar
-import android.os.Bundle
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.lifecycle.ViewModelProviders
-import android.content.Intent
-import com.example.expense_management.database.myDatabase
-import android.widget.TextView
-import android.widget.Toast
 import android.content.DialogInterface
-import android.widget.RadioButton
-import android.os.Looper
-import android.util.DisplayMetrics
-import android.os.Environment
-import androidx.core.app.ActivityCompat
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
+import android.os.Looper
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
+import android.widget.RadioButton
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.widget.Toolbar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.app.ActivityCompat
 import androidx.core.util.Pair
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.expense_management.R
-import com.example.expense_management.activities.AddingToDatabase
-import com.example.expense_management.activities.DetailedData
-import com.example.expense_management.dataClasses.psfs.CHECK
-import com.example.expense_management.dataClasses.psfs.DATA_ID
-import com.example.expense_management.dataClasses.psfs.DATE_KEY
+import com.example.expense_management.dataClasses.ConstantFuntions.CHECK
+import com.example.expense_management.dataClasses.ConstantFuntions.DATA_ID
+import com.example.expense_management.dataClasses.ConstantFuntions.DATE_KEY
+import com.example.expense_management.dataClasses.ConstantFuntions.checkDate
+import com.example.expense_management.dataClasses.ConstantFuntions.makeDate
+import com.example.expense_management.database.DataItems
+import com.example.expense_management.database.DataViewModel
+import com.example.expense_management.database.ExpenseDatabase
+import com.example.expense_management.recyclerViewAdapters.MainRecycleAdapter
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.apache.commons.io.FileUtils
 import java.io.File
-import java.lang.Exception
-import java.util.ArrayList
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
-    var dialogBuilder: AlertDialog.Builder? = null
-    var deleteDialogBuilder: AlertDialog.Builder? = null
-    var sortAlertBuilder: AlertDialog.Builder? = null
-    var dialog: AlertDialog? = null
-    var deleteDialog: AlertDialog? = null
-    var sortAlert: AlertDialog? = null
-    private var adapter: mainRecycleAdapter? = null
-    var items: DataItems? = null
-    var doubleBackToExitPressedOnce = false
+    private var dialogBuilder: AlertDialog.Builder? = null
+    private var deleteDialogBuilder: AlertDialog.Builder? = null
+    private var sortAlertBuilder: AlertDialog.Builder? = null
+    private var dialog: AlertDialog? = null
+    private var deleteDialog: AlertDialog? = null
+    private var sortAlert: AlertDialog? = null
+    private var adapter: MainRecycleAdapter? = null
+    private var items: DataItems? = null
+    private var doubleBackToExitPressedOnce = false
     private var materialDatePicker: MaterialDatePicker<Long>? = null
     private var datePickerForSearch: MaterialDatePicker<Long>? = null
     private var forMultiDates: MaterialDatePicker<Pair<Long, Long>>? = null
-    var viewModel: DataViewModel? = null
-    var expense = 0
-    var got = 0
+    private var viewModel: DataViewModel? = null
+    private var expense = 0
+    private var got = 0
     lateinit var toolbar: MaterialToolbar
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         toolbar = findViewById(R.id.tool_bar)
         val mainListRecyclerView = findViewById<RecyclerView>(R.id.main_list_recycleView)
         mainListRecyclerView.layoutManager = LinearLayoutManager(this)
-        adapter = mainRecycleAdapter()
+        adapter = MainRecycleAdapter()
         mainListRecyclerView.adapter = adapter
         val addingData = findViewById<FloatingActionButton>(R.id.adding_element)
         val layoutParams = CoordinatorLayout.LayoutParams(-2, -2)
@@ -85,8 +82,8 @@ class MainActivity : AppCompatActivity() {
         materialDatePicker = builder.setTitleText("Select Date")
             .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
             .build()
-        viewModel = ViewModelProviders.of(this).get(DataViewModel::class.java)
-        viewModel!!.allDataDescending.observe(
+        viewModel = ViewModelProviders.of(this@MainActivity).get(DataViewModel::class.java)
+        viewModel!!.allDataDescending().observe(
             this,
             { dataItems: List<DataItems?>? -> setDataItemsList(dataItems) })
         datePickerForSearch = builder.setTitleText("Search by date")
@@ -102,22 +99,26 @@ class MainActivity : AppCompatActivity() {
             )
         }
         materialDatePicker!!.addOnPositiveButtonClickListener { selection: Long ->
-            val get = checkDate(selection, this@MainActivity)
-            if (get < 0) {
-                val intent = Intent(this@MainActivity, AddingToDatabase::class.java)
-                intent.putExtra(DATE_KEY, selection)
-                startActivity(intent)
-            } else {
-                makeAlertDailogbBox(selection)
-                dialog!!.show()
+            CoroutineScope(IO).launch {
+                val get = checkDate(selection)
+                CoroutineScope(Main).launch {
+                    if (get < 0) {
+                        val intent = Intent(this@MainActivity, AddingToDatabase::class.java)
+                        intent.putExtra(DATE_KEY, selection)
+                        startActivity(intent)
+                    } else {
+                        makeAlertDailogbBox(selection)
+                        dialog!!.show()
+                    }
+                }
             }
+
         }
         forMultiDates!!.addOnPositiveButtonClickListener { selection ->
             CoroutineScope(IO).launch { getSumDetails(selection) }
         }
-        toolbar.setOnMenuItemClickListener(Toolbar.OnMenuItemClickListener { item: MenuItem ->
-            val itemId = item.itemId
-            when (itemId) {
+        toolbar.setOnMenuItemClickListener { item: MenuItem ->
+            when (item.itemId) {
                 R.id.search_by_date -> {
                     datePickerForSearch!!.show(supportFragmentManager, "ust")
                 }
@@ -135,18 +136,30 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             false
-        })
-        adapter!!.setOnItemLongClickListener { dataItem: DataItems -> alertForDelete(dataItem) }
-        adapter!!.setOnItemClickListener { data: DataItems ->
-            val dataIntent = Intent(this@MainActivity, DetailedData::class.java)
-            dataIntent.putExtra(DATA_ID, data.date)
-            dataIntent.putExtra(CHECK, "yes")
-            this@MainActivity.startActivity(dataIntent)
-            finish()
         }
+        adapter!!.setOnItemClickListener(object : MainRecycleAdapter.OnItemClickListener{
+            override fun onItemClicked(data: DataItems) {
+                alertForDelete(data)
+            }
+        })
+
+        adapter!!.setOnItemClickListener(object : MainRecycleAdapter.OnItemClickListener{
+            override fun onItemClicked(data: DataItems) {
+                val dataIntent = Intent(this@MainActivity, DetailedData::class.java)
+                dataIntent.putExtra(DATA_ID, data.date)
+                dataIntent.putExtra(CHECK, "yes")
+                this@MainActivity.startActivity(dataIntent)
+                finish()
+            }
+        })
+        adapter!!.setOnItemLongClickListener(object : MainRecycleAdapter.OnItemLongClickListener{
+            override fun onItemLongClicked(data: DataItems) {
+               alertForDelete(data)
+            }
+        })
         datePickerForSearch!!.addOnPositiveButtonClickListener { selection: Long? ->
             CoroutineScope(IO).launch {
-                    myDatabase.getDbINSTANCE(this@MainActivity).Dao().getRoww(selection)
+                ExpenseDatabase.getDbINSTANCE(this@MainActivity)?.dao()?.getRoww(selection)
                 searchMain(selection)
             }
         }
@@ -177,19 +190,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private suspend fun getSumDetails(selection : Pair<Long,Long>) {
-        expense = myDatabase.getDbINSTANCE(this@MainActivity).Dao()
-            .getExpense(selection.first, selection.second)
-        got = myDatabase.getDbINSTANCE(this@MainActivity).Dao()
-            .getGain(selection.first, selection.second)
-        showSumAlertOnMainThread(expense,got,selection.first,selection.second)
+        expense = ExpenseDatabase.getDbINSTANCE(this@MainActivity)?.dao()
+            ?.getExpense(selection.first, selection.second)!!
+        got = ExpenseDatabase.getDbINSTANCE(this@MainActivity)?.dao()
+            ?.getGain(selection.first, selection.second)!!
+        showSumAlertOnMainThread(expense, got, selection.first, selection.second)
     }
 
     private fun setDataItemsList(dataItems: List<DataItems?>?) {
-        var dataItemsList: MutableList<DataItems?> = ArrayList()
-        if (dataItemsList == null) dataItemsList = ArrayList()
+        val dataItemsList: MutableList<DataItems?> = ArrayList()
         dataItemsList.clear()
         dataItemsList.addAll(dataItems!!)
-        if (dataItemsList != null) adapter!!.setDataItemsList(dataItems)
+        adapter!!.setDataItemsList(dataItems as List<DataItems>)
         adapter!!.notifyDataSetChanged()
     }
 
@@ -262,37 +274,37 @@ ${makeDate(dataItem.date)} date data"""
     }
 
     private fun gotA() {
-        viewModel!!.allGotDataAscending.observe(
+        viewModel!!.allGotDataAscending().observe(
             this@MainActivity,
             { dataItems: List<DataItems?>? -> setDataItemsList(dataItems) })
     }
 
     private fun expenseA() {
-        viewModel!!.allExpenseDataAscending.observe(
+        viewModel!!.allExpenseDataAscending().observe(
             this@MainActivity,
             { dataItems: List<DataItems?>? -> setDataItemsList(dataItems) })
     }
 
     private fun expenseD() {
-        viewModel!!.allExpenseDataDescending.observe(
+        viewModel!!.allExpenseDataDescending().observe(
             this@MainActivity,
             { dataItems: List<DataItems?>? -> setDataItemsList(dataItems) })
     }
 
     private fun gotD() {
-        viewModel!!.allGotDataDescending.observe(
+        viewModel!!.allGotDataDescending().observe(
             this@MainActivity,
             { dataItems: List<DataItems?>? -> setDataItemsList(dataItems) })
     }
 
     private fun dateA() {
-        viewModel!!.allDataAscending.observe(
+        viewModel!!.allDataAscending().observe(
             this@MainActivity,
             { dataItems: List<DataItems?>? -> setDataItemsList(dataItems) })
     }
 
     private fun dateD() {
-        viewModel!!.allDataDescending.observe(
+        viewModel!!.allDataDescending().observe(
             this@MainActivity,
             { dataItems: List<DataItems?>? -> setDataItemsList(dataItems) })
     }
@@ -317,15 +329,6 @@ ${makeDate(dataItem.date)} date data"""
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
-    fun setBackup(id: Int) {
-        makeToast(getString(R.string.progress))
-    }
-
-    val backup: Unit
-        get() {
-            makeToast(getString(R.string.progress))
-        }
-
     private fun go(): Pair<Int, Int> {
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
@@ -341,7 +344,7 @@ ${makeDate(dataItem.date)} date data"""
             val permission =
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
             if (permission == PackageManager.PERMISSION_GRANTED) {
-                myDatabase.getDbINSTANCE(this).close()
+                ExpenseDatabase.getDbINSTANCE(this)?.close()
                 val db = getDatabasePath(database)
                 val dbShm = File(db.parent, "$database-shm")
                 val dbWal = File(db.parent, "$database-wal")
@@ -375,7 +378,7 @@ ${makeDate(dataItem.date)} date data"""
             val permission =
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
             if (permission == PackageManager.PERMISSION_GRANTED) {
-                myDatabase.getDbINSTANCE(this).close()
+                ExpenseDatabase.getDbINSTANCE(this)?.close()
                 val db = File(sd, database)
                 val dbShm = File(db.parent, "$database-shm")
                 val dbWal = File(db.parent, "$database-wal")

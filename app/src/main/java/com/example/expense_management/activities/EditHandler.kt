@@ -9,17 +9,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProviders
 import com.example.expense_management.R
-import com.example.expense_management.dataClasses.psfs.CHECK
-import com.example.expense_management.dataClasses.psfs.DATA_ID
-import com.example.expense_management.dataClasses.psfs.LIST_POSITION
-import com.example.expense_management.dataClasses.psfs.LOOK
-import com.example.expense_management.dataClasses.psfs.OUR_DATE
-import com.example.expense_management.dataClasses.psfs.UPDATE_MONEY
-import com.example.expense_management.dataClasses.psfs.UPDATE_MONEY_DESCRIPTION
-import com.example.expense_management.dataClasses.psfs.setGrossMoney
+import com.example.expense_management.dataClasses.ConstantFuntions.CHECK
+import com.example.expense_management.dataClasses.ConstantFuntions.DATA_ID
+import com.example.expense_management.dataClasses.ConstantFuntions.LIST_POSITION
+import com.example.expense_management.dataClasses.ConstantFuntions.LOOK
+import com.example.expense_management.dataClasses.ConstantFuntions.OUR_DATE
+import com.example.expense_management.dataClasses.ConstantFuntions.UPDATE_MONEY
+import com.example.expense_management.dataClasses.ConstantFuntions.UPDATE_MONEY_DESCRIPTION
+import com.example.expense_management.dataClasses.ConstantFuntions.setGrossMoney
 import com.example.expense_management.database.DataItems
 import com.example.expense_management.database.DataViewModel
-import com.example.expense_management.database.myDatabase
+import com.example.expense_management.database.ExpenseDatabase
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.radiobutton.MaterialRadioButton
 import com.google.android.material.textfield.TextInputEditText
@@ -106,10 +106,11 @@ class EditHandler : AppCompatActivity() {
             false
         })
         if (see) {
-            CoroutineScope(IO).launch { d=myDatabase.getDbINSTANCE(this@EditHandler).Dao().getRoww(dateId) }
+            CoroutineScope(IO).launch { d=ExpenseDatabase.getDbINSTANCE(this@EditHandler)
+                ?.dao()?.getRoww(dateId) }
 
         } else {
-            model!!.getRow(dateId).observe(this@EditHandler, { items -> d = items })
+            model!!.getRow(dateId)?.observe(this@EditHandler, { items -> d = items })
         }
     }
 

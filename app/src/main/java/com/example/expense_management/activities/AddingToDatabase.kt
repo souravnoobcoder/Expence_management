@@ -9,19 +9,18 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProviders
-import com.example.expense_management.activities.MainActivity
 import com.example.expense_management.R
-import com.example.expense_management.dataClasses.psfs.CHECK
-import com.example.expense_management.dataClasses.psfs.DATE_KEY
-import com.example.expense_management.dataClasses.psfs.DETAIL_DATE
-import com.example.expense_management.dataClasses.psfs.DETAIL_GROSS_MONEY_GOT
-import com.example.expense_management.dataClasses.psfs.DETAIL_GROSS_MONEY_PAID
-import com.example.expense_management.dataClasses.psfs.DETAIL_MONEY_EXPENSE
-import com.example.expense_management.dataClasses.psfs.DETAIL_MONEY_EXPENSE_PURPOSE
-import com.example.expense_management.dataClasses.psfs.DETAIL_MONEY_GOT
-import com.example.expense_management.dataClasses.psfs.DETAIL_MONEY_GOT_PURPOSE
-import com.example.expense_management.dataClasses.psfs.makeDate
-import com.example.expense_management.dataClasses.psfs.setGrossMoney
+import com.example.expense_management.dataClasses.ConstantFuntions.CHECK
+import com.example.expense_management.dataClasses.ConstantFuntions.DATE_KEY
+import com.example.expense_management.dataClasses.ConstantFuntions.DETAIL_DATE
+import com.example.expense_management.dataClasses.ConstantFuntions.DETAIL_GROSS_MONEY_GOT
+import com.example.expense_management.dataClasses.ConstantFuntions.DETAIL_GROSS_MONEY_PAID
+import com.example.expense_management.dataClasses.ConstantFuntions.DETAIL_MONEY_EXPENSE
+import com.example.expense_management.dataClasses.ConstantFuntions.DETAIL_MONEY_EXPENSE_PURPOSE
+import com.example.expense_management.dataClasses.ConstantFuntions.DETAIL_MONEY_GOT
+import com.example.expense_management.dataClasses.ConstantFuntions.DETAIL_MONEY_GOT_PURPOSE
+import com.example.expense_management.dataClasses.ConstantFuntions.makeDate
+import com.example.expense_management.dataClasses.ConstantFuntions.setGrossMoney
 import com.example.expense_management.database.DataItems
 import com.example.expense_management.database.DataViewModel
 import com.google.android.material.appbar.MaterialToolbar
@@ -93,14 +92,18 @@ class AddingToDatabase : AppCompatActivity() {
         addingMore.setOnClickListener {
             val amountUsed = amount?.text.toString()
             val amountPurpose = detail?.text.toString()
-            if (gain?.isChecked == true) {
-                settingToGain(amountUsed, amountPurpose)
-                makeEditTextNullAgain()
-            } else if (paid?.isChecked == true) {
-                settingToExpense(amountUsed, amountPurpose)
-                makeEditTextNullAgain()
-            } else {
-                makeToast("please select Gain or Paid")
+            when {
+                gain?.isChecked == true -> {
+                    settingToGain(amountUsed, amountPurpose)
+                    makeEditTextNullAgain()
+                }
+                paid?.isChecked == true -> {
+                    settingToExpense(amountUsed, amountPurpose)
+                    makeEditTextNullAgain()
+                }
+                else -> {
+                    makeToast("please select Gain or Paid")
+                }
             }
         }
     }

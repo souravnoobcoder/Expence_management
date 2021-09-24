@@ -5,13 +5,13 @@ import android.content.Intent
 import android.text.format.DateFormat
 import androidx.core.util.Pair
 import com.example.expense_management.activities.EditHandler
-import com.example.expense_management.database.myDatabase
+import com.example.expense_management.database.ExpenseDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import java.util.*
 
-object psfs {
+object ConstantFuntions {
     const val UPDATE_MONEY = "OK"
     const val UPDATE_MONEY_DESCRIPTION = "hello"
     const val OUR_DATE = "date"
@@ -27,13 +27,13 @@ object psfs {
     const val DATE_KEY = "selected date"
     const val CHECK = "check"
     const val DATA_ID = "idkd"
-    lateinit var dates: List<Long?>
+    private lateinit var dates: List<Long?>
     @JvmStatic
     fun setGrossMoney(money: List<Int>?): Int {
         var gross = 0
         var value: Int
         if (money == null) return 0
-        var i: Int = 0
+        var i = 0
         while (i < money.size) {
             value = money[i]
             gross += value
@@ -47,10 +47,9 @@ object psfs {
         return DateFormat.format("dd/MM/yy", Date(l)).toString()
     }
 
-    fun checkDate(date: Long, context: Context?): Int {
-        CoroutineScope(IO).launch { dates = myDatabase.INSTANCE.Dao().allDate() }
-
-        myDatabase.DELETE_INSTANCE()
+    suspend fun checkDate(date: Long): Int {
+        dates = ExpenseDatabase.INSTANCE?.dao()?.allDate()!!
+        ExpenseDatabase.deleteInstance()
         return Arrays.binarySearch(dates.toTypedArray(), date)
     }
 

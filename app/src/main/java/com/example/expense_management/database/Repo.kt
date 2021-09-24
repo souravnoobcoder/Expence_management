@@ -49,7 +49,6 @@ class Repo(application: Application?) {
 
     fun update(items: DataItems?) {
         CoroutineScope(IO).launch { dao.update(items) }
-
     }
 
     fun getRow(date: Long): LiveData<DataItems?>? {
@@ -57,8 +56,8 @@ class Repo(application: Application?) {
     }
 
     init {
-        val database = myDatabase.getDbINSTANCE(application)
-        dao = database.Dao()
+        val database = ExpenseDatabase.getDbINSTANCE(application)
+        dao = database?.dao()!!
         liveData = dao.dataAscending()
     }
 }

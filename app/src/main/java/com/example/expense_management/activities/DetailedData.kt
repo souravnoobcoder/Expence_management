@@ -11,25 +11,24 @@ import androidx.core.util.Pair
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.expense_management.activities.MainActivity
 import com.example.expense_management.R
-import com.example.expense_management.RecyclerViewAdapters.detailed_adapter
-import com.example.expense_management.dataClasses.psfs.CHECK
-import com.example.expense_management.dataClasses.psfs.DATA_ID
-import com.example.expense_management.dataClasses.psfs.DETAIL_DATE
-import com.example.expense_management.dataClasses.psfs.DETAIL_GROSS_MONEY_GOT
-import com.example.expense_management.dataClasses.psfs.DETAIL_GROSS_MONEY_PAID
-import com.example.expense_management.dataClasses.psfs.DETAIL_MONEY_EXPENSE
-import com.example.expense_management.dataClasses.psfs.DETAIL_MONEY_EXPENSE_PURPOSE
-import com.example.expense_management.dataClasses.psfs.DETAIL_MONEY_GOT
-import com.example.expense_management.dataClasses.psfs.DETAIL_MONEY_GOT_PURPOSE
-import com.example.expense_management.dataClasses.psfs.OUR_DATE
-import com.example.expense_management.dataClasses.psfs.makeDate
-import com.example.expense_management.dataClasses.psfs.setForAdapterIntent
-import com.example.expense_management.dataClasses.psfs.setGrossMoney
+import com.example.expense_management.recyclerViewAdapters.DetailedAdapter
+import com.example.expense_management.dataClasses.ConstantFuntions.CHECK
+import com.example.expense_management.dataClasses.ConstantFuntions.DATA_ID
+import com.example.expense_management.dataClasses.ConstantFuntions.DETAIL_DATE
+import com.example.expense_management.dataClasses.ConstantFuntions.DETAIL_GROSS_MONEY_GOT
+import com.example.expense_management.dataClasses.ConstantFuntions.DETAIL_GROSS_MONEY_PAID
+import com.example.expense_management.dataClasses.ConstantFuntions.DETAIL_MONEY_EXPENSE
+import com.example.expense_management.dataClasses.ConstantFuntions.DETAIL_MONEY_EXPENSE_PURPOSE
+import com.example.expense_management.dataClasses.ConstantFuntions.DETAIL_MONEY_GOT
+import com.example.expense_management.dataClasses.ConstantFuntions.DETAIL_MONEY_GOT_PURPOSE
+import com.example.expense_management.dataClasses.ConstantFuntions.OUR_DATE
+import com.example.expense_management.dataClasses.ConstantFuntions.makeDate
+import com.example.expense_management.dataClasses.ConstantFuntions.setForAdapterIntent
+import com.example.expense_management.dataClasses.ConstantFuntions.setGrossMoney
 import com.example.expense_management.database.DataItems
 import com.example.expense_management.database.DataViewModel
-import com.example.expense_management.database.myDatabase
+import com.example.expense_management.database.ExpenseDatabase
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.CoroutineScope
@@ -55,8 +54,8 @@ class DetailedData : AppCompatActivity() {
     private var got: MutableList<Int>? = null
     private var paid: MutableList<Int>? = null
     private var dates: List<Long>? = null
-    private var forGainAdapter: detailed_adapter? = null
-    private var forExpenseAdapter: detailed_adapter? = null
+    private var forGainAdapter: DetailedAdapter? = null
+    private var forExpenseAdapter: DetailedAdapter? = null
     private var dataItems: DataItems? = null
     private var items: DataItems? = null
     private var adapterCheck = false
@@ -87,7 +86,7 @@ class DetailedData : AppCompatActivity() {
             .build()
         changeDatePicker!!.addOnPositiveButtonClickListener { selection: Long ->
             CoroutineScope(Main).launch {
-                dates = myDatabase.getDbINSTANCE(this@DetailedData).Dao().allDate()
+                dates = ExpenseDatabase.getDbINSTANCE(this@DetailedData)?.dao()?.allDate()
                 dateChange(selection)
             }
         }
@@ -97,7 +96,8 @@ class DetailedData : AppCompatActivity() {
             dateId = intent.getLongExtra(DATA_ID, -1)
             println("yes its$dateId")
             CoroutineScope(IO).launch {
-                dataItems = myDatabase.getDbINSTANCE(this@DetailedData).Dao().getRoww(dateId)
+                dataItems = ExpenseDatabase.getDbINSTANCE(this@DetailedData)?.dao()
+                    ?.getRoww(dateId)
                 CoroutineScope(Main).launch {  initializeLists()
                     date = makeDate(dataItems!!.date)
                     grossGot = java.lang.String.valueOf(dataItems!!.grossMoneyGot)
@@ -107,7 +107,6 @@ class DetailedData : AppCompatActivity() {
                     paidDescription!!.addAll(dataItems!!.moneyExpensePurposes!!)
                     gotDescription!!.addAll(dataItems!!.moneyGotPurposes!!)
                     iMain()
-
                 }
             }
         } else {
@@ -121,15 +120,8 @@ class DetailedData : AppCompatActivity() {
             aBoolean = true
         }
         if(cheek!="yes"){
-            da?.text = date
-            go?.text = "Got : $grossGot"
-            pa?.text = "Paid : $grossPaid"
-            forExpenseAdapter = detailed_adapter(paid, paidDescription, cheek, false)
-            forGainAdapter = detailed_adapter(got, gotDescription, cheek, true)
-            gainRecycle?.layoutManager = LinearLayoutManager(this)
-            expenseRecycle?.layoutManager = LinearLayoutManager(this)
-            gainRecycle?.adapter = forGainAdapter
-            expenseRecycle?.adapter = forExpenseAdapter
+            initializingAdapter()
+            click()
         }
 
         button?.setOnClickListener {
@@ -139,28 +131,6 @@ class DetailedData : AppCompatActivity() {
             addNew.putExtra(CHECK, true)
             startActivity(addNew)
             finish()
-        }
-        forGainAdapter?.setOnItemLongClickListener { integer, string, listPosition ->
-            deletePosition = listPosition
-            val intentBooleanPair: Pair<Intent, Boolean> = setForAdapterIntent(
-                true, integer, string, listPosition,
-                dateId, date, this@DetailedData
-            )
-            forEditIntent = intentBooleanPair.first
-            adapterCheck = intentBooleanPair.second
-            makeAlertDailogbBox(integer, string)
-            dialog?.show()
-        }
-        forExpenseAdapter?.setOnItemLongClickListener { integer, string, listPosition ->
-            deletePosition = listPosition
-            val intentBooleanPair: Pair<Intent, Boolean> = setForAdapterIntent(
-                false, integer, string,
-                listPosition, dateId, date, this@DetailedData
-            )
-            forEditIntent = intentBooleanPair.first
-            adapterCheck = intentBooleanPair.second
-            makeAlertDailogbBox(integer, string)
-            dialog?.show()
         }
         if (!aBoolean) {
             da?.setOnLongClickListener {
@@ -195,41 +165,9 @@ class DetailedData : AppCompatActivity() {
                 finish()
             }.setNegativeButton("Delete") { _, _ ->
                 CoroutineScope(IO).launch {
-                    items = myDatabase.getDbINSTANCE(this@DetailedData).Dao().getRoww(dateId)
+                    items = ExpenseDatabase.getDbINSTANCE(this@DetailedData)?.dao()?.getRoww(dateId)
                    iMain()
                 }
-                Thread {
-                    Thread {
-                        items = myDatabase.getDbINSTANCE(this@DetailedData).Dao().getRoww(dateId)
-                    }
-                        .start()
-                    try {
-                        Thread.sleep(150)
-                    } catch (e: InterruptedException) {
-                        e.printStackTrace()
-                    }
-                    myDatabase.DELETE_INSTANCE()
-                    if (adapterCheck) {
-                        items!!.moneyGot!!.removeAt(deletePosition)
-                        items!!.grossMoneyGot = setGrossMoney(items!!.moneyGot)
-                        items!!.moneyGotPurposes!!.removeAt(deletePosition)
-                    } else {
-                        items!!.moneyExpense!!.removeAt(deletePosition)
-                        items!!.grossMoneyExpense = setGrossMoney(items!!.moneyExpense)
-                        items!!.moneyExpensePurposes!!.removeAt(deletePosition)
-                    }
-                    model!!.update(items)
-                }.start()
-                try {
-                    Thread.sleep(250)
-                } catch (e: InterruptedException) {
-                    e.printStackTrace()
-                }
-                val dataIntent = Intent(this@DetailedData, DetailedData::class.java)
-                dataIntent.putExtra(DATA_ID, dateId)
-                dataIntent.putExtra(CHECK, "yes")
-                startActivity(dataIntent)
-                finish()
             }
         dialog = dialogBuilder!!.create()
     }
@@ -263,44 +201,49 @@ class DetailedData : AppCompatActivity() {
             changeDateAlert(selection)
         }
     }
-    private suspend fun iMain(){
+    private fun iMain(){
         CoroutineScope(Main).launch {
             initializingAdapter()
+            click()
         }
     }
-    private suspend fun initializingAdapter(){
+    private fun initializingAdapter(){
         da?.text = date
         go?.text = "Got : $grossGot"
         pa?.text = "Paid : $grossPaid"
-        forExpenseAdapter = detailed_adapter(paid, paidDescription, cheek, false)
-        forGainAdapter = detailed_adapter(got, gotDescription, cheek, true)
+        forExpenseAdapter = cheek?.let { DetailedAdapter(paid, paidDescription, it, false) }
+        forGainAdapter = cheek?.let { DetailedAdapter(got, gotDescription, it, true) }
         gainRecycle?.layoutManager = LinearLayoutManager(this)
         expenseRecycle?.layoutManager = LinearLayoutManager(this)
         gainRecycle?.adapter = forGainAdapter
         expenseRecycle?.adapter = forExpenseAdapter
     }
-    fun click(){
-        forGainAdapter?.setOnItemLongClickListener { integer, string, listPosition ->
-            deletePosition = listPosition
-            val intentBooleanPair: Pair<Intent, Boolean> = setForAdapterIntent(
-                true, integer, string, listPosition,
-                dateId, date, this@DetailedData
-            )
-            forEditIntent = intentBooleanPair.first
-            adapterCheck = intentBooleanPair.second
-            makeAlertDailogbBox(integer, string)
-            dialog?.show()
-        }
-        forExpenseAdapter?.setOnItemLongClickListener { integer, string, listPosition ->
-            deletePosition = listPosition
-            val intentBooleanPair: Pair<Intent, Boolean> = setForAdapterIntent(
-                false, integer, string,
-                listPosition, dateId, date, this@DetailedData
-            )
-            forEditIntent = intentBooleanPair.first
-            adapterCheck = intentBooleanPair.second
-            makeAlertDailogbBox(integer, string)
-            dialog?.show()
-        }
+    private fun click(){
+        forGainAdapter?.setOnItemLongClickListener(object : DetailedAdapter.OnItemLongClickListener{
+            override fun onItemLongClicked(integer: String, string: String, position: Int) {
+                deletePosition = position
+                val intentBooleanPair: Pair<Intent, Boolean> = setForAdapterIntent(
+                    true, integer, string, position,
+                    dateId, date, this@DetailedData
+                )
+                forEditIntent = intentBooleanPair.first
+                adapterCheck = intentBooleanPair.second
+                makeAlertDailogbBox(integer, string)
+                dialog?.show()
+            }
+        })
+        forExpenseAdapter?.setOnItemLongClickListener(object : DetailedAdapter.OnItemLongClickListener{
+            override fun onItemLongClicked(integer: String, string: String, position: Int) {
+                deletePosition = position
+                val intentBooleanPair: Pair<Intent, Boolean> = setForAdapterIntent(
+                    false, integer, string,
+                    position, dateId, date, this@DetailedData
+                )
+                forEditIntent = intentBooleanPair.first
+                adapterCheck = intentBooleanPair.second
+                makeAlertDailogbBox(integer, string)
+                dialog?.show()
+            }
+        })
     }
 }
